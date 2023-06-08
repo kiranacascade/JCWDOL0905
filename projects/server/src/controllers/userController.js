@@ -1,8 +1,8 @@
 const db = require("../models");
-const users = db.users;
+const users = db.User;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const tokens = db.tokens;
+const tokens = db.Token;
 const sendEmail = require("../helper/sendEmail");
 const jwtKey = process.env.JWT_SECRET_KEY;
 const { checkReferralCodeUniqueness, generateRandomReferralCode } = require('../helper/referralCodeGenerator')
@@ -34,9 +34,9 @@ module.exports = {
         isUnique = await checkReferralCodeUniqueness(referralCode);
       }
       const result = await users.create({name, email, password: hashPass, phone_number, referral_code: referralCode});
-      const token = jwt.sign({ id_user: result.id_user, name: result.name, email: result.email }, jwtKey);
-      await tokens.create({id_user: result.id_user, token: token, token_type: "VERIFICATION"});
-      const url = `${client_url}/verify?id_user=${result.id_user}&token=${token}`;
+      const token = jwt.sign({ id_user: result.id, name: result.name, email: result.email }, jwtKey);
+      await tokens.create({id_user: result.id, token: token, token_type: "VERIFICATION"});
+      const url = `${client_url}/verify?id_user=${result.id}&token=${token}`;
       const message = `<p>Click this link to verify: <a href='${url}'>${url}</a></p>`;
       await sendEmail(result.email, "Verify Account", message);
       res.status(201).send({isError: false, message: "Register Success! Please Check Email to Verify", data: result});
@@ -51,7 +51,7 @@ module.exports = {
       const tokenData = await tokens.findOne({where: {token: token}});
       if (!tokenData) {
         return res.status(400).send({ code: 400, message: "Invalid or expired token" })}
-      const [affectedRows] = await users.update({ is_verified: 1 },{where: {id_user: id_user}}) 
+      const [affectedRows] = await users.update({ is_verified: 1 },{where: {id: id_user}}) 
       if (affectedRows === 0) {
         return res.status(404).send({ code: 404, message: `User not found with id : ${id_user}` })}
       const deletedRows = await tokens.update({token: null, token_type: null}, {where: {id_user: id_user}});
@@ -68,11 +68,11 @@ module.exports = {
       let result = await users.findOne({where: {email: email}});
       if (!result)
         return res.status(404).send({message: "Email doesn't exist"});
-      const newToken = jwt.sign({ id_user: result.id_user, name: result.name, email: result.email }, jwtKey)
-      const [affectedRows] = await tokens.update({ token: newToken, token_type: "VERIFICATION" },{where: {id_user: result.id_user}})
+      const newToken = jwt.sign({ id_user: result.id, name: result.name, email: result.email }, jwtKey)
+      const [affectedRows] = await tokens.update({ token: newToken, token_type: "VERIFICATION" },{where: {id_user: result.id}})
       if (affectedRows === 0) {
         return res.status(404).send({code: 404, message: `Token for that email is not found, maybe the token already used ,try login `})}
-      const url = `${client_url}/verify?id_user=${result.id_user}&token=${newToken}`;
+      const url = `${client_url}/verify?id_user=${result.id}&token=${newToken}`;
       const message = `<p>Click this link to verify: <a href='${url}'>${url}</a></p>`;
       await sendEmail(result.email, "Verify Account", message);
       res.status(200).send({code: 200, message: "A verification email has been sent. Please check your email and verify"});
@@ -93,9 +93,9 @@ module.exports = {
         if (err) {
           res.status(404).send({isError: true, message: "Login failed when comparing password"});
         } else if (result) {
-          const token = jwt.sign({id_user: resultUser.id_user, name: resultUser.name, email: resultUser.email, is_verified: resultUser.is_verified}, jwtKey)
-          await tokens.update({token: token, token_type: "ACCESS_TOKEN"}, {where: {id_user: resultUser.id_user}});
-          res.status(200).send({isError: false, message: "Login Success", data: {access_token: token, id_user: resultUser.id_user}});
+          const token = jwt.sign({id_user: resultUser.id, name: resultUser.name, email: resultUser.email, is_verified: resultUser.is_verified}, jwtKey)
+          await tokens.update({token: token, token_type: "ACCESS_TOKEN"}, {where: {id_user: resultUser.id}});
+          res.status(200).send({isError: false, message: "Login Success", data: {access_token: token, id_user: resultUser.id}});
         } else {
           return res.status(404).send({isError: true, message: "Invalid email or password"})}
       });
@@ -109,9 +109,9 @@ module.exports = {
       let result = await users.findOne({where: {email: email}});
       if (!result)
         return res.status(404).send({message: "Email doesn't exist"});
-      const newToken = jwt.sign({ id_user: result.id_user, name: result.name, email: result.email }, jwtKey);      
-      await tokens.update({token: newToken, token_type: "FORGOT_PASSWORD"}, {where: {id_user: result.id_user}});
-      const url = `${client_url}/verify-forgot-password?id_user=${result.id_user}&token=${newToken}`;
+      const newToken = jwt.sign({ id_user: result.id, name: result.name, email: result.email }, jwtKey);      
+      await tokens.update({token: newToken, token_type: "FORGOT_PASSWORD"}, {where: {id_user: result.id}});
+      const url = `${client_url}/verify-forgot-password?id_user=${result.id}&token=${newToken}`;
       const message = `<p>Click this link to reset password: <a href='${url}'>${url}</a></p>`;
       await sendEmail(result.email, "Reset Password", message);
       res.status(200).send({data: {token: newToken}, message: "Check your email to reset password", code: 200})
@@ -125,11 +125,11 @@ module.exports = {
       let result = await users.findOne({where: {email: email}});
       if (!result)
         return res.status(404).send({message: "Email doesn't exist"});
-      const newToken = jwt.sign({ id_user: result.id_user, name: result.name, email: result.email }, jwtKey)
-      const [affectedRows] = await tokens.update({ token: newToken, token_type: "FORGOT_PASSWORD" },{where: {id_user: result.id_user}})
+      const newToken = jwt.sign({ id_user: result.id, name: result.name, email: result.email }, jwtKey)
+      const [affectedRows] = await tokens.update({ token: newToken, token_type: "FORGOT_PASSWORD" },{where: {id_user: result.id}})
       if (affectedRows === 0) {
         return res.status(404).send({code: 404, message: `Token for user id : ${id_user} is not found`})}
-      const url = `${client_url}/verify-forgot-password?id_user=${result.id_user}&token=${newToken}`;
+      const url = `${client_url}/verify-forgot-password?id_user=${result.id}&token=${newToken}`;
       const message = `<p>Click this link to reset password: <a href='${url}'>${url}</a></p>`;
       await sendEmail(result.email, "Reset Password", message);
       res.status(200).send({data: {token: newToken}, message: "Check your email to reset password", code: 200});

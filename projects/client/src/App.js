@@ -1,7 +1,4 @@
-import axios from "axios";
-import logo from "./logo.svg";
 import "./App.css";
-import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/user/LandingPage";
 import Register from "./pages/user/Register";
@@ -15,25 +12,8 @@ import VerificationBridge from "./pages/user/VerificationBridge";
 import VerificationPasswordBridge from "./pages/user/VerificationPasswordBridge";
 
 function App() {
-  // const [message, setMessage] = useState("");
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const { data } = await axios.get(
-  //       `${process.env.REACT_APP_API_BASE_URL}/greetings`
-  //     );
-  //     setMessage(data?.message || "");
-  //   })();
-  // }, []);
-
   return (
     <BrowserRouter>
-      {/* <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          {message}
-        </header>
-      </div> */}
       <Routes>
         <Route Component={Register} path="/register" />
         <Route Component={Login} path="/login" />

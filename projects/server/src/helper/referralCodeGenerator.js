@@ -1,5 +1,5 @@
 const db = require("../models");
-const users = db.users;
+const users = db.User;
 
 async function checkReferralCodeUniqueness(referralCode) {
   const existingUser = await users.findOne({where: {referral_code: referralCode}});
