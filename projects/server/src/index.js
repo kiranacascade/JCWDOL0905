@@ -21,17 +21,7 @@ app.use(express.json());
 const { userRouter } = require("./routers")
 
 // Add routes
-app.use('/users', userRouter)
-
-app.get("/api", (req, res) => {
-  res.send(`Hello, this is my API`);
-});
-
-app.get("/api/greetings", (req, res, next) => {
-  res.status(200).json({
-    message: "Hello, Student !",
-  });
-});
+app.use('/api/users', userRouter)
 
 // ===========================
 
