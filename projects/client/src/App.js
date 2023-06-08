@@ -1,26 +1,33 @@
-import axios from "axios";
-import logo from "./logo.svg";
+// import "@/styles/utils.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
+import ProductsList from "./pages/productsList";
+import CategoryList from "./pages/categoryList";
 import { useEffect, useState } from "react";
+import axios from "axios";
+
+const router = createBrowserRouter([
+  // {
+  //   path: "/",
+  //   element: <ProductsList />,
+  //   // errorElement: <ErrorPage />,
+  // },
+  { path: "/product", element: <ProductsList /> },
+  { path: "/category/:id", element: <CategoryList /> },
+]);
 
 function App() {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    (async () => {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/greetings`
-      );
-      setMessage(data?.message || "");
-    })();
-  }, []);
+  // const [message, setMessage] = useState("");
+  // useEffect(() => {
+  //   (async () => {
+  //     const { data } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/greetings`);
+  //     setMessage(data?.message || "");
+  //   })();
+  // }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        {message}
-      </header>
-    </div>
+    <main>
+      <RouterProvider router={router} />
+    </main>
   );
 }
 
