@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
           name: "id_user",
         },
       });
-      User.hasMany(models.Token, {
+      User.hasOne(models.Token, {
         foreignKey: {
           name: "id_user",
         },
@@ -55,9 +55,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      profile_picture: {
-        type: DataTypes.STRING,
-      },
       is_verified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -65,6 +62,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       gender: {
         type: DataTypes.ENUM("male", "female"),
+      },
+      birthdate: {
+        type: DataTypes.DATEONLY
+      },
+      profile_picture: {
+        type: DataTypes.STRING,
       },
       referral_code: {
         type: DataTypes.STRING,
