@@ -18,10 +18,11 @@ app.use(express.json());
 
 //#region API ROUTES
 // Import routes
-const { userRouter } = require("./routers")
+const { userRouter, profileRouter } = require("./routers")
 
 // Add routes
 app.use('/api/users', userRouter)
+app.use('/api/profiles', profileRouter)
 
 // ===========================
 

@@ -10,6 +10,7 @@ import ResetPassword from "./pages/user/ResetPassword";
 import ResendEmailResetPW from "./pages/user/ResendEmailResetPW"
 import VerificationBridge from "./pages/user/VerificationBridge";
 import VerificationPasswordBridge from "./pages/user/VerificationPasswordBridge";
+import EditProfile from "./pages/user/EditProfile";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route Component={VerificationBridge} path="/verify" />
         <Route Component={VerificationPasswordBridge} path="/verify-forgot-password"/>
         <Route Component={LandingPage} path="/" />
+        <Route Component={EditProfile} path="/edit-profile" />
       </Routes>
     </BrowserRouter>
   );
