@@ -1,33 +1,31 @@
-// import "@/styles/utils.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import { createBrowserRouter, RouterProvider, Routes } from "react-router-dom";
 import "./App.css";
 import ProductsList from "./pages/productsList";
-import CategoryList from "./pages/categoryList";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import CategoryPage from "./pages/categoryPage";
 
-const router = createBrowserRouter([
-  // {
-  //   path: "/",
-  //   element: <ProductsList />,
-  //   // errorElement: <ErrorPage />,
-  // },
-  { path: "/product", element: <ProductsList /> },
-  { path: "/category/:id", element: <CategoryList /> },
-]);
+// const router = createBrowserRouter([
+//   // {
+//   //   path: "/",
+//   //   element: <ProductsList />,
+//   //   // errorElement: <ErrorPage />,
+//   // },
+//   { path: "/product", element: <ProductsList /> },
+//   { path: "/category/:id", element: <CategoryPage /> },
+// ]);
 
 function App() {
-  // const [message, setMessage] = useState("");
-  // useEffect(() => {
-  //   (async () => {
-  //     const { data } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/greetings`);
-  //     setMessage(data?.message || "");
-  //   })();
-  // }, []);
   return (
-    <main>
-      <RouterProvider router={router} />
-    </main>
+    <BrowserRouter>
+      <Routes>
+        <Route Component={ProductsList} path="/product" />
+        <Route Component={CategoryPage} path="/category/:id" />
+      </Routes>
+    </BrowserRouter>
+
+    // <main>
+    //   <RouterProvider router={router} />
+    // </main>
   );
 }
 

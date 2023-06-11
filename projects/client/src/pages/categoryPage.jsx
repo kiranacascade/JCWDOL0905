@@ -4,11 +4,11 @@ import { useState, useEffect } from "react";
 import { Pagination } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import { useParams } from "react-router-dom";
+import { Category } from "../components/category";
 
-export default function ProductsList() {
+export default function ProductsByCategory() {
   const [productsInfo, setProductsInfo] = useState([]);
   const [sort, setSort] = useState(1);
-  const [categories, setCategories] = useState([]);
 
   // pagination
   const [activePage, setActivePage] = useState(1);
@@ -18,15 +18,6 @@ export default function ProductsList() {
   const { id } = useParams();
 
   useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const categoriesData = await axios.get("http://localhost:8000/category/fetch", {});
-        console.log(categoriesData.data.data);
-        setCategories(categoriesData.data.data);
-      } catch (err) {
-        console.log(err);
-      }
-    }
     async function fetchProducts() {
       try {
         let url;
@@ -34,22 +25,22 @@ export default function ProductsList() {
         switch (parseInt(sort)) {
           // sort by name A-Z
           case 1:
-            url = `http://localhost:8000/inventory/fetch/category/${id}?order=product_name&sort=ASC&page=${activePage}`;
+            url = `http://localhost:8000/api/inventory/fetch?order=product_name&sort=ASC&category=${id}&page=${activePage}`;
             break;
           // sort by name Z-A
           case 2:
-            url = `http://localhost:8000/inventory/fetch/category/${id}?order=product_name&sort=DESC&page=${activePage}`;
+            url = `http://localhost:8000/api/inventory/fetch?order=product_name&sort=DESC&category=${id}&page=${activePage}`;
             break;
           // sort by price L-H
           case 3:
-            url = `http://localhost:8000/inventory/fetch/category/${id}?order=product_price&sort=ASC&page=${activePage}`;
+            url = `http://localhost:8000/api/inventory/fetch?order=product_price&sort=ASC&category=${id}&page=${activePage}`;
             break;
           // sort by price H-L
           case 4:
-            url = `http://localhost:8000/inventory/fetch/category/${id}?order=product_price&sort=DESC&page=${activePage}`;
+            url = `http://localhost:8000/api/inventory/fetch?order=product_price&sort=DESC&category=${id}&page=${activePage}`;
             break;
           default:
-            url = `http://localhost:8000/inventory/fetch/category/${id}?order=createdAt&sort=ASC&page=${activePage}`;
+            url = `http://localhost:8000/api/inventory/fetch?order=createdAt&sort=ASC&category=${id}&page=${activePage}`;
         }
 
         const productData = await axios.get(url, {});
@@ -60,7 +51,6 @@ export default function ProductsList() {
         console.log(err);
       }
     }
-    fetchCategories();
     fetchProducts();
   }, [sort, activePage]);
 
@@ -83,19 +73,10 @@ export default function ProductsList() {
   }
   return (
     <div className="bg-neutral-100">
-      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 md:max-w-4xl md:px-6 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Products</h2>
 
-        <div className="flex my-12 p-5 rounded-lg bg-white border border-gray-200 drop-shadow-md">
-          {categories.map((category) => (
-            <button key={category.id} className="space-y-2 m-3 h-max w-48">
-              <a href={`http://localhost:3000/category/${category.id}`} className="flex flex-col justify-center items-center space-y-1">
-                <img src={category.category_image} alt={category.category_name} className="w-full h-auto rounded-full overflow-visible" />
-                <p className=" font-semibold text-gray-800 text-md">{category.category_name}</p>
-              </a>
-            </button>
-          ))}
-        </div>
+        <Category />
 
         <div className="my-12 flex justify-end drop-shadow-md">
           <select className="w-72 rounded-md green border border-gray-200 active:border-green-500" id="sortBy" data-te-select-init value={sort} onChange={handleSortChange}>
@@ -114,8 +95,8 @@ export default function ProductsList() {
                   <img src={productInfo.Product.product_image} alt={productInfo.Product.product_name} className="h-full w-full object-cover object-center sm:h-full sm:w-full" />
                 </div>
               </div>
-              <div className="flex flex-1 flex-col space-y-1 p-4">
-                <h3 className="text-md font-medium text-gray-900">
+              <div className="flex flex-1 flex-col px-4 py-3">
+                <h3 className="text-md font-medium text-gray-900 my-1">
                   {productInfo.Product.product_name}
                   {/* <a href={productInfo.Product.href}>
                     <span aria-hidden="true" className="absolute inset-0" />
@@ -123,9 +104,9 @@ export default function ProductsList() {
                   </a> */}
                 </h3>
 
-                {/* <p className="text-sm text-gray-500">{productInfo.Product.product_description}</p> */}
+                <p className="text-md text-gray-500 my-1">{productInfo.Product.weight} gram</p>
+
                 <div className="flex flex-1 flex-col justify-end">
-                  {/* <p className="text-sm italic text-gray-500">Stock : {productInfo.stock}</p> */}
                   <p className=" text-lg font-bold text-green-600">{rupiah(productInfo.Product.product_price)}</p>
                 </div>
               </div>
@@ -142,8 +123,6 @@ export default function ProductsList() {
             }}
           />
         </div>
-
-        {/* <Pagination /> */}
       </div>
     </div>
   );

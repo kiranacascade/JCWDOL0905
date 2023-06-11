@@ -8,7 +8,8 @@ module.exports = {
       upload(req, res, async (err) => {
         if (err) {
           console.log(err);
-          return res.status(400).json({
+          return res.status(400).send({
+            isError: true,
             message: "Error uploading image. Please complete your data",
           });
         }
@@ -17,16 +18,19 @@ module.exports = {
 
         if (!product_name || !product_price || !weight || !product_description || !id_category) {
           return res.status(400).send({
-            status: false,
+            isError: true,
             message: "Please complete your data",
           });
         }
 
         if (!req.file) {
-          return res.status(400).send("No file uploaded");
+          return res.status(400).send({
+            isError: true,
+            message: "No file chosen",
+          });
         }
 
-        let imageUrl = req.protocol + "://" + req.get("host") + "/products/" + req.file.filename;
+        let imageUrl = req.protocol + "://" + req.get("host") + "/api/products/" + req.file.filename;
 
         const newProduct = await product.create({
           product_name: product_name,
@@ -38,15 +42,15 @@ module.exports = {
         });
 
         res.status(200).send({
-          status: true,
+          isError: false,
           message: "Successfully add a product",
           data: newProduct,
         });
       });
     } catch (err) {
       console.log(err);
-      res.status(500).send({
-        status: false,
+      res.status(400).send({
+        isError: true,
         message: "Error adding a product",
       });
     }
@@ -56,27 +60,16 @@ module.exports = {
       const allProducts = await product.findAll({});
 
       res.status(200).send({
-        status: true,
+        isError: false,
         message: "Successfully retrieved all products",
         data: allProducts,
       });
     } catch (err) {
       console.log(err);
-      res.status(500).send(err);
-    }
-  },
-  fetchProductImage: async (req, res) => {
-    try {
-      const result = await product.findOne({
-        where: {
-          id: req.params.id,
-        },
+      res.status(500).send({
+        isError: true,
+        message: "Fetch all products failed",
       });
-      // console.log(result);
-      res.status(200).send(result.product_image);
-    } catch (err) {
-      console.log(err);
-      res.status(400).send(err);
     }
   },
 };

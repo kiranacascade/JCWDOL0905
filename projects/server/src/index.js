@@ -30,19 +30,15 @@ app.get("/api/greetings", (req, res, next) => {
     message: "Hello, Student !",
   });
 });
-app.use("/products", express.static(__dirname + "/public/products"));
-app.use("/categories", express.static(__dirname + "/public/categories"));
 
-app.use("/api/avatar", express.static(`${__dirname}/public/avatar`));
+app.use("/api/products", express.static(__dirname + "/public/products"));
+app.use("/api/categories", express.static(__dirname + "/public/categories"));
+
 const { categoryRouters, productRouters, inventoryRouters } = require("./routers");
-app.use("/category", categoryRouters);
-app.use("/product", productRouters);
-app.use("/inventory", inventoryRouters);
+app.use("/api/category", categoryRouters);
+app.use("/api/product", productRouters);
+app.use("/api/inventory", inventoryRouters);
 
-// app.get("/products/:name", (req, res) => {
-//   const path = __dirname + "/public/products/" + req.params.name;
-//   res.sendFile(path);
-// });
 // ===========================
 
 // not found

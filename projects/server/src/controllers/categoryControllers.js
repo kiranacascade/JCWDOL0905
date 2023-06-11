@@ -8,20 +8,27 @@ module.exports = {
       upload(req, res, async (err) => {
         if (err) {
           console.log(err);
-          return res.status(400).json({
+          return res.status(400).send({
+            isError: true,
             message: "Error uploading image",
           });
         }
         const { category_name } = req.body;
 
         if (!category_name) {
-          return res.status(400).send("Please provide a category name");
+          return res.status(400).send({
+            isError: true,
+            message: "Please provide a category name",
+          });
         }
         if (!req.file) {
-          return res.status(400).send("No file uploaded");
+          return res.status(400).send({
+            isError: true,
+            message: "No file chosen",
+          });
         }
 
-        let imageUrl = req.protocol + "://" + req.get("host") + "/categories/" + req.file.filename;
+        let imageUrl = req.protocol + "://" + req.get("host") + "/api/categories/" + req.file.filename;
 
         const newCategory = await category.create({
           category_name: category_name,
@@ -29,15 +36,15 @@ module.exports = {
         });
 
         res.status(200).send({
-          status: true,
-          message: "Successfully create new category",
+          isError: false,
+          message: "Successfully create a new category",
           data: newCategory,
         });
       });
     } catch (err) {
       console.log(err);
       res.status(500).send({
-        status: false,
+        isError: true,
         message: "Error creating category",
       });
     }
@@ -47,13 +54,16 @@ module.exports = {
       let result = await category.findAll({});
 
       res.status(200).send({
-        status: true,
+        isError: false,
         message: "Successfully fetch all categories",
         data: result,
       });
     } catch (err) {
       console.log(err);
-      res.status(400).send(err);
+      res.status(400).send({
+        isError: true,
+        message: "Fetch all category failed",
+      });
     }
   },
 };
