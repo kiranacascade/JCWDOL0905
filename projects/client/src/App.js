@@ -11,8 +11,28 @@ import ResendEmailResetPW from "./pages/user/ResendEmailResetPW"
 import VerificationBridge from "./pages/user/VerificationBridge";
 import VerificationPasswordBridge from "./pages/user/VerificationPasswordBridge";
 import EditProfile from "./pages/user/EditProfile";
+import { api } from "./api/api";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { login } from "./redux/userSlice";
 
 function App() {
+
+const dispatch = useDispatch()
+
+  useEffect(()=>{
+    const token = localStorage.getItem("token")
+
+    const fetchUser = async (token) => {
+      await api.get(`/users/auth/${token}`).then((res)=>{
+        // console.log(res)
+      dispatch(login(res.data.user))
+      })
+    }
+    fetchUser(token)
+
+  },[])
+
   return (
     <BrowserRouter>
       <Routes>

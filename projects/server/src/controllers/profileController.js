@@ -7,7 +7,7 @@ module.exports = {
             const profileData = await users.findOne({where: {id: req.params.id}});
             if (!profileData) {
                 return res.status(400).send({code: 400, message: `Invalid id user : ${req.params.id}`})}
-            res.status(200).send({code: 200, message: "Get profile success", data: profileData});
+            res.status(200).send({code: 200, message: "Get profile data success", data: profileData});
 
         } catch (error) {
             console.log(error);

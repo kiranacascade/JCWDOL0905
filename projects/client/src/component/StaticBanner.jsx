@@ -21,14 +21,14 @@ export default function Carousel() {
   infinite: true,
   autoplay: true,
   speed: 500,
-  autoplaySpeed: 50000,
+  autoplaySpeed: 5000,
   slidesToShow: 1,
   slidesToScroll: 1
  };
 
  return (
     <Center>
-        <Box className="carousel" w="100vw" maxW="960px" padding={'10px'}>
+        <Box className="carousel" w={[300, 400, 500, 700, 900]} padding={'10px'}>
         {/* Slider */}
             <Slider {...settings}>
                 {cards.map((url, index) => (
@@ -39,7 +39,7 @@ export default function Carousel() {
                     backgroundPosition="center"
                     backgroundRepeat="no-repeat"
                     backgroundSize="cover"
-                    h="276px"
+                    h={[100, 110, 150, 200, 300]}
                     backgroundImage={`url('${url}')`}
                     />
                 ))}

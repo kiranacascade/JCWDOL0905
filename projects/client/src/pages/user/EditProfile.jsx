@@ -4,6 +4,8 @@ import { api } from "../../api/api";
 import toast, { Toaster } from "react-hot-toast";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import logo_groceria from "../../assets/images/logo-brand-groceria.png"
+import NavBar from "../../component/NavBar";
+
 
 const EditProfile = () => {
     const [email, setEmail] = useState("");
@@ -12,7 +14,8 @@ const EditProfile = () => {
     const [profiles, setProfiles] = useState({name: "", gender: "", email: "", birthdate: ""});
     const Navigate = useNavigate();
 
-    const userId = 2 //user id sementara
+    // const userId = 2
+    const userId = localStorage.getItem("userId")
 
     useEffect(() => {
         async function fetchProfiles() {
@@ -34,7 +37,6 @@ const EditProfile = () => {
 
             setProfiles(profilesData);
             setEmail(profilesData.email)
-            console.log(profiles)
         }
         fetchProfiles();
     }, []);
@@ -79,7 +81,9 @@ const EditProfile = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+        <>
+        <NavBar/>
+          <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
             <button onClick={() => Navigate("/")}><img src={logo_groceria} alt="groceria" style={{ height: "75px" }} /></button>
             <div className="flex flex-col bg-white shadow-md mt-8 px-4 sm:px-6 md:px-8 lg:px-10 py-5 rounded-3xl w-2/3 sm:w-3/4 md:w-2/3 lg:w-1/2 max-w-md">
                 <div className="font-medium self-center text-xl text-gray-800">Edit Profile</div>
@@ -151,6 +155,8 @@ const EditProfile = () => {
                 </div>
             </div>
         </div>
+        </>
+      
     );
 };
 
