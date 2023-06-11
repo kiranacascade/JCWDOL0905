@@ -3,16 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Pagination } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
-import { Category } from "../components/category";
+import { useParams } from "react-router-dom";
+import { Category } from "../../components/category";
+import { api } from "../../api/api";
 
-export default function ProductsList() {
+export default function ProductsByCategory() {
   const [productsInfo, setProductsInfo] = useState([]);
-  const [sort, setSort] = useState(0);
+  const [sort, setSort] = useState(1);
 
   // pagination
   const [activePage, setActivePage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const navigate = useNavigate();
+
+  const { id } = useParams();
 
   useEffect(() => {
     async function fetchProducts() {
@@ -22,33 +26,32 @@ export default function ProductsList() {
         switch (parseInt(sort)) {
           // sort by name A-Z
           case 1:
-            url = `http://localhost:8000/api/inventory/fetch?order=product_name&sort=ASC&page=${activePage}`;
+            url = `/inventory/fetch?order=product_name&sort=ASC&category=${id}&page=${activePage}`;
             break;
           // sort by name Z-A
           case 2:
-            url = `http://localhost:8000/api/inventory/fetch?order=product_name&sort=DESC&page=${activePage}`;
+            url = `/inventory/fetch?order=product_name&sort=DESC&category=${id}&page=${activePage}`;
             break;
           // sort by price L-H
           case 3:
-            url = `http://localhost:8000/api/inventory/fetch?order=product_price&sort=ASC&page=${activePage}`;
+            url = `/inventory/fetch?order=product_price&sort=ASC&category=${id}&page=${activePage}`;
             break;
           // sort by price H-L
           case 4:
-            url = `http://localhost:8000/api/inventory/fetch?order=product_price&sort=DESC&page=${activePage}`;
+            url = `/inventory/fetch?order=product_price&sort=DESC&category=${id}&page=${activePage}`;
             break;
           default:
-            url = `http://localhost:8000/api/inventory/fetch?order=createdAt&sort=ASC&page=${activePage}`;
+            url = `/inventory/fetch?order=createdAt&sort=ASC&category=${id}&page=${activePage}`;
         }
 
-        const productData = await axios.get(url, {});
-        // console.log(productData.data.data);
+        const productData = await api.get(url, {});
+        console.log(productData.data);
         setProductsInfo(productData.data.data);
         setTotalPage(Math.ceil(productData.data.count / 12));
       } catch (err) {
         console.log(err);
       }
     }
-
     fetchProducts();
   }, [sort, activePage]);
 
@@ -77,7 +80,7 @@ export default function ProductsList() {
         <Category />
 
         <div className="my-12 flex justify-end drop-shadow-md">
-          <select className="w-72 rounded-md border border-gray-200 focus:border-green-500 active:border-green-500 hover:border-green-500 target:border-green-500" id="sortBy" data-te-select-init value={sort} onChange={handleSortChange}>
+          <select className="w-72 rounded-md green border border-gray-200 active:border-green-500" id="sortBy" data-te-select-init value={sort} onChange={handleSortChange}>
             <option value="1">Sort by Product Name A-Z</option>
             <option value="2">Sort by Product Name Z-A</option>
             <option value="3">Sort by Price Lowest-Highest</option>
@@ -93,7 +96,7 @@ export default function ProductsList() {
                   <img src={productInfo.Product.product_image} alt={productInfo.Product.product_name} className="h-full w-full object-cover object-center sm:h-full sm:w-full" />
                 </div>
               </div>
-              <div className="flex flex-1 flex-col space-y-1 px-4 py-3">
+              <div className="flex flex-1 flex-col px-4 py-3">
                 <h3 className="text-md font-medium text-gray-900 my-1">
                   {productInfo.Product.product_name}
                   {/* <a href={productInfo.Product.href}>
@@ -103,6 +106,7 @@ export default function ProductsList() {
                 </h3>
 
                 <p className="text-md text-gray-500 my-1">{productInfo.Product.weight} gram</p>
+
                 <div className="flex flex-1 flex-col justify-end">
                   <p className=" text-lg font-bold text-green-600">{rupiah(productInfo.Product.product_price)}</p>
                 </div>

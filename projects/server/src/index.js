@@ -42,6 +42,7 @@ app.use((req, res, next) => {
   }
 });
 
+
 // error
 app.use((err, req, res, next) => {
   if (req.path.includes("/api/")) {
@@ -66,6 +67,7 @@ app.get("*", (req, res) => {
 //#endregion
 
 app.listen(PORT, (err) => {
+
   if (err) {
     console.log(`ERROR: ${err}`);
   } else {

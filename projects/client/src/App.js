@@ -1,5 +1,3 @@
-
-
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/user/LandingPage";
@@ -12,9 +10,8 @@ import ResetPassword from "./pages/user/ResetPassword";
 import ResendEmailResetPW from "./pages/user/ResendEmailResetPW"
 import VerificationBridge from "./pages/user/VerificationBridge";
 import VerificationPasswordBridge from "./pages/user/VerificationPasswordBridge";
-import ProductsList from "./pages/productsList";
-import CategoryPage from "./pages/categoryPage";
-
+import ProductsList from "./pages/user/productsList";
+import CategoryPage from "./pages/user/categoryPage";
 
 
 function App() {
@@ -35,11 +32,7 @@ function App() {
         <Route Component={CategoryPage} path="/category/:id" />
       </Routes>
     </BrowserRouter>
-    
-        
-     
 
-    
   );
 }
 

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { api } from "../api/api";
 
 export const Category = () => {
   const [categories, setCategories] = useState([]);
@@ -9,8 +10,8 @@ export const Category = () => {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const categoriesData = await axios.get("http://localhost:8000/api/category/fetch", {});
-        // console.log(categoriesData.data.data);
+        const categoriesData = await api.get("/category/fetch");
+        console.log(categoriesData.data.data);
         setCategories(categoriesData.data.data);
       } catch (err) {
         console.log(err);
