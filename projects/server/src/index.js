@@ -12,24 +12,16 @@ const app = express();
 //   })
 // );
 
-app.use(cors());
+app.use(cors())
 
 app.use(express.json());
 
 //#region API ROUTES
+// Import routes
+const { userRouter } = require("./routers")
 
-// ===========================
-// NOTE : Add your routes here
-
-app.get("/api", (req, res) => {
-  res.send(`Hello, this is my API`);
-});
-
-app.get("/api/greetings", (req, res, next) => {
-  res.status(200).json({
-    message: "Hello, Student !",
-  });
-});
+// Add routes
+app.use('/api/users', userRouter)
 
 app.use("/api/products", express.static(__dirname + "/public/products"));
 app.use("/api/categories", express.static(__dirname + "/public/categories"));
@@ -74,10 +66,10 @@ app.get("*", (req, res) => {
 //#endregion
 
 app.listen(PORT, (err) => {
-  // db.sequelize.sync({ alter: true });
   if (err) {
     console.log(`ERROR: ${err}`);
   } else {
+    // db.sequelize.sync({alter: true})
     console.log(`APP RUNNING at ${PORT} ✅`);
   }
 });
