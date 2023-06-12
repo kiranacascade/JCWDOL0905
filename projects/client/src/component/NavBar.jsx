@@ -5,6 +5,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import logo from "../assets/images/logo-brand-groceria.png"
 import { useSelector } from 'react-redux'
 
+
 const user = {
   name: 'Tom Cook',
   email: 'tom@example.com',
@@ -32,10 +33,19 @@ function classNames(...classes) {
 }
 
 export default function NavBar() {
+    const [search, setSearch] = useState([]);
+    
     const isLogin = false
     const user = useSelector((state) => state.userSlice)
-    useEffect(()=> {
-    },[])
+    useEffect(() => {
+    }, []);
+    
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter") {
+        const searchParams = new URLSearchParams({ product_name: search });
+        window.location.href = `/product?${searchParams}`;
+      }
+    };
 
     return (
         <Disclosure as="header" className="bg-white">
@@ -65,8 +75,10 @@ export default function NavBar() {
                                         id="search"
                                         name="search"
                                         className="block w-full rounded-md border border-transparent bg-white-700 py-2 pl-10 pr-3 text-sm placeholder-gray-400 focus:border-white focus:bg-white focus:text-gray-900 focus:placeholder-gray-500 focus:outline-none focus:ring-white sm:text-sm"
-                                        placeholder="Search"
+                                        placeholder="Search on Groceria"
                                         type="search"
+                                        onChange={(e) => setSearch(e.target.value)}
+                                        onKeyDown={handleKeyDown}
                                         />
                                     </div>
                                 </div>

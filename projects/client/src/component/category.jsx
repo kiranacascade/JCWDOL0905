@@ -10,8 +10,8 @@ export const Category = () => {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const categoriesData = await api.get("/category/fetch");
-        console.log(categoriesData.data.data);
+        const categoriesData = await api.get("/category");
+        // console.log(categoriesData.data.data);
         setCategories(categoriesData.data.data);
       } catch (err) {
         console.log(err);

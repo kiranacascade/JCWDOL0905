@@ -3,7 +3,7 @@ const { inventoryControllers } = require("../controllers");
 const auth = require('../middleware/auth')
 
 
-router.post("/add", auth, inventoryControllers.addInventory);
-router.get("/fetch", auth, inventoryControllers.fetchAllInventories);
+router.post("/", auth, inventoryControllers.addInventory);
+router.get("/", auth, inventoryControllers.fetchAllInventories);
 
 module.exports = router;

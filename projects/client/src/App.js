@@ -15,7 +15,7 @@ import { api } from "./api/api";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "./redux/userSlice";
-import ProductsList from "./pages/user/productsList";
+import ProductsPage from "./pages/user/productsPage";
 import CategoryPage from "./pages/user/categoryPage";
 
 
@@ -50,7 +50,7 @@ const dispatch = useDispatch()
         <Route Component={VerificationPasswordBridge} path="/verify-forgot-password"/>
         <Route Component={LandingPage} path="/" />
         <Route Component={EditProfile} path="/edit-profile" />
-        <Route Component={ProductsList} path="/product" />
+        <Route Component={ProductsPage} path="/product" />
         <Route Component={CategoryPage} path="/category/:id" />
       </Routes>
     </BrowserRouter>
