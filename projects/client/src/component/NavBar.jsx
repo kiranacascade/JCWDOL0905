@@ -132,8 +132,9 @@ function DesktopMenu(props){
 export default function NavBar() {
     const [search, setSearch] = useState([]);
     
-    const isLogin = false
-    const user = useSelector((state) => state.userSlice)    
+    const user = useSelector((state) => state.userSlice);
+    const isLogin = localStorage.getItem("token");
+
     const handleKeyDown = (event) => {
       if (event.key === "Enter") {
         const searchParams = new URLSearchParams({ product_name: search });
