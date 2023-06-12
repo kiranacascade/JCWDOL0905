@@ -12,6 +12,8 @@ export default function ProductsByCategory() {
   const [productsInfo, setProductsInfo] = useState([]);
   const [sort, setSort] = useState(1);
 
+  const branchId = localStorage.getItem("branchId");
+
   // pagination
   const [activePage, setActivePage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -43,7 +45,11 @@ export default function ProductsByCategory() {
             url = `/inventory/?order=createdAt&sort=ASC&category=${id}&page=${activePage}`;
         }
 
-        const productData = await api.get(url, {});
+        const productData = await api.get(url, {
+          params : {
+            branchId
+          }
+        });
         // console.log(productData.data);
         setProductsInfo(productData.data.data);
         setTotalPage(Math.ceil(productData.data.count / 12));       

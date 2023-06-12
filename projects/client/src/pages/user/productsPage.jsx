@@ -8,6 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import NavBar from "../../component/NavBar";
 import { ProductsList } from "../../component/productsList";
 
+
 export default function ProductsPage() {
   const [productsInfo, setProductsInfo] = useState([]);
   const [sort, setSort] = useState(0);
@@ -16,6 +17,8 @@ export default function ProductsPage() {
   const searchParams = new URLSearchParams(location.search);
   const searchedName = searchParams.get("product_name");
 
+  const branchId = localStorage.getItem("branchId");
+  console.log(branchId)
   // pagination
   const [activePage, setActivePage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -47,7 +50,11 @@ export default function ProductsPage() {
             url = `/inventory/?order=createdAt&sort=ASC&name=${searchValue}&page=${activePage}`;
         }
 
-        const productData = await api.get(url);
+        const productData = await api.get(url, {
+          params : {
+            branchId
+          }
+        });
         // console.log(productData.data.data);
         searchedName && productData.data.data.length < 1 && toast.error(`${searchValue} is not found`);
         setProductsInfo(productData.data.data);
