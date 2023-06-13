@@ -6,13 +6,15 @@ import { Category } from "../../component/category";
 import { api } from "../../api/api";
 import NavBar from "../../component/NavBar";
 import { ProductsList } from "../../component/productsList";
+import { useSelector } from "react-redux";
 
 
 export default function ProductsByCategory() {
   const [productsInfo, setProductsInfo] = useState([]);
   const [sort, setSort] = useState(1);
 
-  const branchId = localStorage.getItem("branchId");
+  const branchId = useSelector((state) => state.branchSlice.branchId);
+  // const branchId = localStorage.getItem("branchId");
 
   // pagination
   const [activePage, setActivePage] = useState(1);
@@ -42,7 +44,7 @@ export default function ProductsByCategory() {
             url = `/inventory/?order=product_price&sort=DESC&category=${id}&page=${activePage}`;
             break;
           default:
-            url = `/inventory/?order=createdAt&sort=ASC&category=${id}&page=${activePage}`;
+            url = `/inventory/?order=product_name&sort=ASC&category=${id}&page=${activePage}`;
         }
 
         const productData = await api.get(url, {
@@ -50,6 +52,7 @@ export default function ProductsByCategory() {
             branchId
           }
         });
+        console.log(productData.data.data);
         setProductsInfo(productData.data.data);
         setTotalPage(Math.ceil(productData.data.count / 12));       
       } catch (err) {
@@ -65,7 +68,7 @@ export default function ProductsByCategory() {
   };
 
   return (
-    <div className="bg-neutral-100">
+    <div className="bg-neutral-100 min-h-screen">
       <NavBar />
       <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8 md:py-6">
         <h2 className="sr-only">Products</h2>

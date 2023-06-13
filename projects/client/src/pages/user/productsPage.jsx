@@ -7,7 +7,7 @@ import { api } from "../../api/api";
 import toast, { Toaster } from "react-hot-toast";
 import NavBar from "../../component/NavBar";
 import { ProductsList } from "../../component/productsList";
-
+import { useSelector } from "react-redux";
 
 export default function ProductsPage() {
   const [productsInfo, setProductsInfo] = useState([]);
@@ -17,7 +17,9 @@ export default function ProductsPage() {
   const searchParams = new URLSearchParams(location.search);
   const searchedName = searchParams.get("product_name");
 
-  const branchId = localStorage.getItem("branchId");
+  // const branchId = localStorage.getItem("branchId");
+  const branchId = useSelector((state) => state.branchSlice.branchId);
+
   // pagination
   const [activePage, setActivePage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -54,7 +56,10 @@ export default function ProductsPage() {
             branchId
           }
         });
-        // console.log(productData.data.data);
+        console.log(productData.data.data);
+        // if (searchedName && productData.data.length < 1) {
+        //   toast.error(`${searchValue} is not found`)
+        // }
         searchedName && productData.data.data.length < 1 && toast.error(`${searchValue} is not found`);
         setProductsInfo(productData.data.data);
         setTotalPage(Math.ceil(productData.data.count / 12));
@@ -70,20 +75,8 @@ export default function ProductsPage() {
     setActivePage(1); // Reset the active page when the sort option changes
   };
 
-  function rupiah(price) {
-    const priceString = price.toString();
-    const len = priceString.length;
-    let str = "";
-    for (let i = 0; i < len; i++) {
-      str += priceString[i];
-      if ((len - i - 1) % 3 === 0 && i !== len - 1) {
-        str += ".";
-      }
-    }
-    return `Rp ${str}`;
-  }
   return (
-    <div className="bg-neutral-100">
+    <div className="bg-neutral-100 min-h-screen">
       <NavBar />
       <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8 md:py-6">
         <h2 className="sr-only">Products</h2>
