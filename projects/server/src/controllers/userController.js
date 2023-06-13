@@ -176,12 +176,38 @@ module.exports = {
     }
   },
   getUserByToken: async (req, res) => {
-    try{
+    try {
       const user = jwt.verify(req.params.token, jwtKey);
       const getUser = await users.findOne({id: user.id_user})
       res.send({code: 200, message: "Get user by token success", user: getUser})
     } catch(error){
       res.status(400).send({ error: "Invalid token" });
     }
+  },
+  changePassword: async (req, res) => {
+    try {
+      let { id_user, oldPassword, newPassword, confirmNewPassword } = req.body;
+      if (!oldPassword || !newPassword || !confirmNewPassword) 
+        return res.status(404).send({isError: true, message: "Please fill all the required fields"});
+      const findUser = await users.findByPk(id_user)
+      if (!findUser)
+        return res.status(404).send({isError: true, message: "User not found"})
+      const isPasswordMatch = await bcrypt.compare(oldPassword, findUser.password)
+      if (!isPasswordMatch)
+        return res.status(404).send({isError: true, message: "Wrong old password"})
+      let char = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=[\]{}|\\,./?'":;<>~`])(?!.*\s).{8,}$/
+      if (!char.test(newPassword))
+        return res.status(404).send({isError: true, message: "Password must contain at least 8 characters including an uppercase letter, a symbol, and a number"})
+      if (confirmNewPassword !== newPassword)
+        return res.status(404).send({isError: true, message: "New password and confirm new password do not match"});
+      const salt = await bcrypt.genSalt(10);
+      const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+      await users.update({password: hashedNewPassword}, {where: {id: id_user}})
+      res.status(200).send({isError: false, message: "Change password success"});
+    } catch (error) {
+      console.log(error);
+      res.status(404).send({isError: true, message: "Change password failed"})
+    }
   }
 };
+ 

@@ -15,11 +15,9 @@ const Login = () => {
   const [errorEmail, setErrorEmail] = useState();
   const [errorPassword, setErrorPassword] = useState();
   const Navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const dispatch = useDispatch()
-
-
-let validateEmail = (value) => {
+  let validateEmail = (value) => {
     if (value === "") {
       setErrorEmail("Please input your email");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
@@ -48,11 +46,7 @@ let validateEmail = (value) => {
       const response = await api.post("users/login", {email: email, password: password});
       toast.success(response.data.message);
       localStorage.setItem("token", `${response.data.data.access_token}`);
-
-      dispatch(
-       login(response.data.data.user)
-      );
-
+      dispatch(login(response.data.data.user));
       setTimeout(() => {Navigate('/')}, 1500);
     } catch (error) {
       toast.error(error.response.data.message);

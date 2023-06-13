@@ -48,8 +48,7 @@ const dispatch = useDispatch()
         <Route Component={ResetPassword} path="/reset-password" />
         <Route Component={ResendEmailResetPW} path="/resend-forgot-password" />
         <Route Component={VerificationBridge} path="/verify" />
-        <Route Component={VerificationPasswordBridge} path="/verify-forgot-password"/>
-        <Route Component={EditProfile} path="/edit-profile" />   
+        <Route Component={VerificationPasswordBridge} path="/verify-forgot-password"/>   
         <Route Component={EditProfile} path="/edit-profile" />
         <Route Component={ProductsPage} path="/product" />
         <Route Component={CategoryPage} path="/category/:id" />    
