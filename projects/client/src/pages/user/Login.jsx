@@ -46,7 +46,7 @@ const Login = () => {
       const response = await api.post("users/login", {email: email, password: password});
       toast.success(response.data.message);
       localStorage.setItem("token", `${response.data.data.access_token}`);
-      dispatch(login(response.data.data.user));
+      // dispatch(login(response.data.data.user));
       setTimeout(() => {Navigate('/')}, 1500);
     } catch (error) {
       toast.error(error.response.data.message);
