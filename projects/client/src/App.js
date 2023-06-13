@@ -16,6 +16,9 @@ import { api } from "./api/api";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "./redux/userSlice";
+import ProductsPage from "./pages/user/productsPage";
+import CategoryPage from "./pages/user/categoryPage";
+
 
 function App() {
 
@@ -46,12 +49,15 @@ const dispatch = useDispatch()
         <Route Component={ResendEmailResetPW} path="/resend-forgot-password" />
         <Route Component={VerificationBridge} path="/verify" />
         <Route Component={VerificationPasswordBridge} path="/verify-forgot-password"/>
-        <Route Component={EditProfile} path="/edit-profile" />       
+        <Route Component={EditProfile} path="/edit-profile" />   
+        <Route Component={EditProfile} path="/edit-profile" />
+        <Route Component={ProductsPage} path="/product" />
+        <Route Component={CategoryPage} path="/category/:id" />    
         <Route Component={LandingPage} path="/" />
         <Route Component={Page404} path="*" />
-        
       </Routes>
     </BrowserRouter>
+
   );
 }
 
