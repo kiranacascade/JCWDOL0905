@@ -11,6 +11,7 @@ import ResendEmailResetPW from "./pages/user/ResendEmailResetPW"
 import VerificationBridge from "./pages/user/VerificationBridge";
 import VerificationPasswordBridge from "./pages/user/VerificationPasswordBridge";
 import EditProfile from "./pages/user/EditProfile";
+import Page404 from "./pages/404"
 import { api } from "./api/api";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -45,8 +46,10 @@ const dispatch = useDispatch()
         <Route Component={ResendEmailResetPW} path="/resend-forgot-password" />
         <Route Component={VerificationBridge} path="/verify" />
         <Route Component={VerificationPasswordBridge} path="/verify-forgot-password"/>
+        <Route Component={EditProfile} path="/edit-profile" />       
         <Route Component={LandingPage} path="/" />
-        <Route Component={EditProfile} path="/edit-profile" />
+        <Route Component={Page404} path="*" />
+        
       </Routes>
     </BrowserRouter>
   );
