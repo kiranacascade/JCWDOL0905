@@ -3,6 +3,7 @@ import Delivered from "../../component/Delivered";
 import Carousel from "../../component/StaticBanner";
 import Footer from "../../component/Footer";
 import Suggested from "../../component/ProductSuggestion";
+import { Category } from "../../component/category";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { URL_GEO } from "../../helper";
@@ -20,7 +21,10 @@ const LandingPage = () => {
   const user = useSelector((state) => state.userSlice)
 
   const currentLocation = { userLocation, userLat, userLng };
-  const branchId = localStorage.getItem("branchId");
+
+  const branchId = useSelector(
+    (state) => state.branchSlice.branchId
+  );
 
   const dispatch = useDispatch();
 
@@ -38,20 +42,11 @@ const LandingPage = () => {
           const urlGetLocation = `${URL_GEO}&q=${position.coords.latitude}%2C+${position.coords.longitude}`;
           const response = await axios.get(urlGetLocation);
 
-          let result = response.data.results[0].components.city;
-          if (!result) {
-            result = response.data.results[0].components.county;
-          } else if (!result) {
-            result = response.data.results[0].components.village;
-          } else if (!result) {
-            result = response.data.results[0].formatted;
-          }
-
           dispatch(
             setUsrLocation({
               usrLat: position.coords.latitude,
               usrLng: position.coords.longitude,
-              usrLocation: result,
+              usrLocation: response.data.results[0].components.city || response.data.results[0].components.county || response.data.results[0].components.municipality || response.data.results[0].formatted || "...",
             })
           );
         },
@@ -60,7 +55,7 @@ const LandingPage = () => {
       );
     }
     getLocation();
-  }, []);
+  }, [user, branchId]);
 
   useEffect(() => {
     async function fetchData() {
@@ -91,10 +86,14 @@ const LandingPage = () => {
         addressData={address}
       />
       <Carousel />
+      <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8 md:py-6 bg-neutral-100">
+        <Category/>
+      </div>
       <Suggested productsData={products} />
       <Footer />
     </div>
   );
+ 
 };
 
 export default LandingPage;

@@ -19,9 +19,12 @@ import {
     FormLabel,
 } from '@chakra-ui/react'
 import toast, { Toaster } from "react-hot-toast";
+import { useSelector, useDispatch } from "react-redux";
+import branchSlice, { getBranchId } from "../redux/branchSlice";
 
 export default function Delivered(props) {
     const Navigate = useNavigate()
+    const dispatch = useDispatch()
     const branchsData = props.branchsData
     const addressData = props.addressData
     const currentLocation = props.currentLocation
@@ -80,6 +83,11 @@ export default function Delivered(props) {
         console.log(branchsData)
 
         localStorage.setItem("branchId", sortedArr[0].id);
+        dispatch(
+            getBranchId({
+              branchId: sortedArr[0].id,
+            })
+        );
     }
 
     const setAddress = async () => {

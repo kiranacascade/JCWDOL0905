@@ -33,7 +33,7 @@ export default function Carousel() {
 
  return (
     <Center>
-        <Box className="carousel" w={[350, 570, 755, 980, 1180]} padding={'10px'}>
+        <Box className="carousel" w={[350, 570, 755, 900, 1050]} padding={'10px'}>
         {/* Slider */}
             <Slider {...settings}>
                 {cards.map((url, index) => (
