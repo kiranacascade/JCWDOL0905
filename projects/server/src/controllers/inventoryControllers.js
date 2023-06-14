@@ -60,7 +60,7 @@ module.exports = {
         limit: pageSize,
         offset: (page - 1) * pageSize,
       });
-      console.log(allInventories);
+      // console.log(allInventories);
       res.status(200).send({
         isError: false,
         message: "Successfully fetch inventories",
