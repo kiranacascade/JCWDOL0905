@@ -13,7 +13,7 @@ export default function ProductsPage() {
   const [productsInfo, setProductsInfo] = useState([]);
   const [sort, setSort] = useState(0);
   const location = useLocation();
-  const [searchValue, setSearchValue] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
   const searchParams = new URLSearchParams(location.search);
   const searchedName = searchParams.get("product_name");
 
@@ -68,6 +68,7 @@ export default function ProductsPage() {
       }
     }
     fetchProducts();
+    console.log(sort, searchValue, activePage)
   }, [sort, searchValue, activePage]);
 
   const handleSortChange = (e) => {
