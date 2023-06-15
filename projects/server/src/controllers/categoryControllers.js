@@ -21,14 +21,14 @@ module.exports = {
         });
       }
 
-      upload(req, res, async (err) => {
-        if (err) {
-          console.log(err);
-          return res.status(400).send({
-            isError: true,
-            message: "Error uploading image",
-          });
-        }
+      // upload(req, res, async (err) => {
+        // if (err) {
+        //   console.log(err);
+        //   return res.status(400).send({
+        //     isError: true,
+        //     message: "Error uploading image",
+        //   });
+        // }
         // const { category_name } = req.body;
 
         // if (!category_name) {
@@ -56,7 +56,7 @@ module.exports = {
           message: "Successfully create a new category",
           data: newCategory,
         });
-      });
+      ;
     } catch (err) {
       console.log(err);
       res.status(500).send({
