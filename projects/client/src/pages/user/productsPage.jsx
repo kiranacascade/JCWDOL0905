@@ -11,18 +11,16 @@ import { useSelector } from "react-redux";
 
 export default function ProductsPage() {
   const [productsInfo, setProductsInfo] = useState([]);
-  const [sort, setSort] = useState(0);
-  const location = useLocation();
   const [searchValue, setSearchValue] = useState("");
+  const [sort, setSort] = useState(0);
+  const [activePage, setActivePage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+
+  const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const searchedName = searchParams.get("product_name");
 
-  // const branchId = localStorage.getItem("branchId");
-  const branchId = useSelector((state) => state.branchSlice.branchId);
-
-  // pagination
-  const [activePage, setActivePage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
+  const branchId = useSelector((state) => state.branchSlice.branchId);  
 
   useEffect(() => {
     async function fetchProducts() {
@@ -56,10 +54,7 @@ export default function ProductsPage() {
             branchId
           }
         });
-        console.log(productData.data.data);
-        // if (searchedName && productData.data.length < 1) {
-        //   toast.error(`${searchValue} is not found`)
-        // }
+
         searchedName && productData.data.data.length < 1 && toast.error(`${searchValue} is not found`);
         setProductsInfo(productData.data.data);
         setTotalPage(Math.ceil(productData.data.count / 12));
@@ -73,7 +68,7 @@ export default function ProductsPage() {
 
   const handleSortChange = (e) => {
     setSort(e.target.value);
-    setActivePage(1); // Reset the active page when the sort option changes
+    setActivePage(1);
   };
 
   return (
@@ -102,7 +97,6 @@ export default function ProductsPage() {
             totalPages={totalPage}
             onPageChange={(e, pageInfo) => {
               setActivePage(pageInfo.activePage);
-              console.log(pageInfo);
             }}
           />
         </div>

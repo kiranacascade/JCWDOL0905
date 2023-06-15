@@ -18,7 +18,7 @@ import { login } from "./redux/userSlice";
 import { setBranchId } from "./redux/branchSlice";
 import ProductsPage from "./pages/user/productsPage";
 import CategoryPage from "./pages/user/categoryPage";
-import { Spinner } from "@chakra-ui/react";
+import { Loading } from "./pages/Loading";
 
 
 function App() {
@@ -49,7 +49,7 @@ function App() {
   },[])
 
   return (
-    <>{isLoading ? <Spinner> </Spinner> : 
+    <>{isLoading ? <Loading /> : 
     <BrowserRouter>
       <Routes>
         <Route Component={Register} path="/register" />
@@ -67,11 +67,8 @@ function App() {
         <Route Component={CategoryPage} path="/category/:id" />
       </Routes>
     </BrowserRouter>
-    }
-    
+    } 
     </>
-    
-
   );
 }
 
