@@ -28,11 +28,4 @@ module.exports = {
       res.status(400).send("Invalid Token");
     }
   },
-//   checkRole : async (req, res, next) => {
-//     if (req.admin.role) {
-//       return next();
-//     }
-//     return res.status(401).send("Your account hasn't been verified");
-//   },
-  
 };

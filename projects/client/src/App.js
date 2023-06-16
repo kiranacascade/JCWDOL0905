@@ -19,6 +19,7 @@ import { setBranchId } from "./redux/branchSlice";
 import ProductsPage from "./pages/user/productsPage";
 import CategoryPage from "./pages/user/categoryPage";
 import { Loading } from "./pages/Loading";
+import { ManageCategory } from "./pages/admin/ManageCategory";
 
 
 function App() {
@@ -65,6 +66,7 @@ function App() {
         <Route Component={EditProfile} path="/edit-profile" />
         <Route Component={ProductsPage} path="/product" />
         <Route Component={CategoryPage} path="/category/:id" />
+        <Route Component={ManageCategory} path="/manage-category" />
       </Routes>
     </BrowserRouter>
     } 
