@@ -41,6 +41,7 @@ export default function EditCategoryModal({ open, setOpen, onClose, category}) {
       document.getElementById("category_name").value = "";
 
       toast.success(response.data.message);
+      window.location.reload();
       handleClose();
     } catch (error) {
       console.log(error);

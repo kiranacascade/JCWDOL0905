@@ -41,6 +41,7 @@ export default function AddCategoryModal({ open, setOpen, onClose}) {
       document.getElementById("category_name").value = "";
 
       toast.success(response.data.message);
+      window.location.reload();
       handleClose();
     } catch (error) {
       console.log(error);

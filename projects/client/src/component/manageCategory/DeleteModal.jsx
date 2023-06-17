@@ -29,6 +29,7 @@ export default function DeleteCategoryModal({ open, setOpen, onClose, categoryId
         },
       });
       toast.success(response.data.message);
+      window.location.reload();
       handleClose();
     } catch (error) {
       console.log(error);
