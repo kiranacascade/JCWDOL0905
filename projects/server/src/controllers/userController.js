@@ -5,7 +5,8 @@ const jwt = require("jsonwebtoken");
 const tokens = db.Token;
 const sendEmail = require("../helper/sendEmail");
 const jwtKey = process.env.JWT_SECRET_KEY;
-const { checkReferralCodeUniqueness, generateRandomReferralCode } = require('../helper/referralCodeGenerator')
+const { checkReferralCodeUniqueness, generateRandomReferralCode } = require('../helper/referralCodeGenerator');
+const { where } = require("sequelize");
 const client_url = process.env.CLIENT_URL
 
 module.exports = {
@@ -178,7 +179,9 @@ module.exports = {
   getUserByToken: async (req, res) => {
     try {
       const user = jwt.verify(req.params.token, jwtKey);
-      const getUser = await users.findOne({id: user.id_user})
+      console.log('user', user);
+      const getUser = await users.findOne({where: {id: user.id_user}})
+      console.log('getUser', getUser);
       res.send({code: 200, message: "Get user by token success", user: getUser})
     } catch(error){
       res.status(400).send({ error: "Invalid token" });

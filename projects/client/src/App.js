@@ -19,6 +19,7 @@ import { login } from "./redux/userSlice";
 import { setBranchId } from "./redux/branchSlice";
 import ProductsPage from "./pages/user/productsPage";
 import CategoryPage from "./pages/user/categoryPage";
+import ChangePassword from "./pages/user/ChangePassword";
 
 
 function App() {
@@ -58,7 +59,8 @@ function App() {
         <Route Component={VerificationPasswordBridge} path="/verify-forgot-password"/>   
         <Route Component={EditProfile} path="/edit-profile" />
         <Route Component={ProductsPage} path="/product" />
-        <Route Component={CategoryPage} path="/category/:id" />    
+        <Route Component={CategoryPage} path="/category/:id" />  
+        <Route Component={ChangePassword} path="/change-password" />   
         <Route Component={LandingPage} path="/" />
         <Route Component={Page404} path="*" />
       </Routes>

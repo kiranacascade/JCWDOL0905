@@ -1,7 +1,7 @@
 import NotFoundImg from "../assets/images/page_not_found.svg";
 import { useNavigate } from "react-router-dom";
 
-const VerificationSuccess = () => {
+const PageNotFound = () => {
   const Navigate = useNavigate();
 
   return (
@@ -38,4 +38,4 @@ const VerificationSuccess = () => {
   );
 };
 
-export default VerificationSuccess;
+export default PageNotFound;
