@@ -4,8 +4,6 @@ import { api } from "../../api/api";
 import toast, { Toaster } from "react-hot-toast";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import logo_groceria from "../../assets/images/logo-brand-groceria.png"
-import { useDispatch, useSelector } from "react-redux";
-import userSlice, { login } from "../../redux/userSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +13,6 @@ const Login = () => {
   const [errorEmail, setErrorEmail] = useState();
   const [errorPassword, setErrorPassword] = useState();
   const Navigate = useNavigate();
-  const dispatch = useDispatch();
 
   let validateEmail = (value) => {
     if (value === "") {
@@ -45,8 +42,14 @@ const Login = () => {
     try {
       const response = await api.post("users/login", {email: email, password: password});
       toast.success(response.data.message);
-      localStorage.setItem("token", `${response.data.data.access_token}`);
-      setTimeout(() => {Navigate('/')}, 1500);
+      if (response.data.data.user.is_verified === false) {
+        localStorage.setItem("token", "")
+        setTimeout(() => {Navigate('/resend-verification')}, 1500);
+      }
+      else {
+        localStorage.setItem("token", `${response.data.data.access_token}`);
+        setTimeout(() => {Navigate('/')}, 1500);
+      }
     } catch (error) {
       toast.error(error.response.data.message);
     }

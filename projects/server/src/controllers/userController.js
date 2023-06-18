@@ -32,8 +32,7 @@ module.exports = {
       let isUnique = await checkReferralCodeUniqueness(referralCode);
       while (!isUnique) {
         referralCode = generateRandomReferralCode(10);
-        isUnique = await checkReferralCodeUniqueness(referralCode);
-      }
+        isUnique = await checkReferralCodeUniqueness(referralCode)}
       const result = await users.create({name, email, password: hashPass, phone_number, referral_code: referralCode});
       const token = jwt.sign({ id_user: result.id, name: result.name, email: result.email }, jwtKey);
       await tokens.create({id_user: result.id, token: token, token_type: "VERIFICATION"});
@@ -42,9 +41,7 @@ module.exports = {
       await sendEmail(result.email, "Verify Account", message);
       res.status(201).send({isError: false, message: "Register Success! Please Check Email to Verify", data: result});
     } catch (error) {
-      console.log(error);
-      res.status(404).send({isError: true, message: "Register failed"});
-    }
+      console.log(error); res.status(404).send({isError: true, message: "Register failed"})}
   },
   verify: async (req, res) => {
     const { id_user, token } = req.params
@@ -78,9 +75,7 @@ module.exports = {
       await sendEmail(result.email, "Verify Account", message);
       res.status(200).send({code: 200, message: "A verification email has been sent. Please check your email and verify"});
     } catch (error) {
-      console.log(error);
-      res.status(500).send({ message: "Internal server error" });
-    }
+      console.log(error); res.status(500).send({ message: "Internal server error" })}
   },
   login: async (req, res) => {
     try {
@@ -102,8 +97,7 @@ module.exports = {
           return res.status(404).send({isError: true, message: "Invalid email or password"})}
       });
     } catch (error) {
-      console.log(error);
-      res.status(404).send({isError: true, message: "Login Failed"})}
+      console.log(error); res.status(404).send({isError: true, message: "Login Failed"})}
   },
   forgotPasswordSendEmail: async (req, res) => {
     try {
@@ -118,8 +112,7 @@ module.exports = {
       await sendEmail(result.email, "Reset Password", message);
       res.status(200).send({data: {token: newToken}, message: "Check your email to reset password", code: 200})
     } catch (error) {
-      console.log(error);
-    }
+      console.log(error)}
   },
   resendEmailForgotPassword: async (req, res) => {
     try {
@@ -136,8 +129,7 @@ module.exports = {
       await sendEmail(result.email, "Reset Password", message);
       res.status(200).send({data: {token: newToken}, message: "Check your email to reset password", code: 200});
     } catch (error) {
-      console.log(error);
-    }
+      console.log(error)}
   },
   verifyForgotPassword: async (req, res) => {
     const { id_user, token } = req.params;
@@ -148,16 +140,14 @@ module.exports = {
       res.status(200).send({code: 200, message: "Verification success"});
     } catch (err) {
       console.log(err);
-      return res.status(500).send({ code: 500, message: "Internal server error" });
-    }
+      return res.status(500).send({ code: 500, message: "Internal server error" })}
   },
   resetPassword: async (req, res) => {
     const { token, password, confirmPassword } = req.body;
     try {
       if (!confirmPassword || !password)
         return res.status(404).send({isError: true, message: "Please fill all the required fields"});
-      let char = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=[\]{}|\\,./?'":;<>~`])(?!.*\s).{8,}$/;
-      if (!char.test(password))
+      if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=[\]{}|\\,./?'":;<>~`])(?!.*\s).{8,}$/.test(password))
         return res.status(404).send({isError: true, message: "Password must contain at least 8 characters including an uppercase letter, a symbol, and a number"});
       if (password !== confirmPassword) {
         return res.status(400).send({ message: "Password doesn't match" })}
@@ -173,15 +163,12 @@ module.exports = {
       }
       res.status(200).send({code: 200, message: "Success reset password, please login"});
     } catch (error) {
-      res.status(400).send({ error: "Invalid token" });
-    }
+      res.status(400).send({ error: "Invalid token" })}
   },
   getUserByToken: async (req, res) => {
     try {
       const user = jwt.verify(req.params.token, jwtKey);
-      console.log('user', user);
       const getUser = await users.findOne({where: {id: user.id_user}})
-      console.log('getUser', getUser);
       res.send({code: 200, message: "Get user by token success", user: getUser})
     } catch(error){
       res.status(400).send({ error: "Invalid token" });
@@ -198,8 +185,7 @@ module.exports = {
       const isPasswordMatch = await bcrypt.compare(oldPassword, findUser.password)
       if (!isPasswordMatch)
         return res.status(404).send({isError: true, message: "Wrong old password"})
-      let char = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=[\]{}|\\,./?'":;<>~`])(?!.*\s).{8,}$/
-      if (!char.test(newPassword))
+      if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=[\]{}|\\,./?'":;<>~`])(?!.*\s).{8,}$/.test(newPassword))
         return res.status(404).send({isError: true, message: "Password must contain at least 8 characters including an uppercase letter, a symbol, and a number"})
       if (confirmNewPassword !== newPassword)
         return res.status(404).send({isError: true, message: "New password and confirm new password do not match"});
@@ -209,8 +195,6 @@ module.exports = {
       res.status(200).send({isError: false, message: "Change password success"});
     } catch (error) {
       console.log(error);
-      res.status(404).send({isError: true, message: "Change password failed"})
-    }
+      res.status(404).send({isError: true, message: "Change password failed"})}
   }
 };
- 
