@@ -19,8 +19,9 @@ module.exports = {
         } else if (result) {
           const token = jwt.sign({id_admin: resultAdmin.id, email: resultAdmin.email, role: resultAdmin.role}, jwtKey)
           await admins.update({token_admin: token}, {where: {id: resultAdmin.id}});
-          delete resultAdmin.dataValues.password;
-          res.status(200).send({isError: false, message: "Login Success", data: {token_admin: token, id_admin: resultAdmin.id, admin: resultAdmin}});
+          let getAdmin = await admins.findOne({where: {id: resultAdmin.id}});
+          delete getAdmin.dataValues.password;
+          res.status(200).send({isError: false, message: "Login Success", data: getAdmin});
         } else {
           return res.status(404).send({isError: true, message: "Invalid email or password"})}
       });
