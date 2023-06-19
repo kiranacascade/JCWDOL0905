@@ -19,6 +19,19 @@ module.exports = {
   inventoryControllers,
   adminController
 };
+const cartController = require("./cartController")
+
+module.exports = {
+    userController,
+    profileController,
+    addressController,
+    branchController,
+    suggestionController,
+    categoryControllers,
+    productControllers,
+    inventoryControllers,
+    cartController,
+}
   
 
 
