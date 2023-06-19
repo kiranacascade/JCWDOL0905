@@ -18,7 +18,7 @@ app.use(express.json());
 
 //#region API ROUTES
 // Import routes
-const { userRouter, profileRouter, addressRouter, branchRouter, suggestionRouter } = require("./routers")
+const { userRouter, profileRouter, addressRouter, branchRouter, suggestionRouter, categoryRouters, productRouters, inventoryRouters, adminRouter } = require("./routers")
 
 // Add routes
 app.use('/api/users', userRouter)
@@ -26,14 +26,12 @@ app.use('/api/profiles', profileRouter)
 app.use('/api/address', addressRouter)
 app.use('/api/branch', branchRouter)
 app.use('/api/suggest', suggestionRouter)
-
 app.use("/api/products", express.static(__dirname + "/public/products"));
 app.use("/api/categories", express.static(__dirname + "/public/categories"));
-
-const { categoryRouters, productRouters, inventoryRouters } = require("./routers");
 app.use("/api/category", categoryRouters);
 app.use("/api/product", productRouters);
 app.use("/api/inventory", inventoryRouters);
+app.use("/api/admins", adminRouter);
 
 // ===========================
 
