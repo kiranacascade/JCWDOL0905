@@ -25,7 +25,8 @@ import { countItem } from "./redux/cartSlice";
 import ProductsPage from "./pages/user/productsPage";
 import CategoryPage from "./pages/user/categoryPage";
 import ChangePassword from "./pages/user/ChangePassword";
-import TokenInvalid from "./pages/TokenInvalid";import Cart from "./pages/user/Cart";
+import TokenInvalid from "./pages/TokenInvalid";
+import Cart from "./pages/user/Cart";
 import ProductDetail from "./pages/user/ProductDetail";
 import Profile from "./pages/user/Profile";
 
