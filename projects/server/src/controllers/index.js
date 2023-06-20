@@ -9,17 +9,23 @@ const productControllers = require("./productControllers");
 const inventoryControllers = require("./inventoryControllers");
 const discountController = require("./discountController")
 const voucherController = require("./voucherController")
+const cartController = require("./cartController")
 
 module.exports = {
-  userController,
-  profileController,
-  addressController,
-  branchController,
-  suggestionController,
-  categoryControllers,
-  productControllers,
-  inventoryControllers,
-  adminControllers,
-  discountController,
-  voucherController
-};
+    userController,
+    profileController,
+    addressController,
+    branchController,
+    suggestionController,
+    categoryControllers,
+    productControllers,
+    inventoryControllers,
+    cartController,
+    adminControllers,
+    discountController,
+    voucherController
+}
+  
+
+
+

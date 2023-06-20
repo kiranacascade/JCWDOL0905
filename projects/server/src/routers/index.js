@@ -9,6 +9,7 @@ const inventoryRouters = require("./inventoryRouters");
 const adminRouter = require("./adminRouter");
 const discountRouter = require("./discountRouter");
 const voucherRouter = require("./voucherRouter")
+const cartRouter = require("./cartRouter");
 
 
 module.exports = {
@@ -20,7 +21,11 @@ module.exports = {
   categoryRouters,
   productRouters,
   inventoryRouters,
+  cartRouter,
   adminRouter,
   discountRouter,
   voucherRouter
 };
+
+
+
