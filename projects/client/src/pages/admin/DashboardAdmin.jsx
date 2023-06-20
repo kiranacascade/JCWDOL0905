@@ -72,7 +72,7 @@ const DashboardAdmin = () => {
                   </div>
                   <div className="flex flex-shrink-0 bg-gray-700 p-4">
                       <div className="group block w-full text-center" >
-                          <p className="text-sm font-medium text-white cursor-pointer" onClick={Logout}> Logout </p>
+                          <p className="text-sm font-medium text-white cursor-pointer hover:text-blue-600" onClick={Logout}> Logout </p>
                       </div>
                   </div>
                 </Dialog.Panel>
@@ -103,7 +103,7 @@ const DashboardAdmin = () => {
             </div>
             <div className="flex flex-shrink-0 bg-gray-700 p-4">
                 <div className="group block w-full text-center">
-                  <p className="text-sm font-medium text-white cursor-pointer" onClick={Logout}>Logout</p>
+                  <p className="text-sm font-medium text-white cursor-pointer hover:text-blue-600" onClick={Logout}>Logout</p>
                 </div>
             </div>
           </div>
