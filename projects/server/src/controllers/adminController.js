@@ -48,5 +48,14 @@ module.exports = {
       res.status(201).send({isError: false, message: "New admin account has been created successfully", data: result});
     } catch (error) {
       console.log(error); res.status(404).send({isError: true, message: "Register failed"})}
-  }
+  },
+  getAdminByToken: async (req, res) => {
+    try {
+      const admin = jwt.verify(req.params.token, jwtKey);
+      const getAdmin = await admins.findOne({where: {id: admin.id_admin}})
+      res.send({code: 200, message: "Get admin by token success", admin: getAdmin})
+    } catch(error){
+      res.status(400).send({ error: "Invalid token" });
+    }
+  },
 };

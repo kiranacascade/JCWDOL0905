@@ -5,6 +5,7 @@ import { api } from "./api/api";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "./redux/userSlice";
+import { loginAdmin   } from "./redux/adminSlice";
 import { setBranchId } from "./redux/branchSlice";
 import { setAccessToken } from "./redux/tokenSlice";
 import { Loading } from "./pages/Loading";
@@ -40,6 +41,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const branchId = localStorage.getItem("branchId");
+    const token_admin = localStorage.getItem("token_admin");
     dispatch(setBranchId({ branchId: branchId }));
     setTimeout(() => {setIsLoading(false)}, 1000);
 
@@ -55,6 +57,18 @@ function App() {
     };
     if (token) {
       fetchUser(token);
+    }
+
+    const fetchAdmin = async (token_admin) => {
+      try {
+        const res = await api.get(`/admins/auth/${token_admin}`);
+        dispatch(loginAdmin(res.data.admin));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (token_admin) {
+      fetchAdmin(token_admin);
     }
 
     async function countCart() {
