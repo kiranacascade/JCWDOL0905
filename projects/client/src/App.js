@@ -29,6 +29,7 @@ import TokenInvalid from "./pages/TokenInvalid";
 import Cart from "./pages/user/Cart";
 import ProductDetail from "./pages/user/ProductDetail";
 import Profile from "./pages/user/Profile";
+import LoginAdmin from "./pages/admin/LoginAdmin";
 
 
 function App() {
@@ -104,6 +105,7 @@ function App() {
               <Route element={<ProtectedPage needLogin={true}><Profile /></ProtectedPage>} path="/profile" />
               <Route element={<ProtectedPage needLogin={true}><Cart /></ProtectedPage>} path="/cart" />
               <Route Component={ProductDetail} path="/product/:id" />
+              <Route Component={LoginAdmin} path="/login-admin" />
             </Routes>
           </BrowserRouter>
         </>
