@@ -4,6 +4,8 @@ import { api } from "../../api/api";
 import toast, { Toaster } from "react-hot-toast";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import logo_groceria from "../../assets/images/logo-brand-groceria.png"
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/adminSlice";
 
 const LoginAdmin = () => {
   const [email, setEmail] = useState("");
@@ -13,6 +15,7 @@ const LoginAdmin = () => {
   const [errorEmail, setErrorEmail] = useState();
   const [errorPassword, setErrorPassword] = useState();
   const Navigate = useNavigate();
+  const dispatch = useDispatch();
 
   let validateEmail = (value) => {
     if (value === "") {
@@ -43,7 +46,8 @@ const LoginAdmin = () => {
       const response = await api.post("admins/login", {email: email, password: password});
       toast.success(response.data.message);
       localStorage.setItem("token_admin", `${response.data.data.token_admin}`);
-    //   setTimeout(() => {Navigate("/")}, 1500);
+      dispatch(login(response.data.data))
+      setTimeout(() => {Navigate("/admin/dashboard")}, 1500);
     } catch (error) {
       toast.error(error.response.data.message);
     }

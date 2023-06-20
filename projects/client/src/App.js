@@ -30,6 +30,7 @@ import Cart from "./pages/user/Cart";
 import ProductDetail from "./pages/user/ProductDetail";
 import Profile from "./pages/user/Profile";
 import LoginAdmin from "./pages/admin/LoginAdmin";
+import DashboardAdmin from "./pages/admin/DashboardAdmin";
 
 
 function App() {
@@ -106,6 +107,7 @@ function App() {
               <Route element={<ProtectedPage needLogin={true}><Cart /></ProtectedPage>} path="/cart" />
               <Route Component={ProductDetail} path="/product/:id" />
               <Route Component={LoginAdmin} path="/login-admin" />
+              <Route Component={DashboardAdmin} path="/admin/dashboard" />
             </Routes>
           </BrowserRouter>
         </>
