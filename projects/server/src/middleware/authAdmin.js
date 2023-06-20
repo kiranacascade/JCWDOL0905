@@ -20,6 +20,8 @@ module.exports = {
         return res.status(401).send("Access Denied");
       }
 
+      // console.log("verifiedAdmin", verifiedAdmin)
+
       req.admin = verifiedAdmin;
       // console.log(req.admin);
       next();

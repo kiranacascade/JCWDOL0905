@@ -20,6 +20,8 @@ import ProductsPage from "./pages/user/productsPage";
 import CategoryPage from "./pages/user/categoryPage";
 import { Loading } from "./pages/Loading";
 import { ManageCategory } from "./pages/admin/ManageCategory";
+import { ManageDiscount } from "./pages/admin/ManageDiscount";
+import { ManageVoucher } from "./pages/admin/ManageVoucher";
 
 
 function App() {
@@ -67,6 +69,8 @@ function App() {
         <Route Component={ProductsPage} path="/product" />
         <Route Component={CategoryPage} path="/category/:id" />
         <Route Component={ManageCategory} path="/manage-category" />
+        <Route Component={ManageDiscount} path="/manage-discount" />
+        <Route Component={ManageVoucher} path="/manage-voucher" />
       </Routes>
     </BrowserRouter>
     } 

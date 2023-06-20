@@ -30,11 +30,13 @@ app.use('/api/suggest', suggestionRouter)
 app.use("/api/products", express.static(__dirname + "/public/products"));
 app.use("/api/categories", express.static(__dirname + "/public/categories"));
 
-const { categoryRouters, productRouters, inventoryRouters, adminRouter } = require("./routers");
+const { categoryRouters, productRouters, inventoryRouters, adminRouter, discountRouter, voucherRouter } = require("./routers");
 app.use("/api/category", categoryRouters);
 app.use("/api/product", productRouters);
 app.use("/api/inventory", inventoryRouters);
-app.use("/api/admin", adminRouter)
+app.use("/api/admin", adminRouter);
+app.use("/api/discount", discountRouter);
+app.use("/api/voucher", voucherRouter)
 
 // ===========================
 

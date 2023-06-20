@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { api } from "../../api/api";
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
-import DeleteCategoryModal from "../../component/manageCategory/DeleteModal";
 import { Toaster } from "react-hot-toast";
-import EditCategoryModal from "../../component/manageCategory/EditCategoryModal";
 import AddCategoryModal from "../../component/manageCategory/AddCategoryModal";
+import DeleteCategoryModal from "../../component/manageCategory/DeleteModal";
+import EditCategoryModal from "../../component/manageCategory/EditCategoryModal";
 
 export const ManageCategory = () => {
   const [categories, setCategories] = useState([]);

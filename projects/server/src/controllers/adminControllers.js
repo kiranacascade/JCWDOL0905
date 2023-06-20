@@ -29,8 +29,7 @@ module.exports = {
         });
       }
 
-      // Compare password dengan bcrypt
-      //   const isvalid = await bcrypt.compare(password, adminExist.password);
+      
 
       if (password !== adminExist.password) {
         return res.status(400).send({
@@ -50,7 +49,7 @@ module.exports = {
 
       res.status(200).send({
         isError: false,
-        message: "admin login success",
+        message: "Admin login success",
         data: adminExist,
         token,
       });

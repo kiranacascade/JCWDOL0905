@@ -7,6 +7,8 @@ const suggestionController = require("./suggestionController");
 const categoryControllers = require("./categoryControllers");
 const productControllers = require("./productControllers");
 const inventoryControllers = require("./inventoryControllers");
+const discountController = require("./discountController")
+const voucherController = require("./voucherController")
 
 module.exports = {
   userController,
@@ -18,4 +20,6 @@ module.exports = {
   productControllers,
   inventoryControllers,
   adminControllers,
+  discountController,
+  voucherController
 };

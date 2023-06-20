@@ -7,6 +7,9 @@ const categoryRouters = require("./categoryRouters");
 const productRouters = require("./productRouters");
 const inventoryRouters = require("./inventoryRouters");
 const adminRouter = require("./adminRouter");
+const discountRouter = require("./discountRouter");
+const voucherRouter = require("./voucherRouter")
+
 
 module.exports = {
   userRouter,
@@ -18,4 +21,6 @@ module.exports = {
   productRouters,
   inventoryRouters,
   adminRouter,
+  discountRouter,
+  voucherRouter
 };
