@@ -1,7 +1,9 @@
-const router = require("express").Router();
-const adminControllers = require("../controllers/adminControllers");
-const auth = require('../middleware/auth');
+const router = require("express").Router()
+const { adminController } = require('../controllers')
+const auth = require('../middleware/auth')
 
-router.post('/login', auth, adminControllers.login);
+router.post('/create-admin', auth, adminController.createNewAdmin)
+router.post('/login', auth, adminController.login)
+router.get("/auth/:token", auth, adminController.getAdminByToken)
 
-module.exports = router;
+module.exports = router
