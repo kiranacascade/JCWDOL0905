@@ -5,12 +5,12 @@ dotenv.config();
 module.exports = {
   verifyToken: (req, res, next) => {
     let token = req.headers.authorization;
-    // console.log("middleware", token);
+
     if (!token) return res.status(401).send("Access Denied / Unauthorized Request");
 
     try {
       token = token.split(" ")[1];
-      // console.log("split", token);
+
       if (token == "null" || !token) {
         return res.status(401).send("Access Denied");
       }
@@ -20,10 +20,7 @@ module.exports = {
         return res.status(401).send("Access Denied");
       }
 
-      // console.log("verifiedAdmin", verifiedAdmin)
-
       req.admin = verifiedAdmin;
-      // console.log(req.admin);
       next();
     } catch (err) {
       console.log(err);

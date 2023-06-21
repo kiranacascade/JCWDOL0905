@@ -8,6 +8,6 @@ const upload = require("../middleware/multer");
 router.post("/", auth, authAdmin.verifyToken, upload("categories"), categoryControllers.createNewCategory);
 router.get("/", auth, categoryControllers.fetchAllCategories);
 router.patch("/:id", auth, authAdmin.verifyToken, upload("categories"), categoryControllers.updateCategory)
-router.delete("/:id", auth, authAdmin.verifyToken, categoryControllers.deleteCategory)
+router.delete("/:id", auth,authAdmin.verifyToken, categoryControllers.deleteCategory)
 
 module.exports = router;

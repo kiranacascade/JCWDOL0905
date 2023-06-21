@@ -7,7 +7,7 @@ import AddDiscountModal from "../../component/AddDiscountModal";
 export const ManageDiscount = () => {
   const [discounts, setDiscounts] = useState([]);
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token_admin");
 
   useEffect(() => {
     async function fetchDiscounts() {

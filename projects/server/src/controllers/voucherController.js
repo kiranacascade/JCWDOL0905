@@ -138,7 +138,7 @@ module.exports = {
   },
   getAllVouchers: async (req, res) => {
     try {
-      if (req.admin.role === "branch") {
+      if (req.admin.role === "BRANCH_ADMIN") {
         const result = await voucher.findAndCountAll({
           where: {
             end_date: {

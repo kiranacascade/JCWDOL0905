@@ -6,7 +6,7 @@ import CreateVoucherModal from "../../component/CreateVoucherModal";
 export const ManageVoucher = () => {
   const [vouchers, setVouchers] = useState([]);
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token_admin");
 
   useEffect(() => {
     async function fetchVouchers() {

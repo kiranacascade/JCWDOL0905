@@ -3,7 +3,6 @@ const discount = db.Discount;
 const inventory = db.Inventory;
 const product = db.Product;
 const { Op } = require("sequelize");
-// const moment = require("moment")
 
 module.exports = {
   createDiscount: async (req, res) => {
@@ -26,14 +25,10 @@ module.exports = {
         }
       }
 
-      // let data = {...req.body}
+      let data = {...req.body}
       
       const now = new Date();
       now.setHours(0,0,0,0)
-      // console.log("now", now)
-      // console.log("start date", new Date(data.start_date))
-      // console.log("end date", new Date(data.end_date))
-      // console.log("<", new Date(data.start_date) < now)
       if (new Date(start_date) < now) {
         return res.status(400).send({
             isError: true,
@@ -52,10 +47,10 @@ module.exports = {
         where: {
             id_inventory: id_inventory,
             start_date: {
-                [Op.lte]: end_date // Discount starts before or on end_date
+                [Op.lte]: data.end_date // Discount starts before or on end_date
             },
             end_date: {
-                [Op.gte]: start_date // Discount ends after or on start_date
+                [Op.gte]: data.start_date // Discount ends after or on start_date
               }
         }
       })
@@ -102,11 +97,11 @@ module.exports = {
         })
       }
 
-      const result = await discount.create(req.body)
+      const result = await discount.create(data)
       res.status(200).send({
         isError: false,
         message: "Successfully create a new discount",
-        date: result
+        data: result
       })
     } catch (err) {
       console.log(err);
@@ -118,8 +113,7 @@ module.exports = {
   },
   getAllDiscounts: async (req, res) => {
     try {
-        // console.log("req.admin", req.admin)
-      if (req.admin.role === "branch") {
+      if (req.admin.role === "BRANCH_ADMIN") {
         const result = await discount.findAndCountAll({
           where: {
             end_date: {

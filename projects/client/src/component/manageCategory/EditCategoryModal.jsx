@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 export default function EditCategoryModal({ open, setOpen, onClose, category}) {
   const [modalOpen, setModalOpen] = useState(open);
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token_admin");
   const cancelButtonRef = useRef(null);
 
   useEffect(() => {

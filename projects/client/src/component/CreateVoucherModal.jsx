@@ -5,18 +5,22 @@ import { api } from "../api/api";
 import toast from "react-hot-toast";
 import Datepicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import { useSelector } from "react-redux";
 
 export default function CreateVoucherModal({ open, setOpen, onClose}) {
   const [categories, setCategories] = useState([]);
   const [selectedType, setSelectedType] = useState(1);
+  const [selectedBranch, setSelectedBranch] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState(1);
   const [selectedStartDate, setSelectedStartDate] = useState(null); 
   const [selectedEndDate, setSelectedEndDate] = useState(null); 
   const [inventories, setInventories] = useState([]);
   const [modalOpen, setModalOpen] = useState(open);
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token_admin");
   const cancelButtonRef = useRef(null);
+
+  const { role, id_branch } = useSelector((state) => state.adminSlice);
+  let branchId = id_branch;
 
   useEffect(() => {
     if (selectedType === "product") {
@@ -32,8 +36,11 @@ export default function CreateVoucherModal({ open, setOpen, onClose}) {
   
       async function fetchInventories() {
         try {
+          if (role === 'SUPER_ADMIN') {
+            branchId = selectedBranch;
+          } 
           const inventoriesData = await api.get(
-            `/inventory/?category=${selectedCategory}&branchId=1`
+            `/inventory/?category=${selectedCategory}&branchId=${branchId}`
           );
           setInventories(inventoriesData.data.data);
         } catch (err) {
@@ -152,6 +159,37 @@ export default function CreateVoucherModal({ open, setOpen, onClose}) {
 
                           {selectedType === "product" ? (
                             <div>
+                              {role === "SUPER_ADMIN" ? (
+                                <div>
+                                  <label className="block text-md font-medium leading-6 text-gray-900">
+                                    Select Store Branch
+                                  </label>
+                                  <div className="my-2">
+                                    <select
+                                      className="w-full rounded-md border border-gray-200 focus:ring-2 focus:ring-inset focus:ring-green-600 active:border-green-500 hover:border-green-500 target:border-green-500"
+                                      id="category"
+                                      required
+                                      onChange={(e) =>
+                                        setSelectedBranch(e.target.value)
+                                      }
+                                    >
+                                      <option key="1" value="1">
+                                        Store 1
+                                      </option>
+                                      <option key="1" value="1">
+                                        Store 1
+                                      </option>
+                                      {/* {categories.map((category) => ( 
+                              <option key={category.id} value={category.id}>
+                                St
+                              </option>
+                            ))} */}
+                                    </select>
+                                  </div>
+                                </div>
+                              ) : (
+                                <></>
+                              )}
                               <div>
                                 <label className="block text-md font-medium leading-6 text-gray-900">
                                   Select Category Product
@@ -166,7 +204,10 @@ export default function CreateVoucherModal({ open, setOpen, onClose}) {
                                     }
                                   >
                                     {categories.map((category) => (
-                                      <option key={category.id} value={category.id}>
+                                      <option
+                                        key={category.id}
+                                        value={category.id}
+                                      >
                                         {category.category_name}
                                       </option>
                                     ))}
@@ -218,13 +259,11 @@ export default function CreateVoucherModal({ open, setOpen, onClose}) {
                                 Voucher Value
                               </label>
                               <div className="my-2">
-                                
-                                  <input
-                                    type="number"
-                                    id="voucher_value"
-                                    className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
-                                  />
-                                
+                                <input
+                                  type="number"
+                                  id="voucher_value"
+                                  className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+                                />
                               </div>
                             </div>
                           </div>
@@ -235,11 +274,11 @@ export default function CreateVoucherModal({ open, setOpen, onClose}) {
                                 Maximum Discount
                               </label>
                               <div className="my-2">
-                                  <input
-                                    type="number"
-                                    id="max_discount"
-                                    className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
-                                  />
+                                <input
+                                  type="number"
+                                  id="max_discount"
+                                  className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+                                />
                               </div>
                             </div>
 
@@ -248,13 +287,11 @@ export default function CreateVoucherModal({ open, setOpen, onClose}) {
                                 Minimum Purchase
                               </label>
                               <div className="my-2">
-                                
-                                  <input
-                                    type="number"
-                                    id="min_purchase_amount"
-                                    className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
-                                  />
-                                
+                                <input
+                                  type="number"
+                                  id="min_purchase_amount"
+                                  className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+                                />
                               </div>
                             </div>
                           </div>
@@ -302,7 +339,14 @@ export default function CreateVoucherModal({ open, setOpen, onClose}) {
                                   selected={selectedEndDate}
                                   className="block w-full mr-2 rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 placeholder:text-gray-400 focus:ring-inset focus:ring-green-600 sm:text-md sm:leading-6"
                                   id="end_date"
-                                  minDate={selectedStartDate ? new Date(selectedStartDate.getTime() + (24 * 60 * 60 * 1000)) : undefined}
+                                  minDate={
+                                    selectedStartDate
+                                      ? new Date(
+                                          selectedStartDate.getTime() +
+                                            24 * 60 * 60 * 1000
+                                        )
+                                      : undefined
+                                  }
                                   onChange={(date) => setSelectedEndDate(date)}
                                 />
                               </div>
