@@ -32,6 +32,7 @@ import ProductDetail from "./pages/user/ProductDetail";
 import Profile from "./pages/user/Profile";
 import LoginAdmin from "./pages/admin/LoginAdmin";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
+import AdminManagement from "./pages/admin/AdminManagement";
 
 
 function App() {
@@ -122,6 +123,7 @@ function App() {
               <Route Component={ProductDetail} path="/product/:id" />
               <Route Component={LoginAdmin} path="/login-admin" />
               <Route Component={DashboardAdmin} path="/admin/dashboard" />
+              <Route Component={AdminManagement} path="/admin/admin-management" />
             </Routes>
           </BrowserRouter>
         </>
