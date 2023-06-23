@@ -123,7 +123,16 @@ function AdminManagement() {
 
   useEffect(() => {
     getListOfAdmin();
-  }, [page, limit]);
+
+    const interval = setInterval(() => {
+      getListOfAdmin();
+    }, 1000); // Panggil getListOfAdmin setiap 5 detik
+
+    return () => {
+      clearInterval(interval); // Hentikan interval saat komponen di-unmount
+    };
+
+  }, [page, limit, name]);
   return (
     <Layout>
       <div className="px-4 sm:px-6 lg:px-8">
