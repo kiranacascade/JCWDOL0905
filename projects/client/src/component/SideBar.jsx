@@ -6,11 +6,14 @@ import { logoutAdmin } from '../redux/adminSlice'
 import { useNavigate } from "react-router-dom";
 
 const navigation = [
-  { name: 'Branch Admin Management', href: '/admin/admin-management', icon: HomeIcon, current: true, roleAccess: ["SUPER_ADMIN"] },
+  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true, roleAccess: ["SUPER_ADMIN", "BRANCH_ADMIN"] },
+  { name: 'Admin Profile', href: '/admin/admin-profile', icon: HomeIcon, current: false, roleAccess: ["SUPER_ADMIN", "BRANCH_ADMIN"] },
   { name: 'Branch Store Management', href: '/admin/branch-management', icon: UserIcon, current: false, roleAccess: ["SUPER_ADMIN"]},
-  { name: 'Sales Report', href: '/admin/sales-report', icon: HomeIcon, current: true, roleAccess: ["BRANCH_ADMIN", "SUPER_ADMIN"] },
-  { name: 'Product Management', href: '/admin/product-management', icon: UserIcon, current: false, roleAccess: ["BRANCH_ADMIN"]},
-  { name: 'Orders', href: '/admin/orders', icon: HomeIcon, current: true, roleAccess: ["BRANCH_ADMIN"] },
+  { name: 'Branch Admin Management', href: '/admin/admin-management', icon: HomeIcon, current: false, roleAccess: ["SUPER_ADMIN"] },
+  { name: 'Product Management', href: '/admin/product-management', icon: UserIcon, current: false, roleAccess: ["SUPER_ADMIN", "BRANCH_ADMIN"]},
+  { name: 'Orders', href: '/admin/orders', icon: HomeIcon, current: false, roleAccess: ["SUPER_ADMIN", "BRANCH_ADMIN"] },
+  { name: 'Discount Management', href: '/admin/discount-management', icon: HomeIcon, current: false, roleAccess: ["SUPER_ADMIN", "BRANCH_ADMIN"] },
+  { name: 'Sales Report', href: '/admin/sales-report', icon: HomeIcon, current: false, roleAccess: ["BRANCH_ADMIN", "SUPER_ADMIN"] },
   { name: 'Product Stock History', href: '/admin/product-stock-history', icon: UserIcon, current: false, roleAccess: ["BRANCH_ADMIN"]},
 ]
 
@@ -27,7 +30,7 @@ function Logout(){
 }
 
   return (
-    <div ref={ref} className="fixed w-56 h-full bg-gray-900 shadow-sm">
+    <div ref={ref} className="fixed w-56 h-full bg-gray-800 text-gray-300 shadow-sm">
       <div className="flex justify-center mt-6 mb-14">
         <picture>
           <img
@@ -45,7 +48,10 @@ function Logout(){
             return (
               <a href={data.href} key={index}>
                 <div
-                  className={`p-5 mx-5 rounded text-left cursor-pointer mb-3 flex items-center transition-colors ${"bg-white text-green-500"}`}
+                  // className={`p-5 mx-5 rounded text-left cursor-pointer mb-3 flex items-center transition-colors ${"bg-white text-green-500"}`}
+                  // className={(data.current ? 'bg-gray-900 text-white' : 'text-gray-300 bg-gray-800  hover:bg-gray-700 hover:text-white',
+                  // 'group flex items-center px-2 py-2 text-sm font-medium rounded-md')}
+                  className={`p-1 mx-5 rounded text-left text-sm font-medium cursor-pointer mb-3 flex items-center transition-colors ${data.current ? 'bg-gray-700 text-white' : 'bg-gray-800 hover:bg-gray-700 hover:text-white'}`}
                 >
                   <div className="mr-2">
                     <data.icon className="h-5 w-5" />
@@ -62,7 +68,8 @@ function Logout(){
       <div className="flex flex-col mt-auto">
         <button
           onClick={Logout}
-          className="p-5 mx-5 rounded text-left cursor-pointer mb-3 flex items-center transition-colors bg-white text-green-600"
+          // className="p-5 mx-5 rounded text-left cursor-pointer mb-3 flex items-center transition-colors bg-white text-green-600"
+          className="p-5 mx-5 rounded text-left cursor-pointer mb-3 flex items-center transition-colors bg-gray-800 hover:bg-gray-700 hover:text-white"
         >
           <div className="mr-2">
             <ArrowLeftOnRectangleIcon className="h-5 w-5" />
