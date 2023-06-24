@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
-export default function ModalAdminBranch({ open, setOpen }) {
+export default function ModalAdminBranch({ open, setOpen, getListOfAdmin }) {
   const [storeData, setStoreData] = useState([]);
   const [adminName, setAdminName] = useState("");
   const [adminEmail, setAdminEmail] = useState("");
@@ -75,6 +75,7 @@ export default function ModalAdminBranch({ open, setOpen }) {
         setAdminPassword('')
         setBranchId('')
       }, 1500);
+      getListOfAdmin()
     } catch (error) {
       toast.error(error.response.data.message);
     }

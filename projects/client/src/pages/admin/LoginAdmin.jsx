@@ -6,6 +6,7 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import logo_groceria from "../../assets/images/logo-brand-groceria.png"
 import { useDispatch } from "react-redux";
 import { loginAdmin } from "../../redux/adminSlice";
+import { setAccessTokenAdmin } from "../../redux/tokenSlice";
 
 const LoginAdmin = () => {
   const [email, setEmail] = useState("");
@@ -47,6 +48,7 @@ const LoginAdmin = () => {
       toast.success(response.data.message);
       localStorage.setItem("token_admin", `${response.data.data.token_admin}`);
       dispatch(loginAdmin(response.data.data))
+      dispatch(setAccessTokenAdmin(response.data.data.token_admin))
       setTimeout(() => {Navigate("/admin/dashboard")}, 1500);
     } catch (error) {
       toast.error(error.response.data.message);

@@ -60,7 +60,7 @@ module.exports = {
   },
   createNewAdmin: async (req, res) => {
     try {
-      let { name, email, password, branchId} = req.body;
+      let { name, email, password, branchId } = req.body;
       if (!name || !email || !password || !branchId)
         return res.status(404).send({
           isError: true,
@@ -108,7 +108,7 @@ module.exports = {
       const { name, email, password, branchId } = req.body;
       const { id } = req.params;
   
-      if (!name || !email || !password) {
+      if (!name || !email || !branchId) {
         return res.status(404).send({
           isError: true,
           message: "Please fill all the required fields",
@@ -122,20 +122,27 @@ module.exports = {
           message: "Invalid email format",
         });
       }
-  
-      const findEmail = await admins.findOne({
-        where: { email: email },
+      
+      const findUserById = await admins.findOne({
+        where: { id: id },
       });
-      if (findEmail) {
-        return res.status(404).send({
-          isError: true,
-          message: "User already exists",
-        });
+
+      const findEmail = await admins.findAll({
+        where: { email: { [Op.ne]: findUserById.email } },
+      });
+
+      for (const element of findEmail) {
+        if (email === element.email) {
+          return res.status(404).send({
+            isError: true,
+            message: "User already exists, use other email",
+          });
+        }
       }
   
       const char =
         /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=[\]{}|\\,./?'":;<>~`])(?!.*\s).{8,}$/;
-      if (!char.test(password)) {
+      if (password && !char.test(password)) {
         return res.status(404).send({
           isError: true,
           message:
@@ -144,19 +151,21 @@ module.exports = {
       }
   
       const salt = await bcrypt.genSalt(10);
-      const hashPass = await bcrypt.hash(password, salt);
-  
-      const result = await admins.update(
-        {
-          admin_name: name,
-          email,
-          password: hashPass,
-          id_branch: branchId,
-        },
-        {
-          where: { id: id },
-        }
-      );
+      const hashPass = password ? await bcrypt.hash(password, salt) : undefined;
+
+      const updateData = {
+        admin_name: name,
+        email,
+        id_branch: branchId,
+      };
+
+      if (hashPass) {
+        updateData.password = hashPass;
+      }
+
+      const result = await admins.update(updateData, {
+        where: { id: id },
+      });
   
       if (result[0] === 0) {
         return res.status(404).send({
@@ -168,7 +177,12 @@ module.exports = {
       res.status(200).send({
         isError: false,
         message: "User has been updated successfully",
-        data: result,
+        data: {
+          admin_name: name,
+          email,
+          password: hashPass,
+          id_branch: branchId,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -190,16 +204,21 @@ module.exports = {
   },
   getBranchAdmin: async (req, res) => {
     try {
-      const { page, limit, name } = req.query;
+      const { page, limit, filterState, filterType } = req.query;
 
       const whereCondition = {
         role: "BRANCH_ADMIN",
       };
 
-      if (name) {
-        console.log("name defined");
+      if (filterState && filterType === "name") {
         whereCondition.admin_name = {
-          [Op.like]: `%${name}%`,
+          [Op.like]: `%${filterState}%`,
+        };
+      }
+
+      if (filterState && filterType === "email") {
+        whereCondition.email = {
+          [Op.like]: `%${filterState}%`,
         };
       }
 
@@ -217,7 +236,6 @@ module.exports = {
       });
       const { count, rows } = resultBranchAdmin;
       const totalPages = Math.ceil(count / Number(limit));
-      console.log(rows, 'this is the rows')
 
       return res.status(200).json({
         totalItems: count,
@@ -227,6 +245,31 @@ module.exports = {
       });
     } catch (error) {
       console.log(error);
+      res.status(400).send({ error: "error while request" });
+    }
+  },
+  deleteAdmin: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      let resultAdmin = await admins.findOne({ where: { id: id } });
+      if (!resultAdmin) {
+        return res
+          .status(404)
+          .send({ isError: true, message: "user not found" });
+      }
+
+      const result = await admins.destroy({
+        where: {
+          id: id,
+        },
+      });
+      res.status(202).send({
+        message: `Success delete admin data with id = ${id}`,
+        data: result,
+      });
+    } catch (error) {
+      res.status(400).send({ message: "error while request delete" });
     }
   },
 };

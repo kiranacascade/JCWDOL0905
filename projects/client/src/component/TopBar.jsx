@@ -1,12 +1,7 @@
-import { Fragment } from "react";
 import {
   Bars3CenterLeftIcon,
-  PencilIcon,
-  ChevronDownIcon,
-  Cog8ToothIcon,
 } from "@heroicons/react/24/solid";
 import { Menu, Transition } from "@headlessui/react";
-// import Link from "next/link";
 
 export default function TopBar({ showNav, setShowNav }) {
   const username = typeof window !== "undefined" ? localStorage.getItem("username") : null;
@@ -16,9 +11,9 @@ export default function TopBar({ showNav, setShowNav }) {
         showNav ? "pl-56" : ""
       }`}
     >
-      <div className="pl-4 md:pl-16">
+      <div className="pl-0">
         <Bars3CenterLeftIcon
-          className="h-8 w-8 text-gray-700 cursor-pointer"
+          className="h-8 w-8 text-white bg-gray-800 cursor-pointer rounded-sm"
           onClick={() => setShowNav(!showNav)}
         />
       </div>

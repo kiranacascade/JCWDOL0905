@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { login } from "./redux/userSlice";
 import { loginAdmin   } from "./redux/adminSlice";
 import { setBranchId } from "./redux/branchSlice";
-import { setAccessToken } from "./redux/tokenSlice";
+import { setAccessToken, setAccessTokenAdmin } from "./redux/tokenSlice";
 import { Loading } from "./pages/Loading";
 import ProtectedPage from "./component/ProtectedPage";
 import LandingPage from "./pages/user/LandingPage";
@@ -33,7 +33,9 @@ import Profile from "./pages/user/Profile";
 import LoginAdmin from "./pages/admin/LoginAdmin";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import AdminManagement from "./pages/admin/AdminManagement";
-
+import ProtectedPageAdmin from "./component/ProtectedPageAdmin";
+import TokenInvalidAdmin from "./pages/admin/TokenInvalidAdmin";
+import { ROLE } from "./constant/role";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -64,20 +66,23 @@ function App() {
       try {
         const res = await api.get(`/admins/auth/${token_admin}`);
         dispatch(loginAdmin(res.data.admin));
+        dispatch(setAccessTokenAdmin(token_admin));
       } catch (error) {
         console.log(error);
+        window.location.href = "/token-invalid-admin";
+        localStorage.removeItem("token_admin");
       }
     };
     if (token_admin) {
       fetchAdmin(token_admin);
-    }
-
+    } 
+      
     async function countCart() {
       try {
         const response = await api.get(`cart/count`, {
-            'headers': {
-                'Authorization': `Bearer ${token}`
-            }
+          'headers': {
+            'Authorization': `Bearer ${token}`,
+          },
         });
 
         dispatch(
@@ -89,8 +94,9 @@ function App() {
         console.log(error.response.data.message);
       }
     }
-    countCart()
-
+    if (token) {
+      countCart()
+    }
   },[])
 
   return (
@@ -122,8 +128,11 @@ function App() {
               <Route element={<ProtectedPage needLogin={true}><Cart /></ProtectedPage>} path="/cart" />
               <Route Component={ProductDetail} path="/product/:id" />
               <Route Component={LoginAdmin} path="/login-admin" />
-              <Route Component={DashboardAdmin} path="/admin/dashboard" />
-              <Route Component={AdminManagement} path="/admin/admin-management" />
+              {/* <Route Component={DashboardAdmin} path="/admin/dashboard" />
+              <Route Component={AdminManagement} path="/admin/admin-management" /> */}
+              <Route Component={TokenInvalidAdmin} path="/token-invalid-admin" />
+              <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <DashboardAdmin /> </ProtectedPageAdmin> } path="/admin/dashboard" />
+              <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN]}> <AdminManagement /> </ProtectedPageAdmin> } path="/admin/admin-management" />
             </Routes>
           </BrowserRouter>
         </>
