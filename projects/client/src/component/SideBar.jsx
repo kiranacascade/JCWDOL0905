@@ -6,8 +6,8 @@ import { logoutAdmin } from '../redux/adminSlice'
 import { useNavigate } from "react-router-dom";
 
 const navigation = [
-  { name: 'Admin Management', href: '/admin/admin-management', icon: HomeIcon, current: true, roleAccess: ["SUPER_ADMIN"] },
-  { name: 'Branch Management', href: '/admin/branch-management', icon: UserIcon, current: false, roleAccess: ["SUPER_ADMIN"]},
+  { name: 'Branch Admin Management', href: '/admin/admin-management', icon: HomeIcon, current: true, roleAccess: ["SUPER_ADMIN"] },
+  { name: 'Branch Store Management', href: '/admin/branch-management', icon: UserIcon, current: false, roleAccess: ["SUPER_ADMIN"]},
   { name: 'Sales Report', href: '/admin/sales-report', icon: HomeIcon, current: true, roleAccess: ["BRANCH_ADMIN", "SUPER_ADMIN"] },
   { name: 'Product Management', href: '/admin/product-management', icon: UserIcon, current: false, roleAccess: ["BRANCH_ADMIN"]},
   { name: 'Orders', href: '/admin/orders', icon: HomeIcon, current: true, roleAccess: ["BRANCH_ADMIN"] },

@@ -123,18 +123,9 @@ export default function ModalAdminBranch({ open, setOpen }) {
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
                 <div>
                   <div className="mt-3 text-center sm:mt-5">
-                    {/* <div className="mt-5 sm:mt-6 flex">
-                      <button
-                        type="button"
-                        className="inline-flex w-full justify-right rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:text-sm"
-                        onClick={() => setOpen(false)}
-                      >
-                        x
-                      </button>
-                    </div> */}
                     <Dialog.Title
                       as="h3"
-                      className="text-lg font-medium leading-6 text-gray-900"
+                      className="text-lg font-bold leading-6 text-gray-900"
                     >
                       Add New Branch Admin
                     </Dialog.Title>
@@ -158,18 +149,6 @@ export default function ModalAdminBranch({ open, setOpen }) {
                         {errorAdminName ? errorAdminName : null}
                       </div>
                     </div>
-                    {/* <div className="mt-2">
-                      <input
-                        onChange={(e) => validateName(e.target.value)}
-                        value={adminName}
-                        id="adminName"
-                        name="adminName"
-                        placeholder="Enter admin name"
-                        type="text"
-                        required
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div> */}
                     <div className="flex flex-col mb-3">
                       <label className="block text-sm text-left font-medium text-gray-700">
                         Email:
@@ -190,18 +169,6 @@ export default function ModalAdminBranch({ open, setOpen }) {
                         {errorAdminEmail ? errorAdminEmail : null}
                       </div>
                     </div>
-                    {/* <div className="mt-2">
-                      <input
-                        onChange={(e) => setAdminEmail(e.target.value)}
-                        value={adminEmail}
-                        id="adminEmail"
-                        name="adminEmail"
-                        placeholder="Enter admin email"
-                        type="text"
-                        required
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div> */}
                     <div className="flex flex-col mb-3">
                       <label className="block text-sm text-left font-medium text-gray-700">
                         Password:
@@ -237,18 +204,6 @@ export default function ModalAdminBranch({ open, setOpen }) {
                         {errorAdminPassword ? errorAdminPassword : null}
                       </div>
                     </div>
-                    {/* <div className="mt-2">
-                      <input
-                        onChange={(e) => setAdminPassword(e.target.value)}
-                        value={adminPassword}
-                        id="password"
-                        name="password"
-                        placeholder="Enter password"
-                        type="text"
-                        required
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div> */}
                     <div className="mt-2">
                       <label
                         htmlFor="location"
