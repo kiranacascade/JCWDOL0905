@@ -7,8 +7,7 @@ import ModalAdminBranch from "../../component/ModalAdminBranch";
 import { Toaster } from "react-hot-toast";
 import ModalEditAdminBranch from "../../component/ModalEditAdminBranch";
 
-function Example({ tableData, setEditData, setOpenEditModal }) {
-  
+function Table({ tableData, setEditData, setOpenEditModal }) { 
   return (
     <div className="mt-8 flex flex-col">
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -17,39 +16,12 @@ function Example({ tableData, setEditData, setOpenEditModal }) {
             <table className="min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-50">
                 <tr>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                  >
-                    Id
-                  </th>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                  >
-                    Admin Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
-                    Email
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
-                    Role
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
-                    Branch Name
-                  </th>
-                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                    <span className="sr-only">Edit</span>
-                  </th>
+                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6" > Id </th>
+                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6" > Admin Name </th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" > Email </th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" > Role </th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" > Branch Name </th>
+                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6"> <span className="sr-only">Edit</span> </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
@@ -101,8 +73,6 @@ function AdminManagement() {
   const [open, setOpen] = useState(false)
   const [openEditModal, setOpenEditModal] = useState(false)
   const [editData, setEditData] = useState({})
-  const [isLoading, setIsLoading] = useState(false);
-
 
   const getListOfAdmin = async () => {
     try {
@@ -115,7 +85,6 @@ function AdminManagement() {
       });
       setTableData(response.data.data);
       setTotalPages(response.data.totalPages);
-
     } catch (error) {
       console.log(error);
     } 
@@ -123,16 +92,12 @@ function AdminManagement() {
 
   useEffect(() => {
     getListOfAdmin();
-
-    const interval = setInterval(() => {
-      getListOfAdmin();
-    }, 1000); // Panggil getListOfAdmin setiap 5 detik
-
+    const interval = setInterval(() => { getListOfAdmin(); }, 1000); 
     return () => {
-      clearInterval(interval); // Hentikan interval saat komponen di-unmount
+      clearInterval(interval);
     };
+  }, [page, limit]);
 
-  }, [page, limit, name]);
   return (
     <Layout>
       <div className="px-4 sm:px-6 lg:px-8">
@@ -170,7 +135,7 @@ function AdminManagement() {
             </button>
           </div>
         </div>
-        <Example tableData={tableData} setEditData={setEditData} setOpenEditModal={setOpenEditModal}/>
+        <Table tableData={tableData} setEditData={setEditData} setOpenEditModal={setOpenEditModal}/>
         <Pagination
           rowsOption={[5, 20, 30]}
           handleChangeRow={setLimit}

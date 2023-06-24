@@ -61,7 +61,7 @@ module.exports = {
   createNewAdmin: async (req, res) => {
     try {
       let { name, email, password, branchId} = req.body;
-      if (!name || !email || !password)
+      if (!name || !email || !password || !branchId)
         return res.status(404).send({
           isError: true,
           message: "Please fill all the required fields",
@@ -100,7 +100,7 @@ module.exports = {
       });
     } catch (error) {
       console.log(error);
-      res.status(404).send({ isError: true, message: "Register failed" });
+      res.status(404).send({ isError: true, message: "Adding new branch admin failed" });
     }
   },
   editAdmin: async (req, res) => {
