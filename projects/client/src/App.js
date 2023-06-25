@@ -127,9 +127,8 @@ function App() {
               <Route element={<ProtectedPage needLogin={true}><Profile /></ProtectedPage>} path="/profile" />
               <Route element={<ProtectedPage needLogin={true}><Cart /></ProtectedPage>} path="/cart" />
               <Route Component={ProductDetail} path="/product/:id" />
+              {/* <Route element={<ProtectedPageAdmin noNeedAdminLogin={true}><LoginAdmin /></ProtectedPageAdmin>} path="/login-admin" /> */}
               <Route Component={LoginAdmin} path="/login-admin" />
-              {/* <Route Component={DashboardAdmin} path="/admin/dashboard" />
-              <Route Component={AdminManagement} path="/admin/admin-management" /> */}
               <Route Component={TokenInvalidAdmin} path="/token-invalid-admin" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <DashboardAdmin /> </ProtectedPageAdmin> } path="/admin/dashboard" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN]}> <AdminManagement /> </ProtectedPageAdmin> } path="/admin/admin-management" />

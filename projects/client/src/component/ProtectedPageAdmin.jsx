@@ -3,7 +3,7 @@ import { useSelector} from "react-redux";
 import { toast } from "react-hot-toast";
 import { ROLE_DEFAULT_PATH } from "../constant/role";
 
-const ProtectedPageAdmin = ({ children, roleRequired }) => {
+const ProtectedPageAdmin = ({ children, noNeedAdminLogin, roleRequired }) => {
   const { accessTokenAdmin } = useSelector(state => state.tokenSlice)
   const { role } = useSelector(state => state.adminSlice)
   const isTokenEmpty = accessTokenAdmin === ''
@@ -15,12 +15,17 @@ const ProtectedPageAdmin = ({ children, roleRequired }) => {
     return <Navigate to="/login-admin" />
   }
 
-  if (!isHaveRoleAccess) {
-    toast.error("You don't have access to access page");
+  // if (!isTokenEmpty && noNeedAdminLogin) {
+  //   toast.error("Please logout first to access login page");
+  //   return <Navigate to="/admin/dashboard" />
+  // }
+
+  if (!isTokenEmpty && !isHaveRoleAccess) {
+    toast.error("You don't have access to this page");
     const path = ROLE_DEFAULT_PATH[role]
     return <Navigate to={path} />
   }
-  
+
   return children;
 };
 
