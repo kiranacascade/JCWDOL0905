@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../api/api";
 import toast, { Toaster } from "react-hot-toast";
@@ -17,6 +17,13 @@ const LoginAdmin = () => {
   const [errorPassword, setErrorPassword] = useState();
   const Navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token_admin = localStorage.getItem("token_admin")
+    if (token_admin) {
+      setTimeout(() => {Navigate('/admin/dashboard')}, 1500)
+    }
+  })
 
   let validateEmail = (value) => {
     if (value === "") {
