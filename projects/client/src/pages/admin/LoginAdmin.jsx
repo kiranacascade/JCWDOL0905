@@ -49,7 +49,7 @@ const LoginAdmin = () => {
       localStorage.setItem("token_admin", `${response.data.data.token_admin}`);
       dispatch(loginAdmin(response.data.data))
       dispatch(setAccessTokenAdmin(response.data.data.token_admin))
-      setTimeout(() => {Navigate("/admin/dashboard")}, 1500);
+      setTimeout(() => {Navigate("/admin/dashboard")}, 1000);
     } catch (error) {
       toast.error(error.response.data.message);
     }

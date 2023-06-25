@@ -71,7 +71,7 @@ export default function ModalDeleteAdminBranch({open, setOpen, deleteData, getLi
                       setOpen(false)
                     }}
                   >
-                    Delete
+                    Yes
                   </button>
                   <button
                     type="button"
@@ -79,7 +79,7 @@ export default function ModalDeleteAdminBranch({open, setOpen, deleteData, getLi
                     onClick={() => setOpen(false)}
                     ref={cancelButtonRef}
                   >
-                    Cancel
+                    No
                   </button>
                 </div>
               </Dialog.Panel>

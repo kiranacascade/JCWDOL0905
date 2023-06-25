@@ -63,7 +63,7 @@ const pathname = window.location.pathname
           return null; // If the user's role is not included, render nothing
         })}
       </div>
-      <div className="mt-5 mb-5 mx-5">
+      <div className="mt-5 mb-5 mx-5 absolute bottom-0">
         <button
           onClick={Logout}
           className="p-2 rounded text-center cursor-pointer flex items-center justify-center transition-colors bg-gray-800 hover:bg-gray-700 hover:text-white text-sm font-bold w-full h-full"

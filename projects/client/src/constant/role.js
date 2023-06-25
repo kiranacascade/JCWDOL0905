@@ -4,6 +4,6 @@ export const ROLE = {
 }
 
 export const ROLE_DEFAULT_PATH = {
-    SUPER_ADMIN: '/admin/admin-management',
+    SUPER_ADMIN: '/admin/dashboard',
     BRANCH_ADMIN: '/admin/dashboard'
 }
