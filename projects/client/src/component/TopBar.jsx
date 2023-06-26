@@ -1,10 +1,6 @@
-import {
-  Bars3CenterLeftIcon,
-} from "@heroicons/react/24/solid";
-import { Menu, Transition } from "@headlessui/react";
+import { Bars3CenterLeftIcon, } from "@heroicons/react/24/solid";
 
 export default function TopBar({ showNav, setShowNav }) {
-  const username = typeof window !== "undefined" ? localStorage.getItem("username") : null;
   return (
     <div
       className={`fixed w-full h-16 flex justify-between items-center transition-all duration-[400ms] ${

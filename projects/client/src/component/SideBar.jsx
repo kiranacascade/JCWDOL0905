@@ -45,7 +45,6 @@ const pathname = window.location.pathname
 
       <div className="flex flex-col flex-grow">
       {navigation.map((data, index) => {
-          // Check if the user's role is included in the roleAccess array
           if (data.roleAccess.includes(role)) {
             return (
               <a href={data.href} key={index}>
@@ -60,7 +59,7 @@ const pathname = window.location.pathname
               </a>
             );
           }
-          return null; // If the user's role is not included, render nothing
+          return null;
         })}
       </div>
       <div className="mt-5 mb-5 mx-5 absolute bottom-0">

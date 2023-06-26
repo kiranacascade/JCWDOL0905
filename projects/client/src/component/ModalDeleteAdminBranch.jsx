@@ -11,9 +11,7 @@ export default function ModalDeleteAdminBranch({open, setOpen, deleteData, getLi
     try {
       const response = await api.delete(`admins/delete-admin/${deleteData.id}`);
       toast.success(response.data.message);
-      setTimeout(() => {
-        setOpen(false);
-      }, 1500);
+      setTimeout(() => { setOpen(false); }, 1500);
       getListOfAdmin()
     } catch (error) {
       toast.error(error.response.data.message);
@@ -23,18 +21,10 @@ export default function ModalDeleteAdminBranch({open, setOpen, deleteData, getLi
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
+        <Transition.Child as={Fragment} 
+          enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0" >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
-
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             <Transition.Child

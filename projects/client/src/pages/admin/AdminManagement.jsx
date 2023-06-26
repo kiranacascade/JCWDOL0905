@@ -18,43 +18,11 @@ function Table({ tableData, setEditData, setOpenEditModal, setOpenDeleteModal })
             <table className="min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-50">
                 <tr>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                  >
-                    ID
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
-                  >
-                    Admin Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900"
-                  >
-                    Email
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900"
-                  >
-                    Role
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900"
-                  >
-                    Branch Store Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="flex px-3 py-3 sm:pr-3 text-sm text-center items-center justify-center font-semibold text-gray-900"
-                  >
-                    {" "}
-                    Actions{" "}
-                  </th>
+                  <th scope="col" className="px-3 py-3 text-left text-sm font-semibold text-gray-900 sm:pl-6" > ID </th> <th scope="col" className="px-3 py-3 text-left text-sm font-semibold text-gray-900 sm:pl-3" > Admin Name </th>
+                  <th scope="col" className="px-3 py-3 text-left text-sm font-semibold text-gray-900" > Email </th>
+                  <th scope="col" className="px-3 py-3 text-left text-sm font-semibold text-gray-900" > Role </th>
+                  <th scope="col" className="px-3 py-3 text-left text-sm font-semibold text-gray-900" > Branch Store Name </th>
+                  <th scope="col" className="flex px-3 py-3 sm:pr-3 text-sm text-center items-center justify-center font-semibold text-gray-900" > {" "} Actions{" "} </th>
                 </tr>
               </thead>
               <tbody className="divide-y text-left divide-gray-200 bg-white">
@@ -70,9 +38,7 @@ function Table({ tableData, setEditData, setOpenEditModal, setOpenDeleteModal })
                       {person.email || ""}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                      {person.role === "BRANCH_ADMIN"
-                        ? "BRANCH ADMIN"
-                        : person.role || ""}
+                      {person.role === "BRANCH_ADMIN" ? "BRANCH ADMIN" : person.role || ""}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                       {person.Store_Branch.branch_name || ""}
@@ -94,22 +60,6 @@ function Table({ tableData, setEditData, setOpenEditModal, setOpenDeleteModal })
                           }}
                         />
                       </div>
-                      {/* <button
-                        type="button"
-                        onClick={() => {
-                          setEditData(person);
-                          setOpenEditModal(true);
-                        }}
-                        className="inline-flex items-center justify-center rounded-md bg-blue-600 text-sm font-medium text-white shadow-sm hover:bg-blue-700 px-3 py-1"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        className="ml-5 inline-flex items-center justify-center rounded-md bg-red-600 text-sm font-medium text-white shadow-sm hover:bg-red-700 px-3 py-1"
-                      >
-                        Delete
-                      </button> */}
                     </td>
                   </tr>
                 ))}
@@ -135,7 +85,6 @@ function AdminManagement() {
   const [editData, setEditData] = useState({});
 
   const onInputChange = (value) => {
-    // Check if the input value matches the email format
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
       setFilterType("email");
     } else {
@@ -161,14 +110,7 @@ function AdminManagement() {
 
   const getListOfAdmin = async () => {
     try {
-      const response = await api.get(`admins/branch-admin-list`, {
-        params: {
-          page: page,
-          limit: limit,
-          filterState: filterState,
-          filterType: filterType,
-        },
-      });
+      const response = await api.get(`admins/branch-admin-list`, { params: { page: page, limit: limit, filterState: filterState, filterType: filterType, }, });
       setTableData(response.data.data);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -184,9 +126,7 @@ function AdminManagement() {
     <Layout>
       <div className="px-4 sm:px-6 lg:px-8">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900 text-center justify-center">
-            Branch Admin Management
-          </h1>
+          <h1 className="text-xl font-semibold text-gray-900 text-center justify-center"> Branch Admin Management </h1>
         </div>
         <div className="mt-10 sm:flex sm:items-center">
           <div className="sm:flex-auto">
