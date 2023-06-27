@@ -63,7 +63,6 @@ export default function ProductsPage() {
       }
     }
     fetchProducts();
-    console.log(sort, searchValue, activePage)
   }, [sort, searchValue, activePage]);
 
   const handleSortChange = (e) => {

@@ -36,6 +36,7 @@ import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import { ManageCategory } from "./pages/admin/ManageCategory";
 import { ManageDiscount } from "./pages/admin/ManageDiscount";
 import { ManageVoucher } from "./pages/admin/ManageVoucher";
+import { ManageProduct } from "./pages/admin/ManageProduct";
 
 
 function App() {
@@ -51,7 +52,9 @@ function App() {
 
     const fetchUser = async (token) => {
       try {
-        const res = await api.get(`/users/auth/${token}`);
+        const res = await api.get(`/users/auth/${token}`, {
+          headers: {Authorization : `Bearer ${token}`}
+        });
         dispatch(login(res.data.user));
         dispatch(setAccessToken(token));
       } catch (error) {
@@ -129,6 +132,7 @@ function App() {
               <Route Component={ManageCategory} path="/manage-category" />
               <Route Component={ManageDiscount} path="/manage-discount" />
               <Route Component={ManageVoucher} path="/manage-voucher" />
+              <Route Component={ManageProduct} path="/manage-product" />
             </Routes>
           </BrowserRouter>
         </>

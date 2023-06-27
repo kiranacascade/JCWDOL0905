@@ -1,7 +1,9 @@
 const db = require("../models");
 const inventory = db.Inventory;
 const product = db.Product;
+const discount = db.Discount;
 const { Op } = require("sequelize");
+const { literal } = require('sequelize');
 
 module.exports = {
   addInventory: async (req, res) => {
@@ -39,11 +41,8 @@ module.exports = {
       const category_id = parseInt(req.query.category) || null;
       const productName = req.query.name || null;
       const sort = req.query.sort || "ASC";
-      const order = req.query.order || "product_name";
+      const order = req.query.order === 'product_price' ? '`Product.product_price`' : '`Product.product_name`';
 
-      console.log(req.query);
-
-      console.log(sort,order);
       const categoryQuery = category_id ? { id_category: category_id } : {};
       const productQuery = productName ? { product_name: { [Op.like]: `%${productName}%` } } : {};
 
@@ -51,11 +50,32 @@ module.exports = {
         where: {
           id_branch: branchId,
         },
-        include: {
+        // attributes: [
+        //   [literal('`Product`.`product_price` - `Discounts`.`discount_value`'), 'calculated_price']
+        // ],
+        include: [{
           model: product,
           where: { ...categoryQuery, ...productQuery },
-        },
-        order: [[{ model: product }, order, sort]],
+       },
+        {
+          model: discount,
+          where: {
+            end_date: {
+              [Op.gte]: new Date(),
+            }
+          },
+          required: false,
+        }],
+       
+        // attributes: {
+        //   include: [
+        //     [
+        //       literal('`Product`.`product_price` - `Discounts`.`discount_value`'),
+        //       'calculated_price',
+        //     ],
+        //   ],
+        // },
+        order: [[literal(order), sort]],
         limit: pageSize,
         offset: (page - 1) * pageSize,
       });
@@ -74,7 +94,6 @@ module.exports = {
       });
     }
   },
-
   findInventory: async (req, res) => {
     const inventoryId = req.params.idInventory;
     try {
@@ -82,7 +101,7 @@ module.exports = {
         if (!findInventory){
             return res.status(404).send({ isError: true, message: "Inventory not exist", navigate: true });
         }
-    
+        
         res.status(200).send({
             status: "Successfully find inventory",
             data: findInventory,
@@ -94,4 +113,44 @@ module.exports = {
         res.status(404).send({isError: true, message: "Find inventory failed"})
     }
 },
+  getInventoryById: async (req, res) => {
+    const id = req.params.id;
+    try {
+      const inventoryData = await inventory.findOne({
+        where: {
+          id: id,
+          stock: {
+            [Op.gte]: 1,
+          }
+        },
+        include: [{
+          model: product
+        },
+        {
+          model: discount,
+          where: {
+            end_date: {
+              [Op.gte]: new Date(),
+            }
+          },
+          required: false,
+        }
+      ],
+      })
+
+      if (!inventoryData) {
+        return res.status(404).send({ isError: true, message: "Inventory not exist"})
+      }
+    
+      res.status(200).send({
+        isError: false,
+        message: "Successfully fetch inventory by id",
+        data: inventoryData,
+      });
+
+    } catch (error) {
+      console.log(error);
+      res.status(404).send({isError: true, message: "Fetch inventory by Id failed"})
+    }
+  }
 };
