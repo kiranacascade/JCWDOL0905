@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   AreaChart,
   Area,
@@ -9,14 +9,14 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-function DashboardChart({ data, plotConfig }) {
+function DashboardChart({ data, plotConfig, maxY }) {
 
   return (
     <ResponsiveContainer width={"100%"} height={350}>
       <AreaChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
+        <XAxis dataKey="name" label={{ value: 'Month', position: 'insideBottom', offset: -5 }}/>
+        <YAxis  domain={[0, maxY]} label={{ value: 'Sales (IDR)', angle: -90, position: 'insideLeft' }}/>
         <Tooltip />
         {plotConfig.map((data, index) => (
           <Area

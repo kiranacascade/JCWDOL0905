@@ -1,10 +1,13 @@
 const db = require("../models");
 const admins = db.Admin;
 const branch = db.Store_Branch;
+const users = db.User;
+const Transaction_Header = db.Transaction_Header;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const jwtKey = process.env.JWT_SECRET_KEY;
 const { Op } = require("sequelize");
+const { Sequelize} = require('sequelize');
 
 module.exports = {
   login: async (req, res) => {
@@ -151,4 +154,44 @@ module.exports = {
       res.status(400).send({ message: "error while request delete" });
     }
   },
+  getDashboardData: async (req, res) => {
+    const totalUser = await users.count()
+    const totalTransactions = await Transaction_Header.count({where: {order_status: {
+      [Op.or]: ['done', 'shipped']
+    }}})
+    const totalSales = await Transaction_Header.sum('final_price', {where: {order_status: {
+      [Op.or]: ['done', 'shipped']
+    }}})
+
+    const totalSalesResult = await Transaction_Header.findAll({
+      attributes: [
+        [Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')"), 'name'],
+        [Sequelize.fn('SUM', Sequelize.col('final_price')), 'totalSales']
+      ],
+      where: {
+        order_status: {
+          [Op.or]: ['done', 'shipped']
+        }
+      },
+      group: [Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')")],
+      order: [[Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')"), 'ASC']]
+    });
+
+    let maxMonthlySales = 0
+    for (const monthSales of totalSalesResult) {
+      if (Number(monthSales.dataValues.totalSales) > maxMonthlySales) {
+        maxMonthlySales = Number(monthSales.dataValues.totalSales)
+      }
+    }
+    
+    const result = {
+      totalUser,
+      totalTransactions,
+      totalSales,
+      totalSalesResult,
+      maxMonthlySales
+    }
+
+    res.status(202).send({ message: `Success get dashboard data`, data: result, });
+  }
 };

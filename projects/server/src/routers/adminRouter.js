@@ -8,5 +8,6 @@ router.get('/branch-admin-list', auth, adminController.getBranchAdmin)
 router.post('/login', auth, adminController.login)
 router.get("/auth/:token", auth, adminController.getAdminByToken)
 router.delete("/delete-admin/:id", auth, adminController.deleteAdmin)
+router.get('/dashboard-data', auth, adminController.getDashboardData)
 
 module.exports = router

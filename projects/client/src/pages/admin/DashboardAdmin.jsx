@@ -2,45 +2,34 @@ import { useSelector } from "react-redux";
 import Layout from "../../component/Layout";
 import { Toaster } from "react-hot-toast";
 import DashboardChart from "../../component/DashboardChart";
+import { api } from "../../api/api";
+import { useEffect, useState } from "react";
 
 const DASHBOARD_TEXT_ROLE_MAPPING = {
   SUPER_ADMIN: "Dashboard Super Admin",
   BRANCH_ADMIN: "Dashboard Branch Admin",
 };
 
-const data = [
-  {
-    name: "January",
-    sales: 4000,
-  },
-  {
-    name: "February",
-    sales: 3000,
-  },
-  {
-    name: "March",
-    sales: 2000,
-  },
-  {
-    name: "April",
-    sales: 2780,
-  },
-  {
-    name: "May",
-    sales: 1890,
-  },
-  {
-    name: "June",
-    sales: 2390,
-  },
-];
-
-const plotConfig = [
-  { key: "sales", color: "#8884d8" },
-];
+const plotConfig = [{ key: "totalSales", color: "#8884d8" }];
 
 const DashboardAdmin = () => {
   const { role } = useSelector((state) => state.adminSlice);
+
+  const [dashboardData, setDashboardData] = useState({});
+
+  const getDashboardData = async () => {
+    try {
+      const response = await api.get(`admins/dashboard-data`);
+      setDashboardData(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getDashboardData();
+  }, []);
+
   return (
     <Layout>
       <main className="flex-1">
@@ -56,7 +45,7 @@ const DashboardAdmin = () => {
                     Total Users
                   </h1>
                   <h1 className="text-xl font-semibold text-gray-900">
-                    1.000
+                    {dashboardData.totalUser || ""}
                   </h1>
                 </div>
                 <div className="bg-gray-100 p-2 rounded-lg">
@@ -64,7 +53,7 @@ const DashboardAdmin = () => {
                     Total Sales
                   </h1>
                   <h1 className="text-xl font-semibold text-gray-900">
-                    IDR 1.000.000.000
+                    IDR  {dashboardData.totalSales || ""}
                   </h1>
                 </div>
                 <div className="bg-gray-100 p-2 rounded-lg">
@@ -72,7 +61,7 @@ const DashboardAdmin = () => {
                     Total Transactions
                   </h1>
                   <h1 className="text-xl font-semibold text-gray-900">
-                    10.000
+                    {dashboardData.totalTransactions || ""}
                   </h1>
                 </div>
               </div>
@@ -81,7 +70,11 @@ const DashboardAdmin = () => {
               <h1 className="text-2xl font-semibold text-gray-900">
                 Sales Overview
               </h1>
-              <DashboardChart data={data} plotConfig={plotConfig} />
+              <DashboardChart
+                data={dashboardData.totalSalesResult}
+                plotConfig={plotConfig}
+                maxY={dashboardData.maxMonthlySales || 100}
+              />
             </div>
           </div>
         </div>
