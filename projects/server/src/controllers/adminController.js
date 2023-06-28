@@ -3,6 +3,8 @@ const admins = db.Admin;
 const branch = db.Store_Branch;
 const users = db.User;
 const Transaction_Header = db.Transaction_Header;
+const Inventories = db.Inventories
+const Transaction_Detail = db.Transaction_Detail
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const jwtKey = process.env.JWT_SECRET_KEY;
@@ -193,5 +195,59 @@ module.exports = {
     }
 
     res.status(202).send({ message: `Success get dashboard data`, data: result, });
+  },
+  getDashboardDataPerBranch: async (req, res) => {
+    const { id } = req.params;
+    const rawQuery = `
+    SELECT DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m') AS name, SUM(Transaction_Headers.final_price) AS totalSales
+    FROM (
+      SELECT Transaction_Details.*, Store_Branches.id AS branch_id
+      FROM Transaction_Details
+      JOIN Inventories ON Transaction_Details.id_inventory = Inventories.id
+      JOIN Store_Branches ON Inventories.id_branch = Store_Branches.id
+    ) AS CombinedQuery
+    JOIN Transaction_Headers ON CombinedQuery.id_trans_header = Transaction_Headers.id
+    WHERE order_status IN ('done', 'shipped') AND CombinedQuery.branch_id = :branchId
+    GROUP BY DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m')
+    ORDER BY DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m') ASC;
+`;
+
+const query2 = `SELECT COUNT(Transaction_Headers.id) as totalTransactions,SUM(Transaction_Headers.final_price) AS totalSales
+FROM (
+  SELECT Transaction_Details.*, Store_Branches.id AS branch_id
+  FROM Transaction_Details
+  JOIN Inventories ON Transaction_Details.id_inventory = Inventories.id
+  JOIN Store_Branches ON Inventories.id_branch = Store_Branches.id
+) AS CombinedQuery
+JOIN Transaction_Headers ON CombinedQuery.id_trans_header = Transaction_Headers.id
+WHERE order_status IN ('done', 'shipped') AND CombinedQuery.branch_id = :branchId;`
+
+try {
+  const totalUser = await users.count()
+  const [result] = await db.sequelize.query(rawQuery, {
+    replacements: { branchId: id },
+  });
+
+  const [result2,metadata2] = await db.sequelize.query(query2, {
+    replacements: { branchId: id },
+  });
+
+  let maxMonthlySales = 0
+  for (const monthSales of result) {
+    if (Number(monthSales.totalSales) > maxMonthlySales) {
+      maxMonthlySales = Number(monthSales.totalSales)
+    }
+  }
+  const data = {
+    totalUser,
+    totalTransactions: result2[0].totalTransactions,
+    totalSales: result2[0].totalSales,
+    totalSalesResult: result,
+    maxMonthlySales
+  }
+  res.status(202).send({ message: `Success delete admin data with id = ${id}`, data: data, });
+} catch (error) {
+  res.status(400).send({ message: "error while request dashboard data" });
+}
   }
 };
