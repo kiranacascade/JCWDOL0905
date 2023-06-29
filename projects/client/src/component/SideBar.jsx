@@ -14,7 +14,7 @@ const navigation = [
   { name: 'Orders', href: '/admin/orders', icon: ShoppingCartIcon, current: false, roleAccess: ["SUPER_ADMIN", "BRANCH_ADMIN"] },
   { name: 'Discount Management', href: '/admin/discount-management', icon: ReceiptPercentIcon, current: false, roleAccess: ["SUPER_ADMIN", "BRANCH_ADMIN"] },
   { name: 'Sales Report', href: '/admin/sales-report', icon: ClipboardDocumentCheckIcon, current: false, roleAccess: ["BRANCH_ADMIN", "SUPER_ADMIN"] },
-  { name: 'Product Stock History', href: '/admin/product-stock-history', icon: InboxStackIcon, current: false, roleAccess: ["BRANCH_ADMIN"]},
+  { name: 'Product Stock History', href: '/admin/product-stock-history', icon: InboxStackIcon, current: false, roleAccess: ["BRANCH_ADMIN", "SUPER_ADMIN"]},
 ]
 
 const SideBar = forwardRef((props, ref) => {
