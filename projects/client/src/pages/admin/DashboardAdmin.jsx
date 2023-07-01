@@ -5,6 +5,7 @@ import DashboardChart from "../../component/DashboardChart";
 import { api } from "../../api/api";
 import { useEffect, useState } from "react";
 import { ROLE } from "../../constant/role";
+import { UsersIcon, BanknotesIcon, ShoppingBagIcon } from '@heroicons/react/24/outline'
 
 const DASHBOARD_TEXT_ROLE_MAPPING = {
   SUPER_ADMIN: "Dashboard Super Admin",
@@ -114,39 +115,67 @@ const DashboardAdmin = () => {
               {DASHBOARD_TEXT_ROLE_MAPPING[role]}
             </h1>
             {renderSearchByBranch()}
-            <div className="flex justify-center">
-              <div className="text-center justify-center py-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                <div className="bg-gray-100 p-2 rounded-lg">
-                  <h1 className="text-lg font-semibold text-gray-900">
+            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="relative overflow-hidden rounded-lg bg-gray-800 px-4 py-5 shadow sm:px-6 sm:py-6">
+                <dt>
+                  <div className="absolute rounded-md bg-indigo-500 p-3">
+                    <UsersIcon
+                      className="h-6 w-6 text-white"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <p className="ml-8 truncate justify-center text-sm font-medium text-gray-300">
                     Total Users
-                  </h1>
-                  <h1 className="text-xl font-semibold text-gray-900">
+                  </p>
+                </dt>
+                <dd className="ml-8 flex justify-center items-baseline">
+                  <p className="text-2xl font-semibold text-white">
                     {dashboardData.totalUser || ""}
-                  </h1>
-                </div>
-                <div className="bg-gray-100 p-2 rounded-lg">
-                  <h1 className="text-lg font-semibold text-gray-900">
+                  </p>
+                </dd>
+              </div>
+              <div className="relative overflow-hidden rounded-lg bg-gray-800 px-4 py-5 shadow sm:px-6 sm:py-6">
+                <dt>
+                  <div className="absolute rounded-md bg-indigo-500 p-3">
+                    <BanknotesIcon
+                      className="h-6 w-6 text-white"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <p className="ml-8 truncate justify-center text-sm font-medium text-gray-300">
                     Total Sales
-                  </h1>
-                  <h1 className="text-xl font-semibold text-gray-900">
+                  </p>
+                </dt>
+                <dd className="ml-8 flex justify-center items-baseline">
+                  <p className="text-2xl font-semibold text-white">
                     IDR {"   "}
                     {dashboardData.totalSales
                       ? dashboardData.totalSales.toLocaleString("id", {
                           useGrouping: true,
                         })
                       : ""}
-                  </h1>
-                </div>
-                <div className="bg-gray-100 p-2 rounded-lg">
-                  <h1 className="text-lg font-semibold text-gray-900">
-                    Total Transactions
-                  </h1>
-                  <h1 className="text-xl font-semibold text-gray-900">
-                    {dashboardData.totalTransactions || ""}
-                  </h1>
-                </div>
+                  </p>
+                </dd>
               </div>
-            </div>           
+              <div className="relative overflow-hidden rounded-lg bg-gray-800 px-4 py-5 shadow sm:px-6 sm:py-6">
+                <dt>
+                  <div className="absolute rounded-md bg-indigo-500 p-3">
+                    <ShoppingBagIcon
+                      className="h-6 w-6 text-white"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <p className="ml-8 truncate justify-center text-sm font-medium text-gray-300">
+                    Total Transactions
+                  </p>
+                </dt>
+                <dd className="ml-8 flex justify-center items-baseline">
+                  <p className="text-2xl font-semibold text-white">
+                    {dashboardData.totalTransactions || ""}
+                  </p>
+                </dd>
+              </div>
+            </div>
             <div className="mt-8">
               <h1 className="text-2xl font-semibold text-gray-900">
                 Sales Overview
