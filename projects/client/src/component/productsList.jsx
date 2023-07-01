@@ -1,19 +1,10 @@
 export const ProductsList = ({ productsInfo }) => {
-    function rupiah(price) {
-      if (price === undefined) {
-        return '';
-      }
-        const priceString = price.toString();
-        const len = priceString.length;
-        let str = "";
-        for (let i = 0; i < len; i++) {
-          str += priceString[i];
-          if ((len - i - 1) % 3 === 0 && i !== len - 1) {
-            str += ".";
-          }
-        }
-        return `Rp ${str}`;
-      }
+
+  function formatIDR(price) {
+    let idr = Math.floor(price).toLocaleString("id-ID");
+    return `Rp ${idr}`;
+  }
+
     return (
       <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-8 lg:grid-cols-4 lg:gap-x-6">
         {productsInfo.map((productInfo) => (
@@ -33,8 +24,6 @@ export const ProductsList = ({ productsInfo }) => {
             <div className="flex flex-1 flex-col px-4 py-3">
               <a href={`/product/${productInfo.id}`}>
                 <h3 className="text-md font-medium text-gray-900 my-1">
-                  {/* {productInfo.Product.product_name} */}
-
                   <span aria-hidden="true" className="absolute inset-0" />
                   {productInfo.Product.product_name}
                 </h3>
@@ -46,21 +35,7 @@ export const ProductsList = ({ productsInfo }) => {
 
               <div className="flex flex-1 flex-col justify-end">
                 <div className="text-lg font-bold text-green-600">
-                  {productInfo.Discounts?.[0]?.discount_type ===
-                    "buy one get one" || !productInfo.Discounts
-                    ? rupiah(productInfo.Product?.product_price)
-                    : productInfo.Discounts?.[0]?.discount_type === "amount"
-                    ? rupiah(
-                        productInfo.Product?.product_price -
-                          productInfo.Discounts?.[0]?.discount_value
-                      )
-                    : productInfo.Discounts?.[0]?.discount_type === "percentage"
-                    ? rupiah(
-                        (productInfo.Product?.product_price *
-                          (100 - productInfo.Discounts?.[0]?.discount_value)) /
-                          100
-                      )
-                    : rupiah(productInfo.Product?.product_price)}
+                  {formatIDR(productInfo.discounted_price)}
                 </div>
               </div>
 
@@ -84,7 +59,7 @@ export const ProductsList = ({ productsInfo }) => {
                     productInfo.Discounts?.[0]?.discount_type ===
                       "percentage") && (
                     <div className="ml-2 mb-0.5 text-md text-gray-400 line-through">
-                      {rupiah(productInfo.Product?.product_price)}
+                      {formatIDR(productInfo.Product?.product_price)}
                     </div>
                   )}
               </div>

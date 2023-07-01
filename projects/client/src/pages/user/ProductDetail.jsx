@@ -18,7 +18,6 @@ const ProductDetail = () => {
     const branchId = useSelector((state) => state.branchSlice.branchId);
     const [carts, setCarts] = useState([])
     const [product, setProduct] = useState({})
-    // const [discount, setDiscount] = useState({})
 
     async function countCart() {
         try {
@@ -84,26 +83,11 @@ const ProductDetail = () => {
                 });
                 countCart()
                 toast.success(response.data.status);
-
             }
-
         } catch(error){
             toast.error(error.response.data.message)
         }
     }
-    useEffect(() => {
-        async function fetchProductData() {
-            try {
-                const result = await api.get(`/inventory/${id}`)
-                setProduct(result.data.data)
-                // console.log("product",result.data.data)
-            } catch (error) {
-            console.log(error);
-            toast.error(error.response.data.message);
-            }
-        }
-        fetchProductData();
-    }, [])
 
     useEffect(() => {
         async function fetchData() {
@@ -125,22 +109,23 @@ const ProductDetail = () => {
           }
         }
         fetchData();
+        async function fetchProductData() {
+          try {
+              const result = await api.get(`/inventory/${id}`)
+              setProduct(result.data.data)
+              console.log("product",result.data.data)
+          } catch (error) {
+            if(error.response.data.navigate){
+              Navigate('/404')
+          }
+          }
+      }
+      fetchProductData();
     }, [user, branchId]);
 
-    function rupiah(price) {
-      if (price === undefined) {
-        return '';
-      }
-      const priceString = price.toString();
-      const len = priceString.length;
-      let str = "";
-      for (let i = 0; i < len; i++) {
-        str += priceString[i];
-        if ((len - i - 1) % 3 === 0 && i !== len - 1) {
-          str += ".";
-        }
-      }
-      return `Rp ${str}`;
+    function formatIDR(price) {
+      let idr = Math.floor(price).toLocaleString("id-ID");
+      return `Rp ${idr}`;
     }
 
     return (
@@ -171,24 +156,9 @@ const ProductDetail = () => {
                 <h2 id="information-heading" className="sr-only">
                   Product information
                 </h2>
-
                 <div className="flex items-center">
                   <div className="text-xl font-bold text-green-600 sm:text-2xl mr-5 pb-1">
-                  {product.Discounts?.[0]?.discount_type ===
-                    "buy one get one" || !product.Discounts
-                    ? rupiah(product.Product?.product_price)
-                    : product.Discounts?.[0]?.discount_type === "amount"
-                    ? rupiah(
-                        product.Product?.product_price -
-                          product.Discounts?.[0]?.discount_value
-                      )
-                    : product.Discounts?.[0]?.discount_type === "percentage"
-                    ? rupiah(
-                        (product.Product?.product_price *
-                          (100 - product.Discounts?.[0]?.discount_value)) /
-                          100
-                      )
-                    : rupiah(product.Product?.product_price)}
+                    {formatIDR(product?.discounted_price)}
                   </div>
 
                   {product.Discounts && (
@@ -206,7 +176,7 @@ const ProductDetail = () => {
                     (product.Discounts?.[0]?.discount_type === "amount" ||
                     product.Discounts?.[0]?.discount_type === "percentage") && (
                       <div className="ml-3 mb-0.5 text-lg text-gray-400 line-through">
-                        {rupiah(product.Product?.product_price)}
+                        {formatIDR(product.Product?.product_price)}
                       </div>
                     )}
                 </div>
@@ -227,26 +197,13 @@ const ProductDetail = () => {
                   </p>
                 </div>
                 <div className="mt-2 flex items-center">
-                  {product.stock >= 1 ? (
-                    <>
-                      <CheckIcon
-                        className="h-5 w-5 flex-shrink-0 text-green-500"
-                        aria-hidden="true"
-                      />
+                      <CheckIcon className="h-5 w-5 flex-shrink-0 text-green-500" aria-hidden="true" />
                       <p className="ml-2 text-md text-gray-500">
-                        In stock : {product.stock}
-                      </p>
-                    </>
-                  ) : (
-                    <p className="ml-2 text-sm text-gray-500">
-                      Product Out of Stock
-                    </p>
-                  )}
+                        In stock : {product.stock}</p>
                 </div>
               </section>
             </div>
 
-            {/* Product form */}
             <div className="mt-4 lg:col-start-2 lg:row-start-2 lg:max-w-lg lg:self-start">
               <section aria-labelledby="options-heading">
                   <div className="mt-10">
@@ -256,7 +213,7 @@ const ProductDetail = () => {
                         disabled={product.stock === 0}
                         className="flex w-full items-center justify-center rounded-md border border-transparent bg-green-600 py-2 px-8 text-lg font-bold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                       >
-                        {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                        Add to Cart
                       </button>
                     )}
                   </div>
