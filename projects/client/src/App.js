@@ -136,10 +136,10 @@ function App() {
               <Route Component={TokenInvalidAdmin} path="/token-invalid-admin" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <DashboardAdmin /> </ProtectedPageAdmin> } path="/admin/dashboard" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN]}> <AdminManagement /> </ProtectedPageAdmin> } path="/admin/admin-management" />
-              <Route Component={ManageCategory} path="/manage-category" />
-              <Route Component={ManageDiscount} path="/manage-discount" />
-              <Route Component={ManageVoucher} path="/manage-voucher" />
-              <Route Component={ManageProduct} path="/manage-product" />
+              <Route Component={ManageCategory} path="/admin/manage-category" />
+              <Route Component={ManageDiscount} path="/admin/manage-discount" />
+              <Route Component={ManageVoucher} path="/admin/manage-voucher" />
+              <Route Component={ManageProduct} path="/admin/manage-product" />
             </Routes>
           </BrowserRouter>
         </>

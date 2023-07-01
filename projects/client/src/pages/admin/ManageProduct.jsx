@@ -7,6 +7,7 @@ import { Pagination } from "semantic-ui-react";
 import DeleteProductModal from "../../component/manageProduct/DeleteProductModal";
 import AddProductModal from "../../component/manageProduct/AddProductModal";
 import EditProductModal from "../../component/manageProduct/EditProductModal";
+import Layout from "../../component/Layout";
 
 export const ManageProduct = () => {
   const [activePage, setActivePage] = useState(1);
@@ -72,23 +73,21 @@ export const ManageProduct = () => {
     setEditModalOpen(false);
   };
 
-  function rupiah(price) {
-    const priceString = price.toString();
-    const len = priceString.length;
-    let str = "";
-    for (let i = 0; i < len; i++) {
-      str += priceString[i];
-      if ((len - i - 1) % 3 === 0 && i !== len - 1) {
-        str += ".";
-      }
-    }
-    return `Rp ${str}`;
+  const handleInputChange = (e) => {
+    setSearchedProduct(e.target.value);
+    setActivePage(1);
+  };
+
+  function formatIDR(price) {
+    let idr = Math.floor(price).toLocaleString("id-ID");
+    return `Rp ${idr}`;
   }
 
   return (
-    <div className="flex bg-neutral-100 min-w-screen min-h-screen">
+    <Layout>
+    <div className="flex min-w-screen min-h-screen">
       <Toaster />
-      <div className="flex mx-auto rounded-md w-full max-w-xl max-h-5xl px-2 py-2 bg-white md:w-full md:max-w-3xl md:my-8 md:px-6 md:py-6 lg:w-full lg:max-w-7xl lg:h-7xl lg:px-4 lg:py-4 lg:my-8 drop-shadow-md">
+      <div className="flex mx-auto rounded-md w-full max-w-xl max-h-5xl px-2 bg-white md:w-full md:max-w-3xl md:px-6 lg:w-full lg:max-w-7xl lg:h-7xl lg:px-4">
         <div className="w-full lg:w-full p-4 lg:p-8 justify-start ">
           <div className="flex justify-between items-center my-3 mb-8">
             <h2>Manage Product</h2>
@@ -110,9 +109,7 @@ export const ManageProduct = () => {
                   />
                 </div>
                 <input
-                  id="search" type="search" placeholder="Search product name"
-                  onChange={(e) => setSearchedProduct(e.target.value)}
-                  className="block w-full rounded-md border-0 pl-10 pr-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-md sm:leading-6"
+                  id="search" type="search" placeholder="Search product name" onChange={handleInputChange} className="block w-full rounded-md border-0 pl-10 pr-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-md sm:leading-6"
                 />
               </div>
               <div className="flex ml-4 lg:ml-8 items-center">
@@ -150,7 +147,7 @@ export const ManageProduct = () => {
 
                   <div className="items-end">
                     <span className="text-lg font-bold text-green-600">
-                      {rupiah(product.product_price)}
+                      {formatIDR(product.product_price)}
                     </span>
                     <span className="ml-3 text-sm text-gray-400 my-1">
                       / {product.weight} gram
@@ -196,5 +193,6 @@ export const ManageProduct = () => {
       {deleteModalOpen && (<DeleteProductModal open={deleteModalOpen} setOpen={setDeleteModalOpen} productId={selectedProductId} cancelButtonRef={null} onClose={closeDeleteModal} /> )}
       {editModalOpen && (<EditProductModal open={editModalOpen} setOpen={setEditModalOpen} categories={categories} product={selectedProduct} cancelButtonRef={null} onClose={closeEditModal} />)}
     </div>
+    </Layout>
   );
 };
