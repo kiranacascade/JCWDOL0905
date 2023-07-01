@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import ModalEditAdminBranch from "../../component/ModalEditAdminBranch";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 import ModalDeleteAdminBranch from "../../component/ModalDeleteAdminBranch";
+import { useSearchParams } from "react-router-dom";
 
 function Table({ tableData, setEditData, setOpenEditModal, setOpenDeleteModal }) {
   return (
@@ -73,8 +74,9 @@ function Table({ tableData, setEditData, setOpenEditModal, setOpenDeleteModal })
 }
 
 function AdminManagement() {
-  const [limit, setLimit] = useState(5);
-  const [page, setPage] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
+  const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 5);
   const [filterState, setFilterState] = useState("");
   const [filterType, setFilterType] = useState("");
   const [tableData, setTableData] = useState([]);
@@ -122,6 +124,10 @@ function AdminManagement() {
     getListOfAdmin();
   }, [page, limit]);
 
+  useEffect(() => {
+    setSearchParams({ page: page.toString(), limit: limit.toString() });
+  }, [page, limit, setSearchParams]);
+
   return (
     <Layout>
       <div className="px-4 sm:px-6 lg:px-8">
@@ -132,7 +138,7 @@ function AdminManagement() {
           <div className="sm:flex-auto">
             <div>
               <input
-                type="yex"
+                type="text"
                 name="name"
                 className="text-sm placeholder-gray-500 pl-5 pr-4 rounded-2xl border border-gray-400 w-300 py-2 focus:outline-none focus:border-green-400"
                 placeholder="Search by name or email"

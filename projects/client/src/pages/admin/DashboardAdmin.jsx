@@ -131,7 +131,9 @@ const DashboardAdmin = () => {
                   <h1 className="text-xl font-semibold text-gray-900">
                     IDR {"   "}
                     {dashboardData.totalSales
-                      ? dashboardData.totalSales.toLocaleString('id', {useGrouping: true})
+                      ? dashboardData.totalSales.toLocaleString("id", {
+                          useGrouping: true,
+                        })
                       : ""}
                   </h1>
                 </div>
@@ -144,7 +146,7 @@ const DashboardAdmin = () => {
                   </h1>
                 </div>
               </div>
-            </div>
+            </div>           
             <div className="mt-8">
               <h1 className="text-2xl font-semibold text-gray-900">
                 Sales Overview

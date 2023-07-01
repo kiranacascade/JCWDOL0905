@@ -39,6 +39,7 @@ import AdminManagement from "./pages/admin/AdminManagement";
 import ProtectedPageAdmin from "./component/ProtectedPageAdmin";
 import TokenInvalidAdmin from "./pages/admin/TokenInvalidAdmin";
 import { ROLE } from "./constant/role";
+import ProductStockHistory from "./pages/admin/ProductStockHistory";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -133,6 +134,7 @@ function App() {
               <Route Component={TokenInvalidAdmin} path="/token-invalid-admin" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <DashboardAdmin /> </ProtectedPageAdmin> } path="/admin/dashboard" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN]}> <AdminManagement /> </ProtectedPageAdmin> } path="/admin/admin-management" />
+              <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN, ROLE.BRANCH_ADMIN]}> <ProductStockHistory /> </ProtectedPageAdmin> } path="/admin/product-stock-history" />
               <Route Component={ManageCategory} path="/manage-category" />
               <Route Component={ManageDiscount} path="/manage-discount" />
               <Route Component={ManageVoucher} path="/manage-voucher" />

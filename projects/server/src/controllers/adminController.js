@@ -133,7 +133,7 @@ module.exports = {
           },
         ],
         limit: Number(limit),
-        offset: Number(page) * Number(limit),
+        offset: Number(page - 1) * Number(limit),
       });
       const { count, rows } = resultBranchAdmin;
       const totalPages = Math.ceil(count / Number(limit));
