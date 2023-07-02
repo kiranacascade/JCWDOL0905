@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Layout from "../../component/Layout";
 import Pagination from "../../component/PaginationRowPerPage";
 import { useState } from "react";
@@ -34,6 +34,13 @@ function Table({ tableData }) {
                   >
                     {" "}
                     Product Name{" "}
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900"
+                  >
+                    {" "}
+                    Branch Name{" "}
                   </th>
                   <th
                     scope="col"
@@ -82,6 +89,9 @@ function Table({ tableData }) {
                       {person.productName || ""}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
+                      {person.branchName || ""}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                       {person.status || ""}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
@@ -123,6 +133,7 @@ function ProductStockHistory() {
   const [orderByMethod, setOrderByMethod] = useState("ASC");
   const [storeData, setStoreData] = useState([]);
   const { id_branch, role } = useSelector((state) => state.adminSlice);
+  const isFirstRender = useRef(true);
 
   const handleChangePage = (newPage) => {
     setPage(newPage);
@@ -136,7 +147,7 @@ function ProductStockHistory() {
     setSearchParams({ page: page.toString(), limit: limit.toString() });
   }, [page, limit, setSearchParams]);
 
-  const getListOfAdmin = async () => {
+  const getListOfInventoryHistory = async (id_branch) => {
     try {
       const response = await api.get(`inventory/findInventoryHistory`, {
         params: {
@@ -145,13 +156,12 @@ function ProductStockHistory() {
           page: page,
           limit: limit,
           productName: productName === "" ? null : productName,
-          branchId: branchId === "All" ? null : branchId,
+          branchId: id_branch,
           orderBy: orderBy,
           orderByMethod: orderByMethod,
         },
       });
       setTableData(response.data.data.items);
-      console.log(response.data.data.items, "itemsss");
       setTotalPages(response.data.data.totalPages);
     } catch (error) {
       console.log(error);
@@ -190,11 +200,26 @@ function ProductStockHistory() {
   };
 
   useEffect(() => {
+    setBranchId(id_branch)
     getListOfStoreData();
+    if (role === ROLE.SUPER_ADMIN) {
+      getListOfInventoryHistory(null);
+    } else {
+      setBranchId(id_branch);
+      getListOfInventoryHistory(id_branch);
+    }
   }, [id_branch]);
 
   useEffect(() => {
-    getListOfAdmin();
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (role === ROLE.SUPER_ADMIN) {
+      getListOfInventoryHistory(null);
+    } else {
+      getListOfInventoryHistory(id_branch);
+    }
   }, [page, limit]);
 
   return (
@@ -270,7 +295,7 @@ function ProductStockHistory() {
                 <div className="flex items-end">
                 <button
                   type="button"
-                  onClick={() => getListOfAdmin()}
+                  onClick={() => getListOfInventoryHistory(branchId)}
                   className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
                 >
                   Search

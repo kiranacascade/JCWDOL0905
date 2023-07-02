@@ -123,6 +123,7 @@ module.exports = {
     SELECT
         Inventory_Histories.id,
         CombinedQuery.productName,
+        CombinedQuery.branchName,
         Inventory_Histories.status,
         Inventory_Histories.reference,
         Inventory_Histories.quantity,
@@ -134,11 +135,14 @@ module.exports = {
             SELECT
                 Inventories.id,
                 Inventories.stock AS inventory_stock,
-                Products.product_name AS productName
+                Products.product_name AS productName,
+                Store_Branches.branch_name AS branchName
             FROM
                 Inventories
             JOIN
                 Products ON Inventories.id_product = Products.id
+            JOIN 
+                Store_Branches ON Inventories.id_branch = Store_Branches.id            
             WHERE
                 ${branchId ? "Inventories.id_branch = :branchId" : "1 = 1"}
         ) AS CombinedQuery
