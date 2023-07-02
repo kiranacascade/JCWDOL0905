@@ -40,6 +40,8 @@ import AdminManagement from "./pages/admin/AdminManagement";
 import ProtectedPageAdmin from "./component/ProtectedPageAdmin";
 import TokenInvalidAdmin from "./pages/admin/TokenInvalidAdmin";
 import { ROLE } from "./constant/role";
+import { ManageStock } from "./pages/admin/ManageStock";
+
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -140,6 +142,7 @@ function App() {
               <Route Component={ManageDiscount} path="/admin/manage-discount" />
               <Route Component={ManageVoucher} path="/admin/manage-voucher" />
               <Route Component={ManageProduct} path="/admin/manage-product" />
+              <Route Component={ManageStock} path="/manage-stock" />
             </Routes>
           </BrowserRouter>
         </>
