@@ -29,21 +29,11 @@ function Table({ tableData, setEditData, setOpenEditModal, setOpenDeleteModal })
               <tbody className="divide-y text-left divide-gray-200 bg-white">
                 {tableData.map((person) => (
                   <tr key={person.email}>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm font-medium text-gray-900 sm:pl-6">
-                      {person.id || ""}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                      {person.admin_name || ""}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                      {person.email || ""}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                      {person.role === "BRANCH_ADMIN" ? "BRANCH ADMIN" : person.role || ""}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                      {person.Store_Branch.branch_name || ""}
-                    </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm font-medium text-gray-900 sm:pl-6"> {person.id || ""} </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.admin_name || ""} </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.email || ""} </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.role === "BRANCH_ADMIN" ? "BRANCH ADMIN" : person.role || ""} </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.Store_Branch.branch_name || ""} </td>
                     <td className="flex whitespace-nowrap px-3 py-3 text-center text-sm font-medium sm:pr-3 justify-center">
                       <div className="flex row">
                         <PencilIcon

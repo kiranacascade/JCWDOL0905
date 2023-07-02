@@ -80,24 +80,11 @@ module.exports = {
   findInventory: async (req, res) => {
     const inventoryId = req.params.idInventory;
     try {
-      let findInventory = await inventory.findOne({
-        where: { id: inventoryId },
-      });
+      let findInventory = await inventory.findOne({ where: { id: inventoryId }, });
       if (!findInventory) {
-        return res
-          .status(404)
-          .send({
-            isError: true,
-            message: "Inventory not exist",
-            navigate: true,
-          });
+        return res .status(404) .send({ isError: true, message: "Inventory not exist", navigate: true, });
       }
-
-      res.status(200).send({
-        status: "Successfully find inventory",
-        data: findInventory,
-        navigate: false,
-      });
+      res.status(200).send({ status: "Successfully find inventory", data: findInventory, navigate: false, });
     } catch (error) {
       console.log(error);
       res.status(404).send({ isError: true, message: "Find inventory failed" });
@@ -105,9 +92,7 @@ module.exports = {
   },
   findInventoryHistory: async (req, res) => {
     let { productName, orderBy, orderByMethod, branchId, startDate, endDate, page, limit, } = req.query;
-
     const mapOrderBy = { id: "Inventory_Histories.id", productName: "CombinedQuery.productName", createdAt: "Inventory_Histories.createdAt", };
-
     productName = productName || ""; // Empty string if not provided
     orderBy = mapOrderBy[orderBy] || "Inventory_Histories.id"; // Default to 'Inventory_Histories.id' if not provided
     orderByMethod = orderByMethod || "ASC"; // Default to 'ASC' if not provided
@@ -116,9 +101,7 @@ module.exports = {
     endDate = endDate || "9999-12-31 23:59:59"; // Default to a very late date if not provided
     page = parseInt(page) || 1; // Default to 1 if not provided or invalid
     limit = parseInt(limit) || 10; // Default to 10 if not provided or invalid
-
     const offset = (page - 1) * limit;
-
     const query = `
     SELECT
         Inventory_Histories.id,
@@ -179,16 +162,11 @@ module.exports = {
   `;
 
     const result = await db.sequelize.query(query, { replacements: { branchId, productName, startDate, endDate, limit, offset, }, });
-
     const countResult = await db.sequelize.query(countQuery, { replacements: { branchId, productName, startDate, endDate, }, });
-
     const totalItems = countResult[0][0].total;
     const totalPages = Math.ceil(totalItems / limit);
-
     console.log(countResult[0][0].total, "count result");
-
     const data = { totalItems, totalPages, currentPage: page, items: result[0], };
-
     return res.status(200).send({ status: "Successfully find invesssntory", data: data, });
   },
 };

@@ -21,92 +21,27 @@ function Table({ tableData }) {
             <table className="min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-50">
                 <tr>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                  >
-                    {" "}
-                    ID{" "}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900"
-                  >
-                    {" "}
-                    Product Name{" "}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900"
-                  >
-                    {" "}
-                    Branch Name{" "}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900"
-                  >
-                    {" "}
-                    Status{" "}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900"
-                  >
-                    {" "}
-                    Reference{" "}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900"
-                  >
-                    {" "}
-                    Quantity{" "}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900"
-                  >
-                    {" "}
-                    Date{" "}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900"
-                  >
-                    {" "}
-                    Current Stock{" "}
-                  </th>
+                  <th scope="col" className="px-3 py-3 text-left text-sm font-semibold text-gray-900 sm:pl-6" > {" "} ID{" "} </th>
+                  <th scope="col" className="px-3 py-3 text-left text-sm font-semibold text-gray-900" > {" "} Product Name{" "} </th>
+                  <th scope="col" className="px-3 py-3 text-left text-sm font-semibold text-gray-900" > {" "} Branch Name{" "} </th>
+                  <th scope="col" className="px-3 py-3 text-left text-sm font-semibold text-gray-900" > {" "} Status{" "} </th>
+                  <th scope="col" className="px-3 py-3 text-left text-sm font-semibold text-gray-900" > {" "} Reference{" "} </th>
+                  <th scope="col" className="px-3 py-3 text-left text-sm font-semibold text-gray-900" > {" "} Quantity{" "} </th>
+                  <th scope="col" className="px-3 py-3 text-left text-sm font-semibold text-gray-900" > {" "} Date{" "} </th>
+                  <th scope="col" className="px-3 py-3 text-left text-sm font-semibold text-gray-900" > {" "} Current Stock{" "} </th>
                 </tr>
               </thead>
               <tbody className="divide-y text-left divide-gray-200 bg-white">
                 {tableData.map((person) => (
                   <tr key={person.email}>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm font-medium text-gray-900 sm:pl-6">
-                      {person.id || ""}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                      {person.productName || ""}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                      {person.branchName || ""}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                      {person.status || ""}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                      {person.reference || ""}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                      {person.quantity || ""}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                      {moment(person.createdAt).format("YYYY-MM-DD HH:mm:ss") ||
-                        ""}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                      {person.current_stock || ""}
-                    </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm font-medium text-gray-900 sm:pl-6"> {person.id || ""} </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.productName || ""} </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.branchName || ""} </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.status || ""} </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.reference || ""} </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.quantity || ""} </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {moment(person.createdAt).format("YYYY-MM-DD HH:mm:ss") || ""} </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.current_stock || ""} </td>
                   </tr>
                 ))}
               </tbody>
@@ -122,7 +57,6 @@ function ProductStockHistory() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
   const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 5);
-
   const [tableData, setTableData] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
@@ -171,7 +105,7 @@ function ProductStockHistory() {
   const renderSearchByBranch = () => {
     return role === ROLE.SUPER_ADMIN ? (
       <div className="flex items-center space-x-4">
-        <p className="w-24 text-right">Branch ID:</p>
+        <p className="w-24 text-right">Branch Store:</p>
         <select
           id="storeId"
           name="storeId"
@@ -256,8 +190,8 @@ function ProductStockHistory() {
                 <input
                   type="text"
                   name="name"
-                  className="w-52 text-sm placeholder-gray-500 border border-gray-400 px-4 py-2 focus:outline-none focus:border-green-400"
-                  placeholder="Search by name or email"
+                  className="w-52 rounded-md text-sm px-4 py-2 focus:outline-none focus:border-green-400 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset"
+                  placeholder="Search by product name"
                   required
                   value={productName}
                   onChange={(e) => setProductName(e.target.value)}
@@ -265,7 +199,7 @@ function ProductStockHistory() {
               </div>
               {renderSearchByBranch()}
               <div className="flex items-center space-x-4">
-                <p className="w-24 text-right">Order By:</p>
+                <p className="w-24 text-right">Sort By:</p>
                 <select
                   id="orderBy"
                   name="orderBy"
@@ -279,7 +213,7 @@ function ProductStockHistory() {
                 </select>
               </div>
               <div className="flex items-center space-x-4">
-                <p className="w-24 text-right">Sort Direction:</p>
+                <p className="w-24 text-right">Sort Order:</p>
                 <select
                   id="orderByMethod"
                   name="orderByMethod"
@@ -301,12 +235,10 @@ function ProductStockHistory() {
                   Search
                 </button>
               </div>
-              </div>
-              
+              </div>              
             </div>
           </PopoverFilter>
         </div>
-
         <Table tableData={tableData} />
         <Pagination
           rowsOption={[5, 10, 20, 30]}

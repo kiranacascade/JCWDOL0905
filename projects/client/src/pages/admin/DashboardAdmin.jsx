@@ -28,8 +28,7 @@ const DashboardAdmin = () => {
             htmlFor="location"
             className="block text-sm text-left font-medium text-gray-700"
           >
-            {" "}
-            Filter by Branch Store {" "}
+            {" "} Filter by Branch Store {" "}
           </label>
           <div className="flex items-center space-x-4">
             <select

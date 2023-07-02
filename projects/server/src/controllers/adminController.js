@@ -16,22 +16,22 @@ module.exports = {
     try {
       let { email, password } = req.body;
       if (!email || !password)
-        return res.status(404).send({ isError: true, message: "Please fill all the required fields", });
+        return res.status(404) .send({ isError: true, message: "Please fill all the required fields", });
       let resultAdmin = await admins.findOne({ where: { email: email } });
       if (!resultAdmin) {
-        return res .status(404) .send({ isError: true, message: "Invalid email or password" });
+        return res.status(404) .send({ isError: true, message: "Invalid email or password" });
       }
       bcrypt.compare(password, resultAdmin.password, async (err, result) => {
         if (err) {
-          res.status(404).send({ isError: true, message: "Login failed when comparing password", });
+          res.status(404) .send({ isError: true, message: "Login failed when comparing password", });
         } else if (result) {
           const token = jwt.sign( { id_admin: resultAdmin.id, email: resultAdmin.email, role: resultAdmin.role, }, jwtKey );
           await admins.update( { token_admin: token }, { where: { id: resultAdmin.id } } );
           let getAdmin = await admins.findOne({ where: { id: resultAdmin.id }, });
           delete getAdmin.dataValues.password;
-          res .status(200) .send({ isError: false, message: "Login Success", data: getAdmin });
+          res.status(200) .send({ isError: false, message: "Login Success", data: getAdmin });
         } else {
-          return res .status(404) .send({ isError: true, message: "Invalid email or password" });
+          return res.status(404) .send({ isError: true, message: "Invalid email or password" });
         }
       });
     } catch (error) {
@@ -43,24 +43,23 @@ module.exports = {
     try {
       let { name, email, password, branchId } = req.body;
       if (!name || !email || !password || !branchId)
-        return res.status(404).send({ isError: true, message: "Please fill all the required fields", });
+        return res.status(404) .send({ isError: true, message: "Please fill all the required fields", });
       let charEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!charEmail.test(email))
-        return res .status(404) .send({ isError: true, message: "Invalid email format" });
+        return res.status(404) .send({ isError: true, message: "Invalid email format" });
       let findEmail = await admins.findOne({ where: { email: email } });
       if (findEmail)
-        return res .status(404) .send({ isError: true, message: "Email already exists" });
-      let char =
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=[\]{}|\\,./?'":;<>~`])(?!.*\s).{8,}$/;
+        return res.status(404) .send({ isError: true, message: "Email already exists" });
+      let char = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=[\]{}|\\,./?'":;<>~`])(?!.*\s).{8,}$/;
       if (!char.test(password))
-        return res.status(404).send({ isError: true, message: "Password must contain at least 8 characters including an uppercase letter, a symbol, and a number", });
+        return res.status(404) .send({ isError: true, message: "Password must contain at least 8 characters including an uppercase letter, a symbol, and a number", });
       const salt = await bcrypt.genSalt(10);
       const hashPass = await bcrypt.hash(req.body.password, salt);
-      const result = await admins.create({ admin_name: name, email, password: hashPass, role: "BRANCH_ADMIN", id_branch: branchId });
-      res.status(201).send({ isError: false, message: "New admin account has been created successfully", data: result, });
+      const result = await admins.create({ admin_name: name, email, password: hashPass, role: "BRANCH_ADMIN", id_branch: branchId, });
+      res.status(201) .send({ isError: false, message: "New admin account has been created successfully", data: result, });
     } catch (error) {
       console.log(error);
-      res.status(404).send({ isError: true, message: "Adding new branch admin failed" });
+      res.status(404) .send({ isError: true, message: "Adding new branch admin failed" });
     }
   },
   editAdmin: async (req, res) => {
@@ -68,37 +67,32 @@ module.exports = {
       const { name, email, password, branchId } = req.body;
       const { id } = req.params;
       if (!name || !email || !branchId) {
-        return res.status(404).send({ isError: true, message: "Please fill all the required fields", });
+        return res.status(404) .send({ isError: true, message: "Please fill all the required fields", });
       }
       const charEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!charEmail.test(email)) {
-        return res.status(404).send({ isError: true, message: "Invalid email format", });
-      }     
-      const findUserById = await admins.findOne({ where: { id: id }, });
+        return res.status(404) .send({ isError: true, message: "Invalid email format" });
+      }
+      const findUserById = await admins.findOne({ where: { id: id } });
       const findEmail = await admins.findAll({ where: { email: { [Op.ne]: findUserById.email } }, });
       for (const element of findEmail) {
         if (email === element.email) {
-          return res.status(404).send({ isError: true, message: "User already exists, use other email", });
+          return res.status(404) .send({ isError: true, message: "User already exists, use other email", });
         }
-      }  
-      const char =
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=[\]{}|\\,./?'":;<>~`])(?!.*\s).{8,}$/;
+      }
+      const char = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=[\]{}|\\,./?'":;<>~`])(?!.*\s).{8,}$/;
       if (password && !char.test(password)) {
-        return res.status(404).send({ isError: true, message: "Password must contain at least 8 characters including an uppercase letter, a symbol, and a number", });
-      }  
+        return res.status(404) .send({ isError: true, message: "Password must contain at least 8 characters including an uppercase letter, a symbol, and a number", });
+      }
       const salt = await bcrypt.genSalt(10);
       const hashPass = password ? await bcrypt.hash(password, salt) : undefined;
-      const updateData = { admin_name: name, email, id_branch: branchId, };
-      if (hashPass) {
-        updateData.password = hashPass;
-      }
-      const result = await admins.update(updateData, {
-        where: { id: id },
-      });  
+      const updateData = { admin_name: name, email, id_branch: branchId };
+      if (hashPass) { updateData.password = hashPass; }
+      const result = await admins.update(updateData, { where: { id: id }, });
       if (result[0] === 0) {
-        return res.status(404).send({ isError: true, message: "User not found", });
-      }  
-      res.status(200).send({ isError: false, message: "User has been updated successfully", data: { admin_name: name, email, password: hashPass, id_branch: branchId, }, });
+        return res .status(404) .send({ isError: true, message: "User not found" });
+      }
+      res.status(200) .send({ isError: false, message: "User has been updated successfully", data: { admin_name: name, email, password: hashPass, id_branch: branchId, }, });
     } catch (error) {
       console.log(error);
       res.status(404).send({ isError: true, message: "Update failed" });
@@ -116,28 +110,17 @@ module.exports = {
   getBranchAdmin: async (req, res) => {
     try {
       const { page, limit, filterState, filterType } = req.query;
-      const whereCondition = { role: "BRANCH_ADMIN", };
+      const whereCondition = { role: "BRANCH_ADMIN" };
       if (filterState && filterType === "name") {
-        whereCondition.admin_name = { [Op.like]: `%${filterState}%`, };
+        whereCondition.admin_name = { [Op.like]: `%${filterState}%` };
       }
       if (filterState && filterType === "email") {
-        whereCondition.email = { [Op.like]: `%${filterState}%`, };
+        whereCondition.email = { [Op.like]: `%${filterState}%` };
       }
-      const resultBranchAdmin = await admins.findAndCountAll({
-        where: whereCondition,
-        attributes: ["id", "admin_name", "email", "role", "id_branch"],
-        include: [
-          {
-            model: branch,
-            attributes: ["branch_name"],
-          },
-        ],
-        limit: Number(limit),
-        offset: Number(page - 1) * Number(limit),
-      });
+      const resultBranchAdmin = await admins.findAndCountAll({ where: whereCondition, attributes: ["id", "admin_name", "email", "role", "id_branch"], include: [ { model: branch, attributes: ["branch_name"], }, ], limit: Number(limit), offset: Number(page - 1) * Number(limit), });
       const { count, rows } = resultBranchAdmin;
       const totalPages = Math.ceil(count / Number(limit));
-      return res.status(200).json({ totalItems: count, totalPages, currentPage: Number(page), data: rows, });
+      return res .status(200) .json({ totalItems: count, totalPages, currentPage: Number(page), data: rows, });
     } catch (error) {
       console.log(error);
       res.status(400).send({ error: "error while request" });
@@ -148,53 +131,31 @@ module.exports = {
       const { id } = req.params;
       let resultAdmin = await admins.findOne({ where: { id: id } });
       if (!resultAdmin) {
-        return res .status(404) .send({ isError: true, message: "user not found" });
+        return res.status(404) .send({ isError: true, message: "user not found" });
       }
-      const result = await admins.destroy({ where: { id: id, }, });
-      res.status(202).send({ message: `Success delete admin data with id = ${id}`, data: result, });
+      const result = await admins.destroy({ where: { id: id } });
+      res.status(202) .send({ message: `Success delete admin data with id = ${id}`, data: result, });
     } catch (error) {
-      res.status(400).send({ message: "error while request delete" });
+      res.status(400).send({ message: "Error while request delete" });
     }
   },
   getDashboardData: async (req, res) => {
-    const totalUser = await users.count()
-    const totalTransactions = await Transaction_Header.count({where: {order_status: {
-      [Op.or]: ['done', 'shipped']
-    }}})
-    const totalSales = await Transaction_Header.sum('final_price', {where: {order_status: {
-      [Op.or]: ['done', 'shipped']
-    }}})
-
-    const totalSalesResult = await Transaction_Header.findAll({
-      attributes: [
-        [Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')"), 'name'],
-        [Sequelize.fn('SUM', Sequelize.col('final_price')), 'totalSales']
-      ],
-      where: {
-        order_status: {
-          [Op.or]: ['done', 'shipped']
+    try {
+      const totalUser = await users.count();
+      const totalTransactions = await Transaction_Header.count({ where: { order_status: { [Op.or]: ["done", "shipped"] } }, });
+      const totalSales = await Transaction_Header.sum("final_price", { where: { order_status: { [Op.or]: ["done", "shipped"] } }, });
+      const totalSalesResult = await Transaction_Header.findAll({ attributes: [ [Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')"), "name"], [Sequelize.fn("SUM", Sequelize.col("final_price")), "totalSales"], ], where: { order_status: { [Op.or]: ["done", "shipped"] } }, group: [Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')")], order: [[Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')"), "ASC"]], });
+      let maxMonthlySales = 0;
+      for (const monthSales of totalSalesResult) {
+        if (Number(monthSales.dataValues.totalSales) > maxMonthlySales) {
+          maxMonthlySales = Number(monthSales.dataValues.totalSales);
         }
-      },
-      group: [Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')")],
-      order: [[Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')"), 'ASC']]
-    });
-
-    let maxMonthlySales = 0
-    for (const monthSales of totalSalesResult) {
-      if (Number(monthSales.dataValues.totalSales) > maxMonthlySales) {
-        maxMonthlySales = Number(monthSales.dataValues.totalSales)
       }
+      const result = { totalUser, totalTransactions, totalSales, totalSalesResult, maxMonthlySales, };
+      res.status(202) .send({ message: `Success get dashboard data`, data: result });
+    } catch (error) {
+      res.status(400).send({ message: "Error while request dashboard data" });
     }
-    
-    const result = {
-      totalUser,
-      totalTransactions,
-      totalSales,
-      totalSalesResult,
-      maxMonthlySales
-    }
-
-    res.status(202).send({ message: `Success get dashboard data`, data: result, });
   },
   getDashboardDataPerBranch: async (req, res) => {
     const { id } = req.params;
@@ -209,45 +170,30 @@ module.exports = {
     JOIN Transaction_Headers ON CombinedQuery.id_trans_header = Transaction_Headers.id
     WHERE order_status IN ('done', 'shipped') AND CombinedQuery.branch_id = :branchId
     GROUP BY DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m')
-    ORDER BY DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m') ASC;
-`;
-
-const query2 = `SELECT COUNT(Transaction_Headers.id) as totalTransactions,SUM(Transaction_Headers.final_price) AS totalSales
-FROM (
-  SELECT Transaction_Details.*, Store_Branches.id AS branch_id
-  FROM Transaction_Details
-  JOIN Inventories ON Transaction_Details.id_inventory = Inventories.id
-  JOIN Store_Branches ON Inventories.id_branch = Store_Branches.id
-) AS CombinedQuery
-JOIN Transaction_Headers ON CombinedQuery.id_trans_header = Transaction_Headers.id
-WHERE order_status IN ('done', 'shipped') AND CombinedQuery.branch_id = :branchId;`
-
-try {
-  const totalUser = await users.count()
-  const [result] = await db.sequelize.query(rawQuery, {
-    replacements: { branchId: id },
-  });
-
-  const [result2,metadata2] = await db.sequelize.query(query2, {
-    replacements: { branchId: id },
-  });
-
-  let maxMonthlySales = 0
-  for (const monthSales of result) {
-    if (Number(monthSales.totalSales) > maxMonthlySales) {
-      maxMonthlySales = Number(monthSales.totalSales)
+    ORDER BY DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m') ASC;`;
+    const query2 = `SELECT COUNT(Transaction_Headers.id) as totalTransactions,SUM(Transaction_Headers.final_price) AS totalSales
+    FROM (
+      SELECT Transaction_Details.*, Store_Branches.id AS branch_id
+      FROM Transaction_Details
+      JOIN Inventories ON Transaction_Details.id_inventory = Inventories.id
+      JOIN Store_Branches ON Inventories.id_branch = Store_Branches.id
+    ) AS CombinedQuery
+    JOIN Transaction_Headers ON CombinedQuery.id_trans_header = Transaction_Headers.id
+    WHERE order_status IN ('done', 'shipped') AND CombinedQuery.branch_id = :branchId;`;
+    try {
+      const totalUser = await users.count();
+      const [result] = await db.sequelize.query(rawQuery, { replacements: { branchId: id }, });
+      const [result2, metadata2] = await db.sequelize.query(query2, { replacements: { branchId: id }, });
+      let maxMonthlySales = 0;
+      for (const monthSales of result) {
+        if (Number(monthSales.totalSales) > maxMonthlySales) {
+          maxMonthlySales = Number(monthSales.totalSales);
+        }
+      }
+      const data = { totalUser, totalTransactions: result2[0].totalTransactions, totalSales: result2[0].totalSales, totalSalesResult: result, maxMonthlySales, };
+      res.status(202) .send({ message: `Success delete admin data with id = ${id}`, data: data, });
+    } catch (error) {
+      res.status(400).send({ message: "error while request dashboard data" });
     }
-  }
-  const data = {
-    totalUser,
-    totalTransactions: result2[0].totalTransactions,
-    totalSales: result2[0].totalSales,
-    totalSalesResult: result,
-    maxMonthlySales
-  }
-  res.status(202).send({ message: `Success delete admin data with id = ${id}`, data: data, });
-} catch (error) {
-  res.status(400).send({ message: "error while request dashboard data" });
-}
-  }
+  },
 };
