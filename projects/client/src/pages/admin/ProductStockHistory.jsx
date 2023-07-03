@@ -40,7 +40,7 @@ function Table({ tableData }) {
                     <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.status || ""} </td>
                     <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.reference || ""} </td>
                     <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.quantity || ""} </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {moment(person.createdAt).format("YYYY-MM-DD HH:mm:ss") || ""} </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {moment.utc(person.createdAt).utcOffset(0).format("YYYY-MM-DD HH:mm:ss") || ""} </td>
                     <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500"> {person.current_stock || ""} </td>
                   </tr>
                 ))}
