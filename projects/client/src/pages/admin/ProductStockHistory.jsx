@@ -90,7 +90,7 @@ function ProductStockHistory() {
           page: page,
           limit: limit,
           productName: productName === "" ? null : productName,
-          branchId: id_branch,
+          branchId: id_branch === "All" ? null : id_branch,
           orderBy: orderBy,
           orderByMethod: orderByMethod,
         },
@@ -134,7 +134,6 @@ function ProductStockHistory() {
   };
 
   useEffect(() => {
-    setBranchId(id_branch)
     getListOfStoreData();
     if (role === ROLE.SUPER_ADMIN) {
       getListOfInventoryHistory(null);

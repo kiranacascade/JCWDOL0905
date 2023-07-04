@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import Pagination from "../PaginationRowPerPage";
 import { useSearchParams } from "react-router-dom";
@@ -94,7 +94,7 @@ function Table({ tableData }) {
                     </td>
                     <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                       {" "}
-                      {row.userName || ""}{" "}
+                      {row.name || ""}{" "}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                       {" "}
@@ -102,15 +102,15 @@ function Table({ tableData }) {
                     </td>
                     <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                       {" "}
-                      {row.priceIdr || ""}{" "}
+                      {row.product_price || ""}{" "}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                       {" "}
-                      {row.soldQuantity || ""}{" "}
+                      {row.product_qty || ""}{" "}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                       {" "}
-                      {row.totalPriceIdr || ""}{" "}
+                      {row.total_price || ""}{" "}
                     </td>
                   </tr>
                 ))}
@@ -127,62 +127,53 @@ function ProductSalesReport() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
   const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 5);
-  const totalPages = 10;
+  const [totalPages, setTotalPages] = useState(0);
   const [branchId, setBranchId] = useState("All");
   const [storeData, setStoreData] = useState([]);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
-  const [orderBy, setOrderBy] = useState((searchParams.get("orderBy")) || "id");
-  const [sortDirection, setSortDirection] = useState((searchParams.get("sortDirection")) || "ASC")
-
-  const dummyData =  [{
-    "id": "vUmJTzukVS",
-    "branchName": "TgpQvW",
-    "createdAt": "2023-07-03T09:59:15.736Z",
-    "userName": "8w7Wpc0aW",
-    "productName": "BKKWZwqm",
-    "priceIdr": 41268,
-    "soldQuantity": 8,
-    "totalPriceIdr": 330144
-  }, {
-    "id": "q8CLpWLdGH",
-    "branchName": "bY2",
-    "createdAt": "2023-07-03T09:59:15.736Z",
-    "userName": "v0JUY1K9ox",
-    "productName": "9C24ov",
-    "priceIdr": 99504,
-    "soldQuantity": 1,
-    "totalPriceIdr": 99504
-  }, {
-    "id": "9oc3LYhboy",
-    "branchName": "RbZ",
-    "createdAt": "2023-07-03T09:59:15.736Z",
-    "userName": "x0Z",
-    "productName": "25",
-    "priceIdr": 57316,
-    "soldQuantity": 1,
-    "totalPriceIdr": 57316
-  }, {
-    "id": "dUZBD2595Q",
-    "branchName": "DMN4yZk68n",
-    "createdAt": "2023-07-03T09:59:15.736Z",
-    "userName": "B",
-    "productName": "R43tWX",
-    "priceIdr": 48573,
-    "soldQuantity": 2,
-    "totalPriceIdr": 97146
-  }, {
-    "id": "QVsFMvAQjE",
-    "branchName": "juHPol3",
-    "createdAt": "2023-07-03T09:59:15.736Z",
-    "userName": "gm",
-    "productName": "LyGl",
-    "priceIdr": 86505,
-    "soldQuantity": 3,
-    "totalPriceIdr": 259515
-  }] 
+  const [orderBy, setOrderBy] = useState(searchParams.get("orderBy") || "createdAt");
+  const [sortDirection, setSortDirection] = useState(
+    searchParams.get("sortDirection") || "ASC"
+  );
+  const [tableData, setTableData] = useState([]);
+  const isFirstRender = useRef(true);
+  const [productName, setProductName] = useState("");
+  const [userName, setUserName] = useState("");
 
   const { id_branch, role } = useSelector((state) => state.adminSlice);
+
+  const getListOfSalesReport = async (id_branch) => {
+    try {
+      const response = await api.get(`admins/sales-report`, {
+        params: {
+          endDate:
+            selectedEndDate === null
+              ? null
+              : moment(selectedEndDate)
+                  .endOf("day")
+                  .format("YYYY-MM-DD HH:mm:ss"),
+          startDate:
+            selectedStartDate === null
+              ? null
+              : moment(selectedStartDate)
+                  .startOf("day")
+                  .format("YYYY-MM-DD HH:mm:ss"),
+          page: page,
+          limit: limit,
+          branchId: id_branch === "All" ? null : id_branch,
+          orderBy: orderBy,
+          orderByMethod: sortDirection,
+          productName: productName === "" ? null : productName,
+          userName: userName === "" ? null : userName,
+        },
+      });
+      setTableData(response.data.data.items);
+      setTotalPages(response.data.data.totalPages);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const renderSearchByBranch = () => {
     return role === ROLE.SUPER_ADMIN ? (
@@ -215,7 +206,12 @@ function ProductSalesReport() {
   };
 
   useEffect(() => {
-    setSearchParams({ page: page.toString(), limit: limit.toString(), orderBy: orderBy, sortDirection: sortDirection});
+    setSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      orderBy: orderBy,
+      sortDirection: sortDirection,
+    });
   }, [page, limit, setSearchParams, orderBy, sortDirection]);
 
   const getListOfStoreData = async () => {
@@ -228,78 +224,118 @@ function ProductSalesReport() {
   };
 
   useEffect(() => {
-    setBranchId(id_branch);
     getListOfStoreData();
+    if (role === ROLE.SUPER_ADMIN) {
+      getListOfSalesReport(null);
+    } else {
+      setBranchId(id_branch);
+      getListOfSalesReport(id_branch);
+    }
   }, [id_branch]);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (role === ROLE.SUPER_ADMIN) {
+      getListOfSalesReport(null);
+    } else {
+      getListOfSalesReport(id_branch);
+    }
+  }, [page, limit]);
 
   return (
     <div>
       <div className="flex justify-end my-8">
         <PopoverFilter>
-        <div className="flex flex-wrap space-y-2">
-              <div className="flex items-center space-x-4">
-                <p className="w-24 text-right">Start Date:</p>
-                <ReactDatePicker
-                  placeholderText="Start Date"
-                  selected={selectedStartDate}
-                  className="w-52 rounded-md border px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 text-sm leading-6"
-                  id="start_date"
-                  onChange={(date) => setSelectedStartDate(date)}
-                />
-              </div>
-              <div className="flex items-center space-x-4">
-                <p className="w-24 text-right">End Date:</p>
-                <ReactDatePicker
-                  placeholderText="End Date"
-                  selected={selectedEndDate}
-                  className="w-52 rounded-md border px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 text-sm leading-6"
-                  id="end_date"
-                  onChange={(date) => setSelectedEndDate(date)}
-                />
-              </div>
-              {renderSearchByBranch()}
-              <div className="flex items-center space-x-4">
-                <p className="w-24 text-right">Sort By:</p>
-                <select
-                  id="orderBy"
-                  name="orderBy"
-                  className="w-52"
-                  onChange={(e) => setOrderBy(e.target.value)}
-                  value={orderBy || "id"}
-                >
-                  <option value="id">ID</option>
-                  <option value="productName">Product Name</option>
-                  <option value="createdAt">Date</option>
-                </select>
-              </div>
-              <div className="flex items-center space-x-4">
-                <p className="w-24 text-right">Sort Order:</p>
-                <select
-                  id="orderByMethod"
-                  name="orderByMethod"
-                  className="w-52"
-                  onChange={(e) => setSortDirection(e.target.value)}
-                  value={sortDirection || "ASC"}
-                >
-                  <option value="ASC">ASC</option>
-                  <option value="DESC">DESC</option>
-                </select>
-              </div>
-              <div className="flex items-center space-x-4 w-full">
-                <div className="flex items-end">
+          <div className="flex flex-wrap space-y-2">
+          <div className="flex items-center space-x-4">
+              <p className="w-24 text-right">Start Date:</p>
+              <ReactDatePicker
+                placeholderText="Start Date"
+                selected={selectedStartDate}
+                className="w-52 rounded-md border px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 text-sm leading-6"
+                id="start_date"
+                onChange={(date) => setSelectedStartDate(date)}
+              />
+            </div>
+            <div className="flex items-center space-x-4">
+              <p className="w-24 text-right">End Date:</p>
+              <ReactDatePicker
+                placeholderText="End Date"
+                selected={selectedEndDate}
+                className="w-52 rounded-md border px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 text-sm leading-6"
+                id="end_date"
+                onChange={(date) => setSelectedEndDate(date)}
+              />
+            </div>
+            <div className="flex items-center space-x-4">
+              <p className="w-24 text-right">Product Name:</p>
+              <input
+                type="text"
+                name="name"
+                className="w-52 rounded-md text-sm px-4 py-2 focus:outline-none focus:border-green-400 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset"
+                placeholder="search by product name"
+                required
+                value={productName}
+                onChange={(e) => setProductName(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center space-x-4">
+              <p className="w-24 text-right">User Name:</p>
+              <input
+                type="text"
+                name="name"
+                className="w-52 rounded-md text-sm px-4 py-2 focus:outline-none focus:border-green-400 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset"
+                placeholder="search by user name"
+                required
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+              />
+            </div>            
+            {renderSearchByBranch()}
+            <div className="flex items-center space-x-4">
+              <p className="w-24 text-right">Sort By:</p>
+              <select
+                id="orderBy"
+                name="orderBy"
+                className="w-52"
+                onChange={(e) => setOrderBy(e.target.value)}
+                value={orderBy || "createdAt"}
+              >
+                <option value="createdAt">Date</option>
+                <option value="productQuantity">Product Quantity</option>
+              </select>
+            </div>
+            <div className="flex items-center space-x-4">
+              <p className="w-24 text-right">Sort Order:</p>
+              <select
+                id="orderByMethod"
+                name="orderByMethod"
+                className="w-52"
+                onChange={(e) => setSortDirection(e.target.value)}
+                value={sortDirection || "ASC"}
+              >
+                <option value="ASC">ASC</option>
+                <option value="DESC">DESC</option>
+              </select>
+            </div>
+            <div className="flex items-center space-x-4 w-full">
+              <div className="flex items-end">
                 <button
                   type="button"
-                  onClick={() => console.log(branchId)}
+                  onClick={() => getListOfSalesReport(branchId)}
                   className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
                 >
                   Search
                 </button>
               </div>
-              </div>              
             </div>
+          </div>
         </PopoverFilter>
       </div>
-      <Table tableData={dummyData} />
+      <Table tableData={tableData} />
       <Pagination
         rowsOption={[5, 10, 20, 30]}
         handleChangeRow={handleChangeRowPerPage}
@@ -314,3 +350,4 @@ function ProductSalesReport() {
 }
 
 export default ProductSalesReport;
+

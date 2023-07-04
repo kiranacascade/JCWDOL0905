@@ -93,7 +93,7 @@ module.exports = {
   findInventoryHistory: async (req, res) => {
     let { productName, orderBy, orderByMethod, branchId, startDate, endDate, page, limit, } = req.query;
     const mapOrderBy = { id: "Inventory_Histories.id", productName: "CombinedQuery.productName", createdAt: "Inventory_Histories.createdAt", };
-    productName = productName || ""; // Empty string if not provided
+    productName = productName ? `%${productName}%` : ""; // formating that for like query
     orderBy = mapOrderBy[orderBy] || "Inventory_Histories.id"; // Default to 'Inventory_Histories.id' if not provided
     orderByMethod = orderByMethod || "ASC"; // Default to 'ASC' if not provided
     branchId = branchId || ""; // Empty string if not provided
@@ -132,7 +132,7 @@ module.exports = {
     JOIN
         Inventory_Histories ON Inventory_Histories.id_inventory = CombinedQuery.id
     WHERE
-        ${productName ? "CombinedQuery.productName = :productName" : "1 = 1"}
+        ${productName ? "CombinedQuery.productName LIKE :productName" : "1 = 1"}
         AND Inventory_Histories.createdAt BETWEEN :startDate AND :endDate
     ORDER BY
         ${orderBy} ${orderByMethod}
@@ -157,7 +157,7 @@ module.exports = {
     JOIN
         Inventory_Histories ON Inventory_Histories.id_inventory = CombinedQuery.id
     WHERE
-        ${productName ? "CombinedQuery.productName = :productName" : "1 = 1"}
+        ${productName ? "CombinedQuery.productName LIKE :productName" : "1 = 1"}
         AND Inventory_Histories.createdAt BETWEEN :startDate AND :endDate;
   `;
 
