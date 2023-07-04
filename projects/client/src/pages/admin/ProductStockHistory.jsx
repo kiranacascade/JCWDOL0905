@@ -219,7 +219,7 @@ function ProductStockHistory() {
                   name="orderByMethod"
                   className="w-52"
                   onChange={(e) => setOrderByMethod(e.target.value)}
-                  value={orderByMethod || "id"}
+                  value={orderByMethod || "ASC"}
                 >
                   <option value="ASC">ASC</option>
                   <option value="DESC">DESC</option>
