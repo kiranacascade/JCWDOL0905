@@ -121,7 +121,6 @@ module.exports = {
         res.status(404).send({isError: true, message: "Find inventory failed"})
     }
   },
-  
   getInventoryById: async (req, res) => {
     const id = req.params.id;
     try {
@@ -170,4 +169,48 @@ module.exports = {
       res.status(404).send({isError: true, message: "Fetch inventory by Id failed"})
     }
   },
+  updateStock: async (req, res) => {
+    const id = req.params.id;
+    try {
+      const {stock} = req.body;
+      console.log(stock)
+
+      const inventoryData = await inventory.findOne({
+        where: {id : id}
+      })
+
+      if (!inventoryData) {
+        return res.status(404).send({ isError: true, message: "Inventory not exist", navigate: true})
+      }
+
+      const data = await inventory.update({
+        stock: stock
+      },{
+        where: {id: id},
+      })
+      
+      let status = inventoryData.stock < stock ? "in" : "out";
+      let qty = Math.abs(inventoryData.stock - stock);
+
+      const result = await inventoryHistory.create({
+        status: status,
+        reference: 'manual',
+        quantity: qty,
+        id_inventory: id,
+      })
+
+      res.status(200).send({
+        isError: false,
+        message: "Successfully update stock",
+        stock: stock,
+        inventoryData: inventoryData,
+        inventory: data,
+        inventoryHistory: result
+      });
+
+    } catch (error) {
+      console.log(error);
+      res.status(404).send({isError: true, message: "Update stock failed"})
+    }
+  }
 };

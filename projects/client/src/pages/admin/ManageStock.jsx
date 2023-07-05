@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { Pagination } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import "semantic-ui-css/semantic.min.css";
+import UpdateStockModal from "../../component/UpdateStockModal";
 
 const ManageStock = () => {
   const [activePage, setActivePage] = useState(1);
@@ -19,6 +20,8 @@ const ManageStock = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedBranchId, setSelectedBranchId] = useState(1);
   const [storeBranches, setStoreBranches] = useState([]);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState({})
   const role = useSelector((state) => state.adminSlice.role);
   const id_branch = useSelector((state) => state.adminSlice.id_branch);
 
@@ -111,6 +114,16 @@ const ManageStock = () => {
     }
     fetchInventories()
   }};
+
+  const openEditModal = (inventoryData) => {
+    setSelectedProduct(inventoryData);
+    setEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setSelectedProduct({});
+    setEditModalOpen(false);
+  };
 
   function formatIDR(price) {
     let idr = Math.floor(price).toLocaleString("id-ID");
@@ -286,10 +299,13 @@ const ManageStock = () => {
                             </td>
                             <td className="flex whitespace-nowrap px-3 py-3 text-center text-sm font-medium sm:pr-3 justify-center">
                               <div className="flex row">
+                                <button className="hover:bg-gray-100 hover:rounded-md p-1" onClick={() => openEditModal(inventory)}>
                                 <PencilSquareIcon
                                   className="fill-green-600 block h-6 w-6"
                                   aria-hidden="true"
                                 />
+                                </button>
+                                
                               </div>
                             </td>
                           </tr>
@@ -312,6 +328,7 @@ const ManageStock = () => {
           </div>
           <div></div>
         </div>
+        {editModalOpen && (<UpdateStockModal open={editModalOpen} setOpen={setEditModalOpen} inventory={selectedProduct} cancelButtonRef={null} onClose={closeEditModal} />)}
       </div>
     </Layout>
   );
