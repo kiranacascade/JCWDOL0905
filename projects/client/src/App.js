@@ -142,7 +142,7 @@ function App() {
               <Route Component={ManageDiscount} path="/admin/manage-discount" />
               <Route Component={ManageVoucher} path="/admin/manage-voucher" />
               <Route Component={ManageProduct} path="/admin/manage-product" />
-              <Route Component={ManageStock} path="/manage-stock" />
+              <Route Component={ManageStock} path="/admin/manage-stock" />
             </Routes>
           </BrowserRouter>
         </>
