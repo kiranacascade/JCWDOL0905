@@ -59,12 +59,14 @@ function ProductStockHistory() {
   const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 5);
   const [tableData, setTableData] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
-  const [selectedStartDate, setSelectedStartDate] = useState(null);
-  const [selectedEndDate, setSelectedEndDate] = useState(null);
-  const [productName, setProductName] = useState("");
-  const [branchId, setBranchId] = useState("All");
-  const [orderBy, setOrderBy] = useState("id");
-  const [orderByMethod, setOrderByMethod] = useState("ASC");
+  const [selectedStartDate, setSelectedStartDate] = useState(searchParams.get("startDate")||"");
+  const [selectedEndDate, setSelectedEndDate] = useState(searchParams.get("endDate")||"");
+  const [productName, setProductName] = useState(searchParams.get("productName")||"");
+  const [branchId, setBranchId] = useState(searchParams.get("branchId")||"All");
+  const [orderBy, setOrderBy] = useState(searchParams.get("orderBy") || "id");
+  const [sortDirection, setSortDirection] = useState(
+    searchParams.get("sortDirection") || "ASC"
+  );
   const [storeData, setStoreData] = useState([]);
   const { id_branch, role } = useSelector((state) => state.adminSlice);
   const isFirstRender = useRef(true);
@@ -78,21 +80,30 @@ function ProductStockHistory() {
   };
 
   useEffect(() => {
-    setSearchParams({ page: page.toString(), limit: limit.toString() });
-  }, [page, limit, setSearchParams]);
+    setSearchParams({ 
+      page: page.toString(),
+      limit: limit.toString(),
+      orderBy: orderBy,
+      sortDirection: sortDirection,
+      branchId: branchId,
+      startDate: selectedStartDate,
+      endDate: selectedEndDate,
+      productName: productName,
+    });
+  }, [page, limit, setSearchParams, orderBy, sortDirection, branchId,selectedStartDate, selectedEndDate,productName]);
 
   const getListOfInventoryHistory = async (id_branch) => {
     try {
-      const response = await api.get(`inventory/findInventoryHistory`, {
+      const response = await api.get(`inventory/admin/history`, {
         params: {
-          endDate: selectedEndDate === null ? null : moment(selectedEndDate).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
-          startDate: selectedStartDate === null ? null : moment(selectedStartDate).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+          endDate: selectedEndDate === "" ? null : moment(selectedEndDate).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+          startDate: selectedStartDate === "" ? null : moment(selectedStartDate).startOf('day').format('YYYY-MM-DD HH:mm:ss'),
           page: page,
           limit: limit,
           productName: productName === "" ? null : productName,
           branchId: id_branch === "All" ? null : id_branch,
           orderBy: orderBy,
-          orderByMethod: orderByMethod,
+          orderByMethod: sortDirection,
         },
       });
       setTableData(response.data.data.items);
@@ -217,8 +228,8 @@ function ProductStockHistory() {
                   id="orderByMethod"
                   name="orderByMethod"
                   className="w-52"
-                  onChange={(e) => setOrderByMethod(e.target.value)}
-                  value={orderByMethod || "ASC"}
+                  onChange={(e) => setSortDirection(e.target.value)}
+                  value={sortDirection || "ASC"}
                 >
                   <option value="ASC">ASC</option>
                   <option value="DESC">DESC</option>

@@ -67,8 +67,8 @@ function AdminManagement() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
   const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 5);
-  const [filterState, setFilterState] = useState("");
-  const [filterType, setFilterType] = useState("");
+  const [filterState, setFilterState] = useState( searchParams.get("filter") ||"");
+  const [filterType, setFilterType] = useState(searchParams.get("filterType") ||"");
   const [tableData, setTableData] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [open, setOpen] = useState(false);
@@ -115,8 +115,8 @@ function AdminManagement() {
   }, [page, limit]);
 
   useEffect(() => {
-    setSearchParams({ page: page.toString(), limit: limit.toString() });
-  }, [page, limit, setSearchParams]);
+    setSearchParams({ page: page.toString(), limit: limit.toString(), filter: filterState, filterType: filterType });
+  }, [page, limit, setSearchParams, filterState, filterType]);
 
   return (
     <Layout>

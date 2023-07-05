@@ -16,22 +16,22 @@ module.exports = {
     try {
       let { email, password } = req.body;
       if (!email || !password)
-        return res.status(404) .send({ isError: true, message: "Please fill all the required fields", });
+        return res.status(404).send({ isError: true, message: "Please fill all the required fields", });
       let resultAdmin = await admins.findOne({ where: { email: email } });
       if (!resultAdmin) {
-        return res.status(404) .send({ isError: true, message: "Invalid email or password" });
+        return res .status(404) .send({ isError: true, message: "Invalid email or password" });
       }
       bcrypt.compare(password, resultAdmin.password, async (err, result) => {
         if (err) {
-          res.status(404) .send({ isError: true, message: "Login failed when comparing password", });
+          res.status(404).send({ isError: true, message: "Login failed when comparing password", });
         } else if (result) {
           const token = jwt.sign( { id_admin: resultAdmin.id, email: resultAdmin.email, role: resultAdmin.role, }, jwtKey );
           await admins.update( { token_admin: token }, { where: { id: resultAdmin.id } } );
           let getAdmin = await admins.findOne({ where: { id: resultAdmin.id }, });
           delete getAdmin.dataValues.password;
-          res.status(200) .send({ isError: false, message: "Login Success", data: getAdmin });
+          res .status(200) .send({ isError: false, message: "Login Success", data: getAdmin });
         } else {
-          return res.status(404) .send({ isError: true, message: "Invalid email or password" });
+          return res .status(404) .send({ isError: true, message: "Invalid email or password" });
         }
       });
     } catch (error) {
@@ -43,10 +43,10 @@ module.exports = {
     try {
       let { name, email, password, branchId } = req.body;
       if (!name || !email || !password || !branchId)
-        return res.status(404) .send({ isError: true, message: "Please fill all the required fields", });
+        return res.status(404).send({ isError: true, message: "Please fill all the required fields", });
       let charEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!charEmail.test(email))
-        return res.status(404) .send({ isError: true, message: "Invalid email format" });
+        return res.status(404).send({ isError: true, message: "Invalid email format" });
       let findEmail = await admins.findOne({ where: { email: email } });
       if (findEmail)
         return res.status(404) .send({ isError: true, message: "Email already exists" });
@@ -67,22 +67,22 @@ module.exports = {
       const { name, email, password, branchId } = req.body;
       const { id } = req.params;
       if (!name || !email || !branchId) {
-        return res.status(404) .send({ isError: true, message: "Please fill all the required fields", });
+        return res.status(404).send({ isError: true, message: "Please fill all the required fields", });
       }
       const charEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!charEmail.test(email)) {
-        return res.status(404) .send({ isError: true, message: "Invalid email format" });
+        return res.status(404).send({ isError: true, message: "Invalid email format" });
       }
       const findUserById = await admins.findOne({ where: { id: id } });
       const findEmail = await admins.findAll({ where: { email: { [Op.ne]: findUserById.email } }, });
       for (const element of findEmail) {
         if (email === element.email) {
-          return res.status(404) .send({ isError: true, message: "User already exists, use other email", });
+          return res.status(404).send({ isError: true, message: "User already exists, use other email", });
         }
       }
       const char = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=[\]{}|\\,./?'":;<>~`])(?!.*\s).{8,}$/;
       if (password && !char.test(password)) {
-        return res.status(404) .send({ isError: true, message: "Password must contain at least 8 characters including an uppercase letter, a symbol, and a number", });
+        return res.status(404).send({ isError: true, message: "Password must contain at least 8 characters including an uppercase letter, a symbol, and a number", });
       }
       const salt = await bcrypt.genSalt(10);
       const hashPass = password ? await bcrypt.hash(password, salt) : undefined;
@@ -90,9 +90,9 @@ module.exports = {
       if (hashPass) { updateData.password = hashPass; }
       const result = await admins.update(updateData, { where: { id: id }, });
       if (result[0] === 0) {
-        return res .status(404) .send({ isError: true, message: "User not found" });
+        return res .status(404).send({ isError: true, message: "User not found" });
       }
-      res.status(200) .send({ isError: false, message: "User has been updated successfully", data: { admin_name: name, email, password: hashPass, id_branch: branchId, }, });
+      res.status(200).send({ isError: false, message: "User has been updated successfully", data: { admin_name: name, email, password: hashPass, id_branch: branchId, }, });
     } catch (error) {
       console.log(error);
       res.status(404).send({ isError: true, message: "Update failed" });
@@ -197,13 +197,14 @@ module.exports = {
     }
   },
   getSalesReport: async (req, res) => {
-    let { orderBy, orderByMethod, branchId, startDate, endDate, page, limit, productName, userName} = req.query;
+    let { orderBy, orderByMethod, branchId, startDate, endDate, page, limit, productName, userName, transactionId} = req.query;
     const mapOrderBy = {createdAt: "Transaction_Headers.createdAt", productQuantity: "CombinedQuery.product_qty"};
     orderBy = mapOrderBy[orderBy] || "Transaction_Headers.id";
     orderByMethod = orderByMethod || "ASC";
     branchId = branchId || "";
     productName = productName ? `%${productName}%` : "";
     userName = userName ? `%${userName}%` : "";
+    transactionId = transactionId ? `%${transactionId}%` : "";
     startDate = startDate || "1970-01-01 00:00:00";
     endDate = endDate || "9999-12-31 23:59:59";
     page = parseInt(page) || 1;
@@ -226,6 +227,7 @@ module.exports = {
     AND Transaction_Headers.createdAt BETWEEN :startDate AND :endDate
     AND ${productName ? "CombinedQuery.productName LIKE :productName" :"1 = 1"}
     AND ${userName ? "Users.name LIKE :userName" :"1 = 1"}
+    AND ${transactionId ? "Transaction_Headers.id LIKE :transactionId" :"1 = 1"}
     ORDER BY
     ${orderBy} ${orderByMethod}
     LIMIT :limit
@@ -246,9 +248,11 @@ module.exports = {
     AND ${branchId ? "CombinedQuery.branchId = :branchId" : "1 = 1"}
     AND Transaction_Headers.createdAt BETWEEN :startDate AND :endDate
     AND ${productName ? "CombinedQuery.productName LIKE :productName" :"1 = 1"}
-    AND ${userName ? "Users.name LIKE :userName" :"1 = 1"};`
-    const result = await db.sequelize.query(salesReportQuery, { replacements: { branchId, startDate, endDate, limit, offset, productName, userName}, });
-    const countResult = await db.sequelize.query(countQuery, { replacements: { branchId, startDate, endDate,  productName, userName}, });
+    AND ${userName ? "Users.name LIKE :userName" :"1 = 1"}
+    AND ${transactionId ? "Transaction_Headers.id LIKE :transactionId" :"1 = 1"}
+    ;`
+    const result = await db.sequelize.query(salesReportQuery, { replacements: { branchId, startDate, endDate, limit, offset, productName, userName, transactionId}, });
+    const countResult = await db.sequelize.query(countQuery, { replacements: { branchId, startDate, endDate,  productName, userName, transactionId}, });
     const totalItems = countResult[0][0].total
     const totalPages = Math.ceil(totalItems / limit);
     const data = { totalItems, totalPages, currentPage: page, items: result[0], };

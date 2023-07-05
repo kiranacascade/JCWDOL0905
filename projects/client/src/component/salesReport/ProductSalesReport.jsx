@@ -128,33 +128,46 @@ function ProductSalesReport() {
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
   const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 5);
   const [totalPages, setTotalPages] = useState(0);
-  const [branchId, setBranchId] = useState("All");
+  const [branchId, setBranchId] = useState(searchParams.get("branchId")||"All");
   const [storeData, setStoreData] = useState([]);
-  const [selectedStartDate, setSelectedStartDate] = useState(null);
-  const [selectedEndDate, setSelectedEndDate] = useState(null);
+  const [selectedStartDate, setSelectedStartDate] = useState(searchParams.get("startDate")||"");
+  const [selectedEndDate, setSelectedEndDate] = useState(searchParams.get("endDate")||"");
   const [orderBy, setOrderBy] = useState(searchParams.get("orderBy") || "createdAt");
   const [sortDirection, setSortDirection] = useState(
     searchParams.get("sortDirection") || "ASC"
   );
   const [tableData, setTableData] = useState([]);
   const isFirstRender = useRef(true);
-  const [productName, setProductName] = useState("");
-  const [userName, setUserName] = useState("");
+  const [productName, setProductName] = useState(searchParams.get("productName")||"");
+  const [userName, setUserName] = useState(searchParams.get("userName")||"");
+  const [transactionId, setTransactionId] = useState(searchParams.get("transactionId")||"");
 
   const { id_branch, role } = useSelector((state) => state.adminSlice);
+
+  // const handleSearch = (id_branch) => {
+  //   setSearchParams({
+  //     ...searchParams,
+  //     page: page.toString(),
+  //     limit: limit.toString(),
+  //     orderBy: orderBy,
+  //     sortDirection: sortDirection,
+  //     branchId: id_branch
+  //   });
+  //   getListOfSalesReport(id_branch)
+  // }
 
   const getListOfSalesReport = async (id_branch) => {
     try {
       const response = await api.get(`admins/sales-report`, {
         params: {
           endDate:
-            selectedEndDate === null
+            selectedEndDate === ""
               ? null
               : moment(selectedEndDate)
                   .endOf("day")
                   .format("YYYY-MM-DD HH:mm:ss"),
           startDate:
-            selectedStartDate === null
+            selectedStartDate === ""
               ? null
               : moment(selectedStartDate)
                   .startOf("day")
@@ -166,6 +179,7 @@ function ProductSalesReport() {
           orderByMethod: sortDirection,
           productName: productName === "" ? null : productName,
           userName: userName === "" ? null : userName,
+          transactionId: transactionId === "" ? null : transactionId
         },
       });
       setTableData(response.data.data.items);
@@ -207,12 +221,19 @@ function ProductSalesReport() {
 
   useEffect(() => {
     setSearchParams({
+      ...searchParams,
       page: page.toString(),
       limit: limit.toString(),
       orderBy: orderBy,
       sortDirection: sortDirection,
+      branchId: branchId,
+      productName: productName,
+      userName: userName,
+      transactionId: transactionId,
+      startDate: selectedStartDate,
+      endDate: selectedEndDate
     });
-  }, [page, limit, setSearchParams, orderBy, sortDirection]);
+  }, [page, limit, setSearchParams, orderBy, sortDirection, branchId, productName, userName, transactionId, selectedStartDate, selectedEndDate]);
 
   const getListOfStoreData = async () => {
     try {
@@ -293,7 +314,19 @@ function ProductSalesReport() {
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
               />
-            </div>            
+            </div>      
+            <div className="flex items-center space-x-4">
+              <p className="w-24 text-right">Transaction ID:</p>
+              <input
+                type="text"
+                name="name"
+                className="w-52 rounded-md text-sm px-4 py-2 focus:outline-none focus:border-green-400 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset"
+                placeholder="search by Transaction ID"
+                required
+                value={transactionId}
+                onChange={(e) => setTransactionId(e.target.value)}
+              />
+            </div>        
             {renderSearchByBranch()}
             <div className="flex items-center space-x-4">
               <p className="w-24 text-right">Sort By:</p>

@@ -35,12 +35,17 @@ import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import { ManageCategory } from "./pages/admin/ManageCategory";
 import { ManageDiscount } from "./pages/admin/ManageDiscount";
 import { ManageVoucher } from "./pages/admin/ManageVoucher";
+import { ManageProduct } from "./pages/admin/ManageProduct";
 import AdminManagement from "./pages/admin/AdminManagement";
 import ProtectedPageAdmin from "./component/ProtectedPageAdmin";
 import TokenInvalidAdmin from "./pages/admin/TokenInvalidAdmin";
 import { ROLE } from "./constant/role";
 import ProductStockHistory from "./pages/admin/ProductStockHistory";
 import SalesReport from "./pages/admin/SalesReport";
+import AddressPage from "./pages/user/AddressPage";
+import CreateOrder from "./pages/user/CreateOrder";
+import OrderList from "./pages/admin/OrderList";
+
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -55,7 +60,9 @@ function App() {
 
     const fetchUser = async (token) => {
       try {
-        const res = await api.get(`/users/auth/${token}`);
+        const res = await api.get(`/users/auth/${token}`, {
+          headers: {Authorization : `Bearer ${token}`}
+        });
         dispatch(login(res.data.user));
         dispatch(setAccessToken(token));
       } catch (error) {
@@ -140,6 +147,13 @@ function App() {
               <Route Component={ManageCategory} path="/manage-category" />
               <Route Component={ManageDiscount} path="/manage-discount" />
               <Route Component={ManageVoucher} path="/manage-voucher" />
+              <Route Component={ManageCategory} path="/admin/manage-category" />
+              <Route Component={ManageDiscount} path="/admin/manage-discount" />
+              <Route Component={ManageVoucher} path="/admin/manage-voucher" />
+              <Route Component={ManageProduct} path="/admin/manage-product" />
+              <Route Component={OrderList} path="/order-list" />
+              <Route element={<ProtectedPage needLogin={true}><AddressPage /></ProtectedPage>} path="/address" />
+              <Route element={<ProtectedPage needLogin={true}><CreateOrder /></ProtectedPage>} path="/order" />
             </Routes>
           </BrowserRouter>
         </>

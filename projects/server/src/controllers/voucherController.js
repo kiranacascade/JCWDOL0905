@@ -2,7 +2,10 @@ const db = require("../models");
 const voucher = db.Voucher;
 const inventory = db.Inventory;
 const product = db.Product;
+const branch = db.Store_Branch;
 const { Op } = require("sequelize");
+const jwt = require("jsonwebtoken");
+const jwtKey = process.env.JWT_SECRET_KEY;
 
 
 module.exports = {
@@ -138,7 +141,6 @@ module.exports = {
   },
   getAllVouchers: async (req, res) => {
     try {
-      if (req.admin.role === "BRANCH_ADMIN") {
         const result = await voucher.findAndCountAll({
           where: {
             end_date: {
@@ -148,38 +150,15 @@ module.exports = {
           include: {
             required : false,
             model: inventory,
-            where: { id_branch: req.admin.id_branch },
-            include: {
-              model: product
-            }
+            include: [{model: product}, {model: branch, attributes: ["branch_name"]}]
           },
         });
 
-        return res.status(200).send({
+        res.status(200).send({
           isError: true,
           message: "Successfully get all vouchers",
           data: result
         });
-      }
-
-      const branchId = req.query.branchId;
-      const result = await voucher.findAndCountAll({
-        where: {
-            end_date: {
-                [Op.gte]: new Date()
-            }
-        },
-        include: {
-          model: inventory,
-          where: { id_branch: branchId },
-        },
-      });
-
-      res.status(200).send({
-        isError: true,
-        message: "Successfully get all vouchers",
-        data: result
-      });
 
     } catch (err) {
       console.log(err);
@@ -188,5 +167,32 @@ module.exports = {
         message: "Error get all vouchers",
       });
     }
+  },
+
+  getUserVoucher: async (req, res) => {
+    try {
+        let bearerToken = req.headers['authorization'];
+        bearerToken = bearerToken.split(' ')[1]
+        const user = jwt.verify(bearerToken, jwtKey);
+
+        const query = `select user_vouchers.id, user_vouchers.id,
+        vouchers.voucher_type, vouchers.voucher_kind, vouchers.voucher_code, vouchers.voucher_value,
+        vouchers.max_discount, vouchers.min_purchase_amount, vouchers.start_date, vouchers.end_date, vouchers.id_inventory
+        from user_vouchers
+        join vouchers on vouchers.id = user_vouchers.id_voucher
+        where id_user = ${user.id_user}
+        and is_used = 0
+        and now() between vouchers.start_date and vouchers.end_date;`;
+    
+
+        const [results] = await db.sequelize.query(query);
+        res.status(200).send({
+            message: "Successfully fetch user voucher",
+            results,
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({isError: true, message: "Get user voucher failed"})}
   },
 };
