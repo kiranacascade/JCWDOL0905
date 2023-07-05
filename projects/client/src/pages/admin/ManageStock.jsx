@@ -7,8 +7,9 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { useSelector } from "react-redux";
 import { Pagination } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
+import "semantic-ui-css/semantic.min.css";
 
-export const ManageStock = () => {
+const ManageStock = () => {
   const [activePage, setActivePage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [categories, setCategories] = useState([]);
@@ -27,9 +28,9 @@ export const ManageStock = () => {
   useEffect(() => {
     async function getStoreBranches() {
         try {
-          const storeData = await api.get('/branch')
+          const storeData = await api.get('/branch/')
           setStoreBranches(storeData.data.data)
-          console.log(storeData.data.data)
+          console.log("Branches", storeData.data.data)
         } catch (error) {
           console.log(error)
         }
@@ -315,3 +316,5 @@ export const ManageStock = () => {
     </Layout>
   );
 };
+
+export default ManageStock;

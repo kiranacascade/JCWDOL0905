@@ -9,7 +9,7 @@ import EditCategoryModal from "../../component/manageCategory/EditCategoryModal"
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { Pagination } from "semantic-ui-react";
 
-export const ManageCategory = () => {
+const ManageCategory = () => {
   const [activePage, setActivePage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [categories, setCategories] = useState([]);
@@ -229,3 +229,6 @@ export const ManageCategory = () => {
     </Layout>
   );
 };
+
+
+export default ManageCategory;

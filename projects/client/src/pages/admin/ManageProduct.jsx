@@ -9,7 +9,7 @@ import AddProductModal from "../../component/manageProduct/AddProductModal";
 import EditProductModal from "../../component/manageProduct/EditProductModal";
 import Layout from "../../component/Layout";
 
-export const ManageProduct = () => {
+const ManageProduct = () => {
   const [activePage, setActivePage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [sort, setSort] = useState(1);
@@ -254,3 +254,5 @@ export const ManageProduct = () => {
     </Layout>
   );
 };
+
+export default ManageProduct;
