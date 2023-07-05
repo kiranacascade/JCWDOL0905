@@ -5,7 +5,7 @@ import CreateVoucherModal from "../../component/CreateVoucherModal";
 import Layout from "../../component/Layout";
 import { useSelector } from "react-redux";
 
-export const ManageVoucher = () => {
+const ManageVoucher = () => {
   const [vouchers, setVouchers] = useState([]);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const token = localStorage.getItem("token_admin");
@@ -156,3 +156,5 @@ export const ManageVoucher = () => {
     </Layout>
   );
 };
+
+export default ManageVoucher;

@@ -6,7 +6,7 @@ import Layout from "../../component/Layout";
 import { useSelector } from "react-redux";
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
-export const ManageDiscount = () => {
+const ManageDiscount = () => {
   const [discounts, setDiscounts] = useState([]);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [selectedBranchId, setSelectedBranchId] = useState(1);
@@ -151,3 +151,5 @@ export const ManageDiscount = () => {
     </Layout>
   );
 };
+
+export default ManageDiscount;
