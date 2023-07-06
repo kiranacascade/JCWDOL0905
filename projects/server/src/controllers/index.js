@@ -10,24 +10,18 @@ const adminController = require("./adminController")
 const cartController = require("./cartController")
 const discountController = require("./discountController")
 const voucherController = require("./voucherController")
-const cityController = require("./cityController")
-const shippingController = require("./shippingController")
-const transactionController = require("./transactionController")
 
 module.exports = {
-    userController,
-    profileController,
-    addressController,
-    branchController,
-    suggestionController,
-    categoryControllers,
-    productControllers,
-    inventoryControllers,
-    adminController,
-    cartController,
-    discountController,
-    voucherController,
-    cityController,
-    shippingController,
-    transactionController,
+  userController,
+  profileController,
+  addressController,
+  branchController,
+  suggestionController,
+  categoryControllers,
+  productControllers,
+  inventoryControllers,
+  adminController,
+  cartController,
+  discountController,
+  voucherController
 }

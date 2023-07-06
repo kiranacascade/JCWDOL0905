@@ -12,7 +12,6 @@ import { setUsrLocation } from "../../redux/locationSlice";
 import { setBranchId } from "../../redux/branchSlice";
 import { api } from "../../api/api";
 import toast, { Toaster } from "react-hot-toast";
-import pin from "../../assets/images/pin.png"
 
 const LandingPage = () => {
   const dispatch = useDispatch();
@@ -101,7 +100,7 @@ const LandingPage = () => {
         <Carousel />
         <Category/>
         <span className="inline-flex items-start">
-          <img src={pin} alt="" className="self-center w-4 h-4 rounded-full mr-1" />
+          <img src="https://cdn-icons-png.flaticon.com/512/67/67347.png" alt="" className="self-center w-4 h-4 rounded-full mr-1" />
           <span>
             {products.length>0 ? `${products[0].branch_name} (${products[0].city})` : ""}
           </span>
