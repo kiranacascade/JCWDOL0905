@@ -27,7 +27,7 @@ function Table({ tableData }) {
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900"
                   >
                     {" "}
                     Branch Name{" "}
