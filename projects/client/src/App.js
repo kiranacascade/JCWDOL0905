@@ -41,6 +41,10 @@ import AdminManagement from "./pages/admin/AdminManagement";
 import ProtectedPageAdmin from "./component/ProtectedPageAdmin";
 import TokenInvalidAdmin from "./pages/admin/TokenInvalidAdmin";
 import { ROLE } from "./constant/role";
+import AddressPage from "./pages/user/AddressPage";
+import CreateOrder from "./pages/user/CreateOrder";
+import OrderList from "./pages/admin/OrderList";
+
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -142,6 +146,9 @@ function App() {
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <ManageVoucher /> </ProtectedPageAdmin> } path="/admin/manage-voucher" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <ManageProduct /> </ProtectedPageAdmin> } path="/admin/manage-product" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <ManageStock /> </ProtectedPageAdmin> } path="/admin/manage-stock" />
+              <Route Component={OrderList} path="/order-list" />
+              <Route element={<ProtectedPage needLogin={true}><AddressPage /></ProtectedPage>} path="/address" />
+              <Route element={<ProtectedPage needLogin={true}><CreateOrder /></ProtectedPage>} path="/order" />
             </Routes>
           </BrowserRouter>
         </>
