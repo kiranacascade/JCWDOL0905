@@ -25,17 +25,6 @@ module.exports = {
           });
         }
 
-        // const productExist = await product.findOne({
-        //   where: {product_name: product_name}
-        // })
-
-        // if (productExist) {
-        //   return res.status(400).send({
-        //     isError: true,
-        //     message: "A product with the same name already exists"
-        //   })
-        // }
-
         let imageUrl = req.protocol + "://" + req.get("host") + "/api/products/" + req.file.filename;
 
         const newProduct = await product.create({
@@ -63,7 +52,8 @@ module.exports = {
             status: "in",
             reference: "initial",
             quantity: 0,
-            id_inventory: newInventory.id
+            id_inventory: newInventory.id,
+            current_stock: 0
           });
           initStocks.push(initStock);
         }
