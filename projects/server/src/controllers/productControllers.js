@@ -63,7 +63,8 @@ module.exports = {
             status: "in",
             reference: "initial",
             quantity: 0,
-            id_inventory: newInventory.id
+            id_inventory: newInventory.id,
+            current_stock: 0
           });
           initStocks.push(initStock);
         }
