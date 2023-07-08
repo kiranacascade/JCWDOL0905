@@ -15,6 +15,12 @@ export default function UpdateStockModal({ open, setOpen, onClose, product, cate
     stock: Yup.number("Stock must be a number")
       .positive("Stock must be a positive number")
       .integer("Stock must be an integer"),
+      addition: Yup.number("Addition quantity must be a number")
+      .min(0, "Stock must be at least 0")
+      .integer("Addition quantity must be an integer"),
+    substraction: Yup.number("Substraction quantity must be a number")
+      .min(0, "Stock must be at least 0")
+      .integer("Substraction quantity must be an integer"),
   });
 
   useEffect(() => {
@@ -31,16 +37,6 @@ export default function UpdateStockModal({ open, setOpen, onClose, product, cate
 
   const editProduct = async (values) => {
     try {
-    //   const fileInput = document.getElementById("image");
-    //   const file = fileInput.files[0];
-
-    //   const formData = new FormData();
-    //   formData.append("product_name",values.product_name);
-    //   formData.append("id_category",values.id_category);
-    //   formData.append("product_description",values.product_description);
-    //   formData.append("product_price",values.product_price);
-    //   formData.append("weight",values.weight);
-    //   formData.append("image", file);
 
       const config = {
         headers: { Authorization: `Bearer ${token}` },
@@ -57,7 +53,7 @@ export default function UpdateStockModal({ open, setOpen, onClose, product, cate
 
   return (
     <Formik
-      initialValues={{ product_name: inventory?.Product?.product_name || "", stock: inventory?.stock }}
+      initialValues={{ stock: inventory?.stock, addition: 0, substraction: 0 }}
       validationSchema={editStockSchema}
       onSubmit={(values) => editProduct(values)}
     >
@@ -103,74 +99,107 @@ export default function UpdateStockModal({ open, setOpen, onClose, product, cate
                               <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                                 <Dialog.Title
                                   as="h3"
-                                  className="text-lg font-semibold leading-6 text-gray-900"
+                                  className="text-xl font-semibold leading-6 text-gray-900"
                                 >
                                   Update Stock
                                 </Dialog.Title>
                                 <div className="mt-8 mb-4 w-96">
                                   {/* <Form> */}
-                                  <Field name="product_name">
-                                    {({ field, form }) => (
-                                      <div>
-                                        <label
-                                          htmlFor="product_name"
-                                          className="block text-md font-medium leading-6 text-gray-900"
-                                        >
-                                          Product Name
-                                        </label>
-                                        <div className="my-2">
-                                          <input
-                                            {...field} id="product_name" type="text" disabled className={`block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 disabled:opacity-60 ${
-                                              form.errors.product_name &&
-                                              form.touched.product_name
-                                                ? "ring-2 ring-red-600"
-                                                : ""
-                                            }`}
-                                          />
-                                          <ErrorMessage
-                                            component="div"
-                                            name="product_name"
-                                            className="text-red-500 text-sm mt-1"
-                                          />
-                                        </div>
+                                  <div className="flex mb-4">
+                                    <div className="flex w-20 h-20 bg-neutral-300 shrink-0 mr-3">
+                                      <div className="square-image-container rounded-md">
+                                        <img
+                                          src={inventory?.Product?.product_image}
+                                          alt={inventory?.Product?.product_name}
+                                          className="w-full h-full object-cover object-center sm:h-full sm:w-full rounded-md"
+                                        />
                                       </div>
-                                    )}
-                                  </Field>
-                                  
-                                
-                                  <Field name="stock">
-                                    {({ field, form }) => (
+                                    </div>
+                                    <div className="flex-row h-full">
                                       <div className="">
-                                        <label
-                                          htmlFor="stock"
-                                          className="block text-md font-medium leading-6 text-gray-900"
-                                        >
-                                          Price
-                                        </label>
-                                        <div className="my-2">
-                                          <div className="relative">
-                                            <input
-                                              {...field}
-                                              id="stock" type="number" 
-                                              className={`block w-full rounded-md border-0 px-2 pt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 ${
-                                                form.errors.stock &&
-                                                form.touched.stock
-                                                  ? "ring-2 ring-red-600"
-                                                  : ""
-                                              }`}
+                                        <h4 className="font-bold text-gray-700 mb-1">
+                                          {inventory?.Product?.product_name}
+                                        </h4>
+                                        <p className="text-md text-gray-500">In stock : <span className="text-green-600 font-bold">{inventory?.stock}</span></p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                 
+
+                                  <div className="flex">
+                                    <Field name="addition">
+                                      {({ field, form }) => (
+                                        <div className="">
+                                          <label
+                                            htmlFor="addition"
+                                            className="block text-md font-medium leading-6 text-gray-900"
+                                          >
+                                            Add
+                                          </label>
+                                          <div className="my-2">
+                                            <div className="relative">
+                                              <input
+                                                {...field}
+                                                id="addition"
+                                                type="number"
+                                                className={`block w-full rounded-md border-0 px-2 pt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:opacity-50 ${
+                                                  form.errors.addition &&
+                                                  form.touched.addition
+                                                    ? "ring-2 ring-red-600"
+                                                    : ""
+                                                }`}
+                                                disabled={
+                                                  form.values.substraction != 0
+                                                }
+                                              />
+                                            </div>
+                                            <ErrorMessage
+                                              name="addition"
+                                              component="div"
+                                              className="text-red-500 text-sm mt-1"
                                             />
                                           </div>
-                                          <ErrorMessage
-                                            name="stock"
-                                            component="div"
-                                            className="text-red-500 text-sm mt-1"
-                                          />
                                         </div>
-                                      </div>
-                                    )}
-                                  </Field>
+                                      )}
+                                    </Field>
 
-                                  
+                                    <Field name="substraction">
+                                      {({ field, form }) => (
+                                        <div className="ml-4">
+                                          <label
+                                            htmlFor="substraction"
+                                            className="block text-md font-medium leading-6 text-gray-900"
+                                          >
+                                            Substract
+                                          </label>
+                                          <div className="my-2">
+                                            <div className="relative">
+                                              <input
+                                                {...field}
+                                                id="substraction"
+                                                type="number"
+                                                className={`block w-full rounded-md border-0 px-2 py-1.5 pt-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:opacity-50 ${
+                                                  form.errors.substraction &&
+                                                  form.touched.substraction
+                                                    ? "ring-2 ring-red-600"
+                                                    : ""
+                                                }`}
+                                                disabled={
+                                                  form.values.addition != 0
+                                                }
+                                              />
+                                            </div>
+                                            <ErrorMessage
+                                              name="substraction"
+                                              component="div"
+                                              className="text-red-500 text-sm mt-1"
+                                            />
+                                          </div>
+                                        </div>
+                                      )}
+                                    </Field>
+                                  </div>
+
                                   {/* </Form> */}
                                 </div>
                               </div>

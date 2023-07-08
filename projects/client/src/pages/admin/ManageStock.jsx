@@ -94,6 +94,11 @@ const ManageStock = () => {
     setActivePage(1);
   };
 
+  const handleFilterCategory = (e) => {
+    setSelectedCategory(e.target.value)
+    setActivePage(1);
+  };
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
     setActivePage(1);
@@ -177,7 +182,7 @@ const ManageStock = () => {
                   onKeyDown={handleKeyDown}
                   className="w-full rounded-md border-0 pl-10 pr-40 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-md sm:leading-6"
                 />
-                <select className="absolute right-0 bg-gray-100 right-0 rounded-r-md border border-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 active:border-green-500 hover:border-green-500 target:border-green-500" onChange={(e) => setSelectedCategory(e.target.value)}>
+                <select className="absolute right-0 bg-gray-100 right-0 rounded-r-md border border-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 active:border-green-500 hover:border-green-500 target:border-green-500" onChange={handleFilterCategory}>
                 <option key="" value="">All Categories</option>
                   {categories.map((category) => (
                     <option key={category.id} value={category.id}>
