@@ -12,5 +12,5 @@ module.exports = withMT({
       },
     },
   },
-  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/aspect-ratio"), require('tailwind-scrollbar-hide'), require('flowbite/plugin'), require('daisyui')],
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/aspect-ratio"), require('tailwind-scrollbar-hide'), require('flowbite/plugin')],
 });
