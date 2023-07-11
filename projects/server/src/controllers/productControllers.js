@@ -25,17 +25,6 @@ module.exports = {
           });
         }
 
-        // const productExist = await product.findOne({
-        //   where: {product_name: product_name}
-        // })
-
-        // if (productExist) {
-        //   return res.status(400).send({
-        //     isError: true,
-        //     message: "A product with the same name already exists"
-        //   })
-        // }
-
         let imageUrl = req.protocol + "://" + req.get("host") + "/api/products/" + req.file.filename;
 
         const newProduct = await product.create({

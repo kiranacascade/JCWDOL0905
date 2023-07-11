@@ -113,14 +113,61 @@ module.exports = {
   },
   getAllDiscounts: async (req, res) => {
     try {
+      const page = parseInt(req.query.page) || 1;
+      const pageSize = 12;
+      const sort = req.query.sort || "ASC";
+      const productName = req.query.name || null;
+      const discountType = req.query.type || null;
       const branchId = req.query.branchId || 1;
-      console.log("branchId", branchId)
-      
+
+      const typeQuery = discountType ? {discount_type : discountType} : {};
+      const searchQuery = productName ? { product_name: { [Op.like]: `%${productName}%` } } : {};
+
+      const products = await product.findAll({
+        where: searchQuery,
+        attributes: ["id"],
+        include: {
+          model: inventory,
+          where: { id_branch: branchId },
+        },
+      });
+  
+      if (!products) {
+        return res.status(200).send({
+          isError: false,
+          message: "No discounts found",
+          data: [],
+          count: 0,
+        });
+      }
+  
+      const productIds = products.map((product) => product.id);
+  
+      const inventories = await inventory.findAll({
+        where: {
+          id_product: productIds,
+        },
+      });
+  
+      if (!inventories) {
+        return res.status(200).send({
+          isError: false,
+          message: "No discounts found",
+          data: [],
+          count: 0,
+        });
+      }
+  
+      const inventoryIds = inventories.map((inv) => inv.id);
+
+
       const result = await discount.findAndCountAll({
         where: {
           end_date: {
               [Op.gte]: new Date(),
             },
+            id_inventory: inventoryIds,
+            ...typeQuery,
         },
         include: {
             model: inventory,
@@ -129,14 +176,17 @@ module.exports = {
                 model: product
             }
         },
+        order: [[{ model: inventory }, { model: product}, 'product_name', sort]],
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
       })
         
-        res.status(200).send({
+      res.status(200).send({
           isError: true,
           message: "Successfully get all discounts",
           data: result.rows,
           count: result.count,
-        });
+      });
     } catch (err) {
       console.log(err);
       res.status(400).send({

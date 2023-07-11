@@ -141,23 +141,37 @@ module.exports = {
   },
   getAllVouchers: async (req, res) => {
     try {
+      const page = parseInt(req.query.page) || 1;
+      const pageSize = 12;
+      const sort = req.query.sort || "ASC";
+      const voucherCode = req.query.code || null;
+      const voucherType = req.query.type || null;
+
+      const typeQuery = voucherType ? {voucher_type : voucherType} : {};
+      const codeQuery = voucherCode ? { voucher_code: { [Op.like]: `%${voucherCode}%` } } : {};
+
         const result = await voucher.findAndCountAll({
           where: {
             end_date: {
               [Op.gte]: new Date(),
             },
+            ...codeQuery, ...typeQuery
           },
           include: {
             required : false,
             model: inventory,
             include: [{model: product}, {model: branch, attributes: ["branch_name"]}]
           },
+          order: [['createdAt', sort]],
+          limit: pageSize,
+          offset: (page - 1) * pageSize,
         });
 
         res.status(200).send({
           isError: true,
           message: "Successfully get all vouchers",
-          data: result
+          data: result.rows,
+          count: result.count
         });
 
     } catch (err) {

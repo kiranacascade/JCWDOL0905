@@ -6,20 +6,17 @@ import { useEffect } from "react";
 import { api } from "../api/api";
 import toast from "react-hot-toast";
 
-export default function UpdateStockModal({ open, setOpen, onClose, product, categories, inventory}) {
+export default function UpdateStockModal({ open, setOpen, onClose, inventory}) {
   const [modalOpen, setModalOpen] = useState(open);
   const token = localStorage.getItem("token_admin");
   const cancelButtonRef = useRef(null);
 
   const editStockSchema = Yup.object().shape({
-    stock: Yup.number("Stock must be a number")
-      .positive("Stock must be a positive number")
-      .integer("Stock must be an integer"),
-      addition: Yup.number("Addition quantity must be a number")
-      .min(0, "Stock must be at least 0")
+    addition: Yup.number("Addition quantity must be a number")
+      .min(0, "Addition must be at least 0")
       .integer("Addition quantity must be an integer"),
     substraction: Yup.number("Substraction quantity must be a number")
-      .min(0, "Stock must be at least 0")
+      .min(0, "Substraction must be at least 0")
       .integer("Substraction quantity must be an integer"),
   });
 
@@ -37,16 +34,22 @@ export default function UpdateStockModal({ open, setOpen, onClose, product, cate
 
   const editProduct = async (values) => {
     try {
-
+      const status = values.addition ? 'in' : 'out';
+      const qty = status === 'in' ? values.addition : values.substraction;
+      const stock = status === 'in' ? inventory.stock + qty : inventory.stock - qty;
+      const data = {
+        stock : stock,
+        status: status,
+        quantity: qty
+      }
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
-      const response = await api.patch(`/inventory/${inventory.id}`, values, config);
+      const response = await api.patch(`/inventory/${inventory.id}`, data, config);
       toast.success(response.data.message);
       window.location.reload();
       handleClose();
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     }
   };
@@ -115,12 +118,12 @@ export default function UpdateStockModal({ open, setOpen, onClose, product, cate
                                         />
                                       </div>
                                     </div>
-                                    <div className="flex-row h-full">
-                                      <div className="">
-                                        <h4 className="font-bold text-gray-700 mb-1">
+                                    <div className="flex-row h-full ">
+                                      <div className="text-left mt-1">
+                                        <h4 className="text-left font-bold text-gray-700 mb-1">
                                           {inventory?.Product?.product_name}
                                         </h4>
-                                        <p className="text-md text-gray-500">In stock : <span className="text-green-600 font-bold">{inventory?.stock}</span></p>
+                                        <p className="m-0 p-0 text-md text-gray-500 text-left">In stock : <span className="text-green-500 font-bold">{inventory?.stock}</span></p>
                                       </div>
                                     </div>
                                   </div>
@@ -170,7 +173,7 @@ export default function UpdateStockModal({ open, setOpen, onClose, product, cate
                                             htmlFor="substraction"
                                             className="block text-md font-medium leading-6 text-gray-900"
                                           >
-                                            Substract
+                                            Reduce
                                           </label>
                                           <div className="my-2">
                                             <div className="relative">
@@ -208,9 +211,9 @@ export default function UpdateStockModal({ open, setOpen, onClose, product, cate
                           <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                             <button
                               type="submit"
-                              className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800 sm:ml-3 sm:w-auto"
+                              className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-600 active:bg-green-700 sm:ml-3 sm:w-auto"
                             >
-                              Submit
+                              Update
                             </button>
                             <button
                               type="button"

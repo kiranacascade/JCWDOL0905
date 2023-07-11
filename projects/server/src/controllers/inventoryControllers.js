@@ -255,7 +255,7 @@ module.exports = {
   updateStock: async (req, res) => {
     const id = req.params.id;
     try {
-      const {stock} = req.body;
+      const { stock, status, quantity } = req.body;
       console.log(stock)
 
       const inventoryData = await inventory.findOne({
@@ -272,27 +272,20 @@ module.exports = {
         where: {id: id},
       })
       
-      let status = inventoryData.stock < stock ? "in" : "out";
-      let qty = Math.abs(inventoryData.stock - stock);
-
       const result = await inventoryHistory.create({
         status: status,
         reference: 'manual',
-        quantity: qty,
+        quantity: quantity,
         id_inventory: id,
+        current_stock: stock
       })
 
       res.status(200).send({
         isError: false,
         message: "Successfully update stock",
-        stock: stock,
-        inventoryData: inventoryData,
-        inventory: data,
-        inventoryHistory: result
+        data: result
       });
-
     } catch (error) {
-      console.log(error);
       res.status(404).send({isError: true, message: "Update stock failed"})
     }
   }
