@@ -148,7 +148,7 @@ const ManageDiscount = () => {
                 </div>
                 <input
                   id="search" type="search"
-                  placeholder="Search product or voucher code"
+                  placeholder="Search product"
                   defaultValue={searchProduct}
                   onChange={e => setSearch(e.target.value)}
                   onKeyDown={handleKeyDown}
