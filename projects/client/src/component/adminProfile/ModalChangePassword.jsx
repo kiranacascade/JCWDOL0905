@@ -13,6 +13,9 @@ export default function ModalChangePassword({ open, setOpen }) {
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [errorNewPasswordConfirm, setErrorNewPasswordConfirm] = useState("")
   const [showPassword, setShowPassword] = useState(false);
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false);
 
   const { id } = useSelector((state) => state.adminSlice);
@@ -100,11 +103,11 @@ export default function ModalChangePassword({ open, setOpen }) {
                           id="oldPassword"
                           name="oldPassword"
                           placeholder="Enter old password"
-                          type={showPassword ? "text" : "password"}
+                          type={showOldPassword ? "text" : "password"}
                           required
                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
-                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2"> {showPassword ? ( <AiFillEye onClick={() => setShowPassword((showPassword) => !showPassword) } /> ) : ( <AiFillEyeInvisible onClick={() => setShowPassword((showPassword) => !showPassword) } /> )} </div>
+                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">                        {showOldPassword ? (<AiFillEye onClick={() => setShowOldPassword((showOldPassword) => !showOldPassword)}/>) : (<AiFillEyeInvisible onClick={() => setShowOldPassword((showOldPassword) => !showOldPassword)}/>)}</div>
                       </div>
                       <div className="text-red-700 text-xs text-left font-semibold"> {errorOldPassword ? errorOldPassword : null} </div>
                     </div>
@@ -117,11 +120,11 @@ export default function ModalChangePassword({ open, setOpen }) {
                           id="newPassword"
                           name="newPassword"
                           placeholder="Enter new password"
-                          type={showPassword ? "text" : "password"}
+                          type={showNewPassword ? "text" : "password"}
                           required
                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
-                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2"> {showPassword ? ( <AiFillEye onClick={() => setShowPassword((showPassword) => !showPassword) } /> ) : ( <AiFillEyeInvisible onClick={() => setShowPassword((showPassword) => !showPassword) } /> )} </div>
+                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">{showNewPassword ? (<AiFillEye onClick={() => setShowNewPassword((showNewPassword) => !showNewPassword)}/>) : (<AiFillEyeInvisible onClick={() => setShowNewPassword((showNewPassword) => !showNewPassword)}/>)}</div>
                       </div>
                       <div className="text-red-700 text-xs text-left font-semibold"> {errorNewPassword ? errorNewPassword : null} </div>
                     </div>
@@ -135,11 +138,11 @@ export default function ModalChangePassword({ open, setOpen }) {
                           id="newPasswordConfirm"
                           name="newPasswordConfirm"
                           placeholder="Enter confirm new password"
-                          type={showPassword ? "text" : "password"}
+                          type={showConfirmNewPassword ? "text" : "password"}
                           required
                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
-                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2"> {showPassword ? ( <AiFillEye onClick={() => setShowPassword((showPassword) => !showPassword) } /> ) : ( <AiFillEyeInvisible onClick={() => setShowPassword((showPassword) => !showPassword) } /> )} </div>
+                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2"> {showConfirmNewPassword ? (<AiFillEye onClick={() => setShowConfirmNewPassword((showConfirmNewPassword) => !showConfirmNewPassword)}/>) : (<AiFillEyeInvisible onClick={() => setShowConfirmNewPassword((showConfirmNewPassword) => !showConfirmNewPassword)}/>)} </div>
                       </div>
                       <div className="text-red-700 text-xs text-left font-semibold"> {errorNewPasswordConfirm ? errorNewPasswordConfirm : null} </div>
                     </div>

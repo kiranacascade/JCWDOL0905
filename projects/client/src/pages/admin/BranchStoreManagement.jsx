@@ -217,21 +217,21 @@ function BranchStoreManagement() {
     <Layout>
       <div className="px-4 sm:px-6 lg:px-8">
         <h1 className="text-xl font-semibold text-gray-900 text-center justify-center">
-          Store Lists
+          Branch Store Management
         </h1>
         <div className="flex justify-end">
           <button
             className="items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
             onClick={() => setOpenModal(true)}
           >
-            Create Store
+            Add New Store
           </button>
         </div>
         <div className="flex justify-start">
           <PopoverFilter positionClass="">
             <div className="flex flex-wrap space-y-2">
               <div className="flex items-center space-x-4">
-                <p className="w-24 text-right">Branch Name:</p>
+                <p className="w-24 text-right">Branch Store Name:</p>
                 <input
                   type="text"
                   name="branchName"
@@ -243,7 +243,7 @@ function BranchStoreManagement() {
                 />
               </div>
               <div className="flex items-center space-x-4">
-                <p className="w-24 text-right">Province Name:</p>
+                <p className="w-24 text-right">Province:</p>
                 <input
                   type="text"
                   name="provinceName"
@@ -255,7 +255,7 @@ function BranchStoreManagement() {
                 />
               </div>
               <div className="flex items-center space-x-4">
-                <p className="w-24 text-right">City Name:</p>
+                <p className="w-24 text-right">City:</p>
                 <input
                   type="text"
                   name="cityName"
