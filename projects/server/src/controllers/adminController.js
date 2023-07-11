@@ -120,7 +120,7 @@ module.exports = {
       const resultBranchAdmin = await admins.findAndCountAll({ where: whereCondition, attributes: ["id", "admin_name", "email", "role", "id_branch"], include: [ { model: branch, attributes: ["branch_name"], }, ], limit: Number(limit), offset: Number(page - 1) * Number(limit), });
       const { count, rows } = resultBranchAdmin;
       const totalPages = Math.ceil(count / Number(limit));
-      return res .status(200) .json({ totalItems: count, totalPages, currentPage: Number(page), data: rows, });
+      return res.status(200).json({ totalItems: count, totalPages, currentPage: Number(page), data: rows, });
     } catch (error) {
       console.log(error);
       res.status(400).send({ error: "error while request" });
@@ -257,5 +257,28 @@ module.exports = {
     const totalPages = Math.ceil(totalItems / limit);
     const data = { totalItems, totalPages, currentPage: page, items: result[0], };
     return res.status(200).send({ status: "Successfully find inventory", data: data, });
+  },
+  changePassword: async (req, res) => {
+    try {
+      let { id, oldPassword, newPassword, newPasswordConfirm } = req.body;
+      if (!oldPassword || !newPassword || !newPasswordConfirm) 
+        return res.status(404).send({isError: true, message: "Please fill all the required fields"});
+      const findUser = await admins.findByPk(id)
+      if (!findUser)
+        return res.status(404).send({isError: true, message: "User not found"})
+      const isPasswordMatch = await bcrypt.compare(oldPassword, findUser.password)
+      if (!isPasswordMatch)
+        return res.status(404).send({isError: true, message: "Wrong old password"})
+      if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+=[\]{}|\\,./?'":;<>~`])(?!.*\s).{8,}$/.test(newPassword))
+        return res.status(404).send({isError: true, message: "Password must contain at least 8 characters including an uppercase letter, a symbol, and a number"})
+      if (newPasswordConfirm !== newPassword)
+        return res.status(404).send({isError: true, message: "New password and confirm new password do not match"});
+      const salt = await bcrypt.genSalt(10);
+      const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+      await admins.update({password: hashedNewPassword}, {where: {id: id}})
+      res.status(200).send({isError: false, message: "Change password success"});
+    } catch (error) {
+      console.log(error);
+      res.status(404).send({isError: true, message: "Change password failed"})}
   }
 };

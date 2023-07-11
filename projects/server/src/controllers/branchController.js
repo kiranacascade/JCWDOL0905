@@ -1,5 +1,7 @@
 const db = require("../models");
 const branch = db.Store_Branch;
+const axios = require("axios")
+const { Op } = require("sequelize");
 
 module.exports = {
   getBranch: async (req, res) => {
@@ -47,6 +49,51 @@ module.exports = {
         .send({ isError: true, message: "Get branch detail failed" });
     }
   },
+  getBranchWithFilter: async (req, res) => {
+    try {
+      let { page, limit, branchName, cityName, provinceName } = req.query;
+      page = parseInt(page) || 1; // Default to 1 if not provided or invalid
+      limit = parseInt(limit) || 5; // Default to 10 if not provided or invalid
+      const offset = (page - 1) * limit;
+      let whereCondition = {}
+      if (branchName) {
+        whereCondition.branch_name = { [Op.like]: `%${branchName}%` };
+      }
+      if (cityName) {
+        whereCondition.city = { [Op.like]: `%${cityName}%` };
+      }
+      if (provinceName) {
+        whereCondition.province = { [Op.like]: `%${provinceName}%` };
+      }
+
+      console.log(whereCondition, 'whereCondition', page, limit)
+      const branchData = await branch.findAndCountAll({where: whereCondition, limit: limit, offset: offset});
+      const { count, rows } = branchData;
+      const totalPages = Math.ceil(count / Number(limit));
+      const data = {
+        totalItems: count,
+        totalPages: totalPages,
+        items: rows
+      }
+      if (!branchData) {
+        return res
+          .status(400)
+          .send({ code: 400, message: `Cant't get branch data` });
+      }
+      res
+        .status(200)
+        .send({
+          code: 200,
+          message: "Get branch data success",
+          data: data,
+        });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(404)
+        .send({ isError: true, message: "Get branch data failed" });
+    }
+  },
   createBranch: async (req, res) => {
     try {
       let { branch_name, address, city, province } = req.body;
@@ -61,6 +108,10 @@ module.exports = {
       const [cityId, cityName] = city.split("-");
       const [provinceId, provinceName] = province.split("-");
 
+      let responseOpenCage = await axios.get(`https://api.opencagedata.com/geocode/v1/json?key=${process.env.KEY_OPENCAGE_API}&pretty=1&q=${address}, ${cityName}, ${provinceName}`)
+      let longitude = responseOpenCage.data.results[0].geometry.lng
+      let latitude = responseOpenCage.data.results[0].geometry.lat
+
       const result = await branch.create({
         branch_name: branch_name,
         address: address,
@@ -68,8 +119,8 @@ module.exports = {
         province: provinceName,
         city_id: cityId,
         province_id: provinceId,
-        latitude: 110,
-        longitude: 15
+        latitude: latitude,
+        longitude: longitude
       });
       res
         .status(201)
@@ -99,6 +150,10 @@ module.exports = {
   
         const [cityId, cityName] = city.split("-");
         const [provinceId, provinceName] = province.split("-");
+
+        let responseOpenCage = await axios.get(`https://api.opencagedata.com/geocode/v1/json?key=${process.env.KEY_OPENCAGE_API}&pretty=1&q=${address}, ${cityName}, ${provinceName}`)
+        let longitude = responseOpenCage.data.results[0].geometry.lng
+        let latitude = responseOpenCage.data.results[0].geometry.lat
   
         const result = await branch.update({
           branch_name: branch_name,
@@ -107,8 +162,8 @@ module.exports = {
           province: provinceName,
           city_id: cityId,
           province_id: provinceId,
-          latitude: 110,
-          longitude: 15
+          latitude: latitude,
+          longitude: longitude
         }, { where: { id: id } });
         res
           .status(201)

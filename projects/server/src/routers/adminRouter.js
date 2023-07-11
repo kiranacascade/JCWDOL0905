@@ -11,5 +11,6 @@ router.delete("/delete-admin/:id", auth, adminController.deleteAdmin)
 router.get('/dashboard-data', auth, adminController.getDashboardData)
 router.get('/dashboard-data/:id', auth, adminController.getDashboardDataPerBranch)
 router.get('/sales-report',auth, adminController.getSalesReport)
+router.post("/change-password", auth, adminController.changePassword);
 
 module.exports = router

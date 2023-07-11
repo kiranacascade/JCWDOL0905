@@ -96,6 +96,7 @@ export default function ModalCreateBranchStore({
 
   useEffect(() => {
     if (provinceName !== "") {
+      setCityName("")
       getListOfCity();
     }
   }, [provinceName]);
@@ -204,9 +205,9 @@ export default function ModalCreateBranchStore({
                         {cityList.map((data, index) => (
                           <option
                             key={index}
-                            value={`${data.city_id}-${data.city_name}`}
+                            value={`${data.city_id}-${data.type} ${data.city_name}`}
                           >
-                            {data.city_name}
+                            {`${data.type} ${data.city_name}`}
                           </option>
                         ))}
                       </select>
@@ -222,16 +223,15 @@ export default function ModalCreateBranchStore({
                     Store Address :{" "}
                   </label>
                   <div className="relative">
-                    <input
-                      onChange={(e) => validateStoreAddress(e.target.value)}
-                      value={storeAddress}
-                      id="storeAddress"
-                      name="storeAddress"
-                      placeholder="Enter store address"
-                      type="text"
-                      required
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 multiline"
-                    />
+                    <textarea
+                    value={storeAddress}
+                    onChange={(e) => validateStoreAddress(e.target.value)}
+                    id="description"
+                    name="description"
+                    rows={3}
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                    defaultValue={''}
+                  />
                   </div>
                   <div className="text-red-700 text-xs text-left font-semibold">
                     {" "}

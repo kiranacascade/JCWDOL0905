@@ -81,6 +81,7 @@ export default function ModalEditBranchStore({ open, setOpen, setEditData, editD
 
   useEffect(() => {
     if (editData && editData.provinceName !== undefined) {
+      setEditData({ ...editData, cityName: "" });
       getListOfCity();
     }
   }, [editData.provinceName]);
