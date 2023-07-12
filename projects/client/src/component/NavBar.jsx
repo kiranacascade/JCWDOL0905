@@ -42,6 +42,9 @@ function DisclosureMenu(props){
                     <Disclosure.Button key={'Profile'} as="a" href={'/profile'} className="block rounded-md py-2 px-4 text-base font-medium text-gray-400 hover:bg-gray-300 hover:text-black">
                         Profile
                     </Disclosure.Button>
+                    <Disclosure.Button key={'Order'} as="a" href={'/order-history'} className="block rounded-md py-2 px-4 text-base font-medium text-gray-400 hover:bg-gray-300 hover:text-black">
+                        My Order
+                    </Disclosure.Button>
                     <Disclosure.Button key={'SignOut'} as="a" onClick={signOut} className="block rounded-md py-2 px-4 text-base font-medium text-gray-400 hover:bg-gray-300 hover:text-black">
                         Sign Out
                     </Disclosure.Button>
@@ -104,6 +107,13 @@ function DesktopMenu(props){
                                 </a>
                             )}
                         </Menu.Item>
+                        <Menu.Item key={"Profile"}>
+                            {({ active }) => (
+                                <a href={'/order-history'} className={classNames(active ? 'bg-gray-100' : '', 'block py-2 px-4 text-sm text-gray-700')}>
+                                    My Order
+                                </a>
+                            )}
+                        </Menu.Item>
                         <Menu.Item key={"SignOut"}>
                             {({ active }) => (
                                 <a href={'#'} onClick={signOut} className={classNames(active ? 'bg-gray-100' : '', 'block py-2 px-4 text-sm text-gray-700')}>
@@ -132,7 +142,7 @@ function DesktopMenu(props){
 }
 
 export default function NavBar() {
-    const [search, setSearch] = useState([]);
+    const [search, setSearch] = useState("");
     const user = useSelector((state) => state.userSlice);
     const isLogin = localStorage.getItem("token");
     const countItem = useSelector((state) => state.cartSlice.count);

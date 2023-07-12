@@ -120,7 +120,7 @@ module.exports = {
       const resultBranchAdmin = await admins.findAndCountAll({ where: whereCondition, attributes: ["id", "admin_name", "email", "role", "id_branch"], include: [ { model: branch, attributes: ["branch_name"], }, ], limit: Number(limit), offset: Number(page - 1) * Number(limit), });
       const { count, rows } = resultBranchAdmin;
       const totalPages = Math.ceil(count / Number(limit));
-      return res.status(200).json({ totalItems: count, totalPages, currentPage: Number(page), data: rows, });
+      return res .status(200) .json({ totalItems: count, totalPages, currentPage: Number(page), data: rows, });
     } catch (error) {
       console.log(error);
       res.status(400).send({ error: "error while request" });

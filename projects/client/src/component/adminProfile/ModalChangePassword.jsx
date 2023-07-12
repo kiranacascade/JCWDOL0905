@@ -12,7 +12,6 @@ export default function ModalChangePassword({ open, setOpen }) {
   const [errorNewPassword, setErrorNewPassword] = useState("")
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [errorNewPasswordConfirm, setErrorNewPasswordConfirm] = useState("")
-  const [showPassword, setShowPassword] = useState(false);
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false)
@@ -71,6 +70,9 @@ export default function ModalChangePassword({ open, setOpen }) {
       const response = await api.post("admins/change-password", { id: id, oldPassword: oldPassword, newPassword: newPassword, newPasswordConfirm: newPasswordConfirm});
       toast.success(response.data.message);
       setTimeout(() => {
+        setOldPassword("")
+        setNewPassword("")
+        setNewPasswordConfirm("")
         setOpen(false);
       }, 1500);
     } catch (error) {
