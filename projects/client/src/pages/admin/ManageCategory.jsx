@@ -9,8 +9,7 @@ import EditCategoryModal from "../../component/manageCategory/EditCategoryModal"
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { Pagination } from "semantic-ui-react";
 import { useSearchParams } from "react-router-dom";
-
-const ManageCategory = () => {
+export const ManageCategory = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activePage, setActivePage] = useState(Number(searchParams.get("page")) || 1);
   const [totalPage, setTotalPage] = useState(1);
@@ -80,7 +79,6 @@ const ManageCategory = () => {
     setSelectedCategory({});
     setEditModalOpen(false);
   };
-
   const handleSortChange = (e) => {
     setSort(e.target.value);
     setActivePage(1);
@@ -91,7 +89,6 @@ const ManageCategory = () => {
     setActivePage(1);
     setSearchCategory(search)
   }};
-
   return (
     <Layout>
       <Toaster />
@@ -136,8 +133,7 @@ const ManageCategory = () => {
                 </select>
               </div>
             </div>
-
-          <div className="grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-x-4 md:gap-y-4 lg:grid-cols-3 lg:gap-x-6 lg:gap-y-4">
+          <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-4 lg:grid-cols-3 lg:gap-x-6 lg:gap-y-4">
             {categories.map((category) => (
               <div
                 className="flex rounded-lg border border-gray-200 sm:w-96 md:max-w-full lg:max-w-full"

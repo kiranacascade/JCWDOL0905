@@ -107,13 +107,11 @@ const ManageProduct = () => {
     setSelectedCategory(e.target.value)
     setActivePage(1);
   };
-
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
     setActivePage(1);
     setSearchedProduct(search)
   }};
-
   function formatIDR(price) {
     let idr = Math.round(price).toLocaleString("id-ID");
     return `Rp ${idr}`;
@@ -176,7 +174,6 @@ const ManageProduct = () => {
                 </select>
               </div>
             </div>
-            
             
             {products.map((product) => (
               <div className="grid grid grid-cols-1 gap-y-4 sm:grid-cols-4 sm:gap-x-6 sm:gap-y-8 lg:grid-cols-6 lg:gap-x-4 rounded-md border border-gray-300 p-3 mb-4">

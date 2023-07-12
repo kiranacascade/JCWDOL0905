@@ -49,7 +49,6 @@ import OrderHistory from "./pages/user/OrderHistory";
 import ProductStockHistory from "./pages/admin/ProductStockHistory";
 import SalesReport from "./pages/admin/SalesReport";
 import Voucher from "./pages/user/Voucher";
-
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
@@ -145,6 +144,10 @@ function App() {
               <Route Component={TokenInvalidAdmin} path="/token-invalid-admin" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <DashboardAdmin /> </ProtectedPageAdmin> } path="/admin/dashboard" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN]}> <AdminManagement /> </ProtectedPageAdmin> } path="/admin/admin-management" />
+              <Route Component={ManageCategory} path="/admin/manage-category" />
+              <Route Component={ManageDiscount} path="/admin/manage-discount" />
+              <Route Component={ManageVoucher} path="/admin/manage-voucher" />
+              <Route Component={ManageProduct} path="/admin/manage-product" />
               <Route element={<ProtectedPage needLogin={true}><AddressPage /></ProtectedPage>} path="/address" />
               <Route element={<ProtectedPage needLogin={true}><CreateOrder /></ProtectedPage>} path="/order" />
               <Route element={<ProtectedPage needLogin={true}><OrderDetail /></ProtectedPage>} path="/order/:id" />
@@ -157,6 +160,8 @@ function App() {
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <ManageVoucher /> </ProtectedPageAdmin> } path="/admin/manage-voucher" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <ManageProduct /> </ProtectedPageAdmin> } path="/admin/manage-product" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <ManageStock /> </ProtectedPageAdmin> } path="/admin/manage-stock" />
+              <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN, ROLE.BRANCH_ADMIN]}> <ProductStockHistory /> </ProtectedPageAdmin> } path="/admin/product-stock-history" />
+              <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN, ROLE.BRANCH_ADMIN]}> <SalesReport /> </ProtectedPageAdmin> } path="/admin/sales-report" />
               <Route Component={Voucher} path="/voucher" />
             </Routes>
           </BrowserRouter>

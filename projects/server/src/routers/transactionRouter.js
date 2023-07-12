@@ -1,4 +1,3 @@
-
 const router = require("express").Router()
 const { transactionController } = require('../controllers')
 const auth = require('../middleware/auth')
