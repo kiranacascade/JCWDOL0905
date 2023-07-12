@@ -175,14 +175,7 @@ export default function Cart() {
                           </div>
                           <div className="mt-1 flex text-sm">
                             <p className="text-gray-500">{item.weight} gr/item</p>
-                            {/* {product.size ? (
-                                <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">{product.size}</p>
-                            ) : null} */}
-                            {/* discount? */}
                           </div>
-                          {/* <p className="mt-1 text-sm font-medium text-gray-900">
-                             {rupiah(item.product_price)}
-                          </p> */}
                           {checkDiscount(item) ?
                             <div>
                               <p className="mt-1 text-sm font-medium text-gray-900 line-through">
@@ -292,15 +285,17 @@ export default function Cart() {
                 </div>
               </dl>
 
-              <div className="mt-6">
-                <button
-                  onClick={()=> Navigate('/order')}
-                  type="submit"
-                  className="w-full rounded-md border border-transparent bg-green-600 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-                >
-                  Checkout
-                </button>
-              </div>
+              {carts.length > 0 &&
+                <div className="mt-6">
+                  <button
+                    onClick={()=> Navigate('/order')}
+                    type="submit"
+                    className="w-full rounded-md border border-transparent bg-green-600 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                  >
+                    Checkout
+                  </button>
+                </div>
+              }
             </section>
           </form>
         </div>

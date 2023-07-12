@@ -160,7 +160,6 @@ const ManageProduct = () => {
                   ))}
                 </select>
               </div>
-
               <div className="flex mt-4 md:ml-8 md:mt-0 items-center">
                 <label className="block w-16 text-md font-medium leading-6 text-gray-900 mr-2 ">
                   Sort by:

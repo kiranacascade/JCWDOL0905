@@ -1,7 +1,7 @@
 const db = require("../models");
 const inventory = db.Inventory;
-const inventoryHistory = db.Inventory_History;
 const product = db.Product;
+const inventoryHistory = db.Inventory_History;
 const discount = db.Discount;
 const category = db.Category;
 const { Op } = require("sequelize");

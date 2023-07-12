@@ -104,11 +104,7 @@ const LandingPage = () => {
         <Category />
         <PromoBanner />
         <span className="inline-flex items-start">
-          <img
-            src={pin}
-            alt=""
-            className="self-center w-4 h-4 rounded-full mr-1"
-          />
+          <img src={pin} alt="" className="self-center w-4 h-4 rounded-full mr-1" />
           <span>
             {products.length > 0
               ? `${products[0].branch_name} (${products[0].city})`
