@@ -46,6 +46,7 @@ import SalesReport from "./pages/admin/SalesReport";
 import AddressPage from "./pages/user/AddressPage";
 import CreateOrder from "./pages/user/CreateOrder";
 import OrderList from "./pages/admin/OrderList";
+import Voucher from "./pages/user/Voucher";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -154,6 +155,7 @@ function App() {
               <Route Component={OrderList} path="/order-list" />
               <Route element={<ProtectedPage needLogin={true}><AddressPage /></ProtectedPage>} path="/address" />
               <Route element={<ProtectedPage needLogin={true}><CreateOrder /></ProtectedPage>} path="/order" />
+              <Route Component={Voucher} path="/voucher" />
             </Routes>
           </BrowserRouter>
         </>

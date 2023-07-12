@@ -39,9 +39,6 @@ export default function VoucherTableBody({ vouchers, branchId }) {
               )}
             </td>
             <td className="px-3 py-3 text-sm text-gray-500">
-              {voucher.voucher_code}
-            </td>
-            <td className="px-3 py-3 text-sm text-gray-500">
               {voucher.voucher_kind === "percentage" ? voucher.voucher_value + "%" : formatIDR(voucher.voucher_value)}
             </td>
             <td className="px-3 py-3 text-sm text-gray-500">

@@ -146,7 +146,7 @@ const ManageVoucher = () => {
               </div>
             </div>
 
-          <Table headCols={["ID", "Voucher Type", "Product", "Voucher Code", "Voucher Value", "Max Discount", "Min Purchase Value", "Period"]} tableBody={<VoucherTableBody vouchers={vouchers} branchId={branchId}/>} />
+          <Table headCols={["ID", "Voucher Type", "Product", "Voucher Value", "Max Discount", "Min Purchase Value", "Period"]} tableBody={<VoucherTableBody vouchers={vouchers} branchId={branchId}/>} />
 
           <div className="my-12 flex justify-center">
               <Pagination
