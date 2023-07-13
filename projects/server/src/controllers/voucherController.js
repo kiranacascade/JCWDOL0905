@@ -142,7 +142,7 @@ module.exports = {
             end_date: {
               [Op.gte]: new Date(),
             },
-            ...codeQuery, ...typeQuery
+             ...typeQuery
           },
           include: {
             required : false,
@@ -177,7 +177,7 @@ module.exports = {
         const user = jwt.verify(bearerToken, jwtKey);
 
         const query = `select user_vouchers.id, user_vouchers.id,
-        vouchers.voucher_type, vouchers.voucher_kind, vouchers.voucher_code, vouchers.voucher_value,
+        vouchers.voucher_type, vouchers.voucher_kind, vouchers.voucher_value,
         vouchers.max_discount, vouchers.min_purchase_amount, vouchers.start_date, vouchers.end_date, vouchers.id_inventory
         from user_vouchers
         join vouchers on vouchers.id = user_vouchers.id_voucher
