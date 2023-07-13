@@ -11,6 +11,13 @@ import { Pagination } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 
 const ManageDiscount = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activePage, setActivePage] = useState(Number(searchParams.get("page")) || 1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState(searchParams.get("sort") || "ASC");
+  const [discountType, setDiscountType] = useState(searchParams.get("type") ||"")
+  const [searchProduct, setSearchProduct] = useState(searchParams.get("name") || "");
   const [discounts, setDiscounts] = useState([]);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [selectedBranchId, setSelectedBranchId] = useState(searchParams.get("branchId") || 1);
@@ -29,7 +36,6 @@ const ManageDiscount = () => {
       name: searchProduct
     });
   }, [activePage, sort, discountType, searchProduct, selectedBranchId]);
-
 
   useEffect(() => {
     const config = {
