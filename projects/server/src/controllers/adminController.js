@@ -141,10 +141,20 @@ module.exports = {
   },
   getDashboardData: async (req, res) => {
     try {
+      let { year } = req.query;
+      year = year || "2023";
       const totalUser = await users.count();
-      const totalTransactions = await Transaction_Header.count({ where: { order_status: { [Op.or]: ["done", "shipped"] } }, });
-      const totalSales = await Transaction_Header.sum("final_price", { where: { order_status: { [Op.or]: ["done", "shipped"] } }, });
-      const totalSalesResult = await Transaction_Header.findAll({ attributes: [ [Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')"), "name"], [Sequelize.fn("SUM", Sequelize.col("final_price")), "totalSales"], ], where: { order_status: { [Op.or]: ["done", "shipped"] } }, group: [Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')")], order: [[Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')"), "ASC"]], });
+      const totalTransactions = await Transaction_Header.count({ where: { createdAt: {
+        [Op.between]: [`${year}-01-01`, `${year}-12-31`],
+      }, order_status: { [Op.or]: ["done", "shipped"] } }, });
+      const totalSales = await Transaction_Header.sum("final_price", { where: { createdAt: {
+        [Op.between]: [`${year}-01-01`, `${year}-12-31`],
+      }, order_status: { [Op.or]: ["done", "shipped"] } }, });
+      const totalSalesResult = await Transaction_Header.findAll({ attributes: [ [Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')"), "name"], [Sequelize.fn("SUM", Sequelize.col("final_price")), "totalSales"], ], where: { order_status: { [Op.or]: ["done", "shipped"] },
+      createdAt: {
+        [Op.between]: [`${year}-01-01`, `${year}-12-31`],
+      },
+    }, group: [Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')")], order: [[Sequelize.literal("DATE_FORMAT(createdAt, '%Y-%m')"), "ASC"]], });
       let maxMonthlySales = 0;
       for (const monthSales of totalSalesResult) {
         if (Number(monthSales.dataValues.totalSales) > maxMonthlySales) {
@@ -158,7 +168,8 @@ module.exports = {
     }
   },
   getDashboardDataPerBranch: async (req, res) => {
-    const { id } = req.params;
+    let { id, year } = req.query;
+    year = year || "2023";
     const rawQuery = `
     SELECT DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m') AS name, SUM(Transaction_Headers.final_price) AS totalSales
     FROM (
@@ -168,7 +179,7 @@ module.exports = {
       JOIN Store_Branches ON Inventories.id_branch = Store_Branches.id
     ) AS CombinedQuery
     JOIN Transaction_Headers ON CombinedQuery.id_trans_header = Transaction_Headers.id
-    WHERE order_status IN ('done', 'shipped') AND CombinedQuery.branch_id = :branchId
+    WHERE order_status IN ('done', 'shipped') AND CombinedQuery.branch_id = :branchId AND YEAR(Transaction_Headers.createdAt) = :year
     GROUP BY DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m')
     ORDER BY DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m') ASC;`;
     const query2 = `SELECT COUNT(Transaction_Headers.id) as totalTransactions,SUM(Transaction_Headers.final_price) AS totalSales
@@ -179,11 +190,11 @@ module.exports = {
       JOIN Store_Branches ON Inventories.id_branch = Store_Branches.id
     ) AS CombinedQuery
     JOIN Transaction_Headers ON CombinedQuery.id_trans_header = Transaction_Headers.id
-    WHERE order_status IN ('done', 'shipped') AND CombinedQuery.branch_id = :branchId;`;
+    WHERE order_status IN ('done', 'shipped') AND CombinedQuery.branch_id = :branchId  AND YEAR(Transaction_Headers.createdAt) = :year;`;
     try {
       const totalUser = await users.count();
-      const [result] = await db.sequelize.query(rawQuery, { replacements: { branchId: id }, });
-      const [result2,] = await db.sequelize.query(query2, { replacements: { branchId: id }, });      
+      const [result] = await db.sequelize.query(rawQuery, { replacements: { branchId: id, year: year }, });
+      const [result2,] = await db.sequelize.query(query2, { replacements: { branchId: id, year: year}, });      
       let maxMonthlySales = 0;
       for (const monthSales of result) {
         if (Number(monthSales.totalSales) > maxMonthlySales) {
