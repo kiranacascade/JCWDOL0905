@@ -70,7 +70,7 @@ function AdminProfile() {
                 </div>
                 <div className="py-4 px-6">
                     <div className="mb-6">
-                        <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="name">Name:</label>
+                        <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="name">Name :</label>
                         <p className="text-gray-900 text-lg" id="name">{adminProfileData.admin_name}</p>
                     </div>
                     <div className="mb-6">
@@ -78,7 +78,7 @@ function AdminProfile() {
                         <p className="text-gray-900 text-lg" id="email">{ROLE_TO_TEXT[adminProfileData.role]}</p>
                     </div>
                     <div className="mb-6">
-                        <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="email">Email:</label>
+                        <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="email">Email :</label>
                         <p className="text-gray-900 text-lg" id="email">{adminProfileData.email}</p>
                     </div>
                     {renderBranchData()}
