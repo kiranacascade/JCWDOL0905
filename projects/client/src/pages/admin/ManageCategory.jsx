@@ -79,11 +79,10 @@ export const ManageCategory = () => {
     setSelectedCategory({});
     setEditModalOpen(false);
   };
-  const handleSortChange = (e) => {
+const handleSortChange = (e) => {
     setSort(e.target.value);
     setActivePage(1);
   };
-
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
     setActivePage(1);

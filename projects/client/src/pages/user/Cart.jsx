@@ -255,26 +255,6 @@ export default function Cart() {
                     <dt className="text-sm text-gray-600">Total Weight</dt>
                     <dd className="text-sm font-medium text-gray-900">{getTotalWeight()} gr</dd>
                 </div>
-                {/* <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                    <dt className="flex items-center text-sm text-gray-600">
-                    <span>Shipping estimate</span>
-                    <a href="#" className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
-                        <span className="sr-only">Learn more about how shipping is calculated</span>
-                        <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
-                    </a>
-                    </dt>
-                    <dd className="text-sm font-medium text-gray-900">$5.00</dd>
-                </div> */}
-                {/* <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                    <dt className="flex text-sm text-gray-600">
-                    <span>Tax estimate</span>
-                    <a href="#" className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
-                        <span className="sr-only">Learn more about how tax is calculated</span>
-                        <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
-                    </a>
-                    </dt>
-                    <dd className="text-sm font-medium text-gray-900">$8.32</dd>
-                </div> */}
                 <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                   <dt className="text-base font-medium text-gray-900">
                     Total Price
