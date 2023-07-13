@@ -50,8 +50,7 @@ import BranchStoreManagement from "./pages/admin/BranchStoreManagement";
 import AdminProfile from "./pages/admin/AdminProfile";
 import OrderDetail from "./pages/user/OrderDetail";
 import OrderHistory from "./pages/user/OrderHistory";
-
-
+import Voucher from "./pages/user/Voucher";
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
@@ -172,6 +171,7 @@ function App() {
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <ManageStock /> </ProtectedPageAdmin> } path="/admin/manage-stock" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN, ROLE.BRANCH_ADMIN]}> <ProductStockHistory /> </ProtectedPageAdmin> } path="/admin/product-stock-history" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN, ROLE.BRANCH_ADMIN]}> <SalesReport /> </ProtectedPageAdmin> } path="/admin/sales-report" />
+              <Route Component={Voucher} path="/voucher" />
             </Routes>
           </BrowserRouter>
         </>
