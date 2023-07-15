@@ -229,39 +229,39 @@ module.exports = {
       Products.product_name,
       CASE 
         WHEN Vouchers.voucher_type = 'total purchase'
-          AND (
-            SELECT SUM(Transaction_Headers.final_price) AS Total_price 
+          AND COALESCE((
+            SELECT SUM(Transaction_Headers.final_price) AS Total_price
             FROM Transaction_Headers
             WHERE Transaction_Headers.id_user = ${userId}
-          ) > Vouchers.min_purchase_amount THEN 'CLAIMABLE'
+          ), 0) > Vouchers.min_purchase_amount THEN 'CLAIMABLE'
           
         WHEN Vouchers.voucher_type = 'total purchase'
-          AND (
-            SELECT SUM(Transaction_Headers.final_price) AS Total_price 
+          AND COALESCE((
+            SELECT SUM(Transaction_Headers.final_price) AS Total_price
             FROM Transaction_Headers
             WHERE Transaction_Headers.id_user = ${userId}
-          ) < Vouchers.min_purchase_amount THEN 'NOT_CLAIMABLE_TXN'
+          ), 0) < Vouchers.min_purchase_amount THEN 'NOT_CLAIMABLE_TXN'
           
         WHEN Vouchers.voucher_type = 'shipping'
-          AND (
-            SELECT COUNT(*) AS Count 
+          AND COALESCE((
+            SELECT COUNT(*) AS Count
             FROM Transaction_Headers
             WHERE Transaction_Headers.id_user = ${userId}
-          ) > 3 THEN 'CLAIMABLE'
+          ), 0) > 3 THEN 'CLAIMABLE'
           
         WHEN Vouchers.voucher_type = 'shipping'
-          AND (
-            SELECT COUNT(*) AS Count 
+          AND COALESCE((
+            SELECT COUNT(*) AS Count
             FROM Transaction_Headers
             WHERE Transaction_Headers.id_user = ${userId}
-          ) < 3 THEN 'NOT_CLAIMABLE_COUNT'
+          ), 0) < 3 THEN 'NOT_CLAIMABLE_COUNT'
           
         ELSE 'CLAIMABLE'
       END AS Statuses
     FROM
       Vouchers
-    JOIN Inventories ON Vouchers.id_inventory = Inventories.id
-    JOIN Products ON Inventories.id_product = Products.id
+    LEFT JOIN Inventories ON Vouchers.id_inventory = Inventories.id
+    LEFT JOIN Products ON Inventories.id_product = Products.id
     WHERE now() between vouchers.start_date and vouchers.end_date;
     `;
       const [data] = await db.sequelize.query(voucherQuery);

@@ -137,8 +137,11 @@ export default function Voucher() {
                   {voucher.max_discount ? 
                     <div className="text-md font-semibold text-gray-700">UP TO {formatIDR(voucher.max_discount)}</div> : <></>
                     }
-                    {voucher.Statuses === 'CLAIMABLE' ? null : (
+                    {voucher.Statuses === 'NOT_CLAIMABLE_TXN' && (
                       <div className="text-sm font-semibold text-gray-500">Spend at least {formatIDR(voucher.min_purchase_amount)} first to be able to claim this voucher</div>
+                    )}
+                    {voucher.Statuses === 'NOT_CLAIMABLE_COUNT' && (
+                      <div className="text-sm font-semibold text-gray-500">Do minimum 3x transaction to get this voucher</div>
                     )}
                     {voucher.voucher_type === "product" ? 
                     <div className="text-sm font-semibold text-gray-500">on purchase: {voucher.product_name}</div> : <></>
