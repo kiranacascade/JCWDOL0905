@@ -232,28 +232,28 @@ module.exports = {
           AND COALESCE((
             SELECT SUM(Transaction_Headers.final_price) AS Total_price
             FROM Transaction_Headers
-            WHERE Transaction_Headers.id_user = ${userId}
+            WHERE Transaction_Headers.id_user = ${userId} AND Transaction_Headers.order_status IN ('done','shipped')
           ), 0) > Vouchers.min_purchase_amount THEN 'CLAIMABLE'
           
         WHEN Vouchers.voucher_type = 'total purchase'
           AND COALESCE((
             SELECT SUM(Transaction_Headers.final_price) AS Total_price
             FROM Transaction_Headers
-            WHERE Transaction_Headers.id_user = ${userId}
+            WHERE Transaction_Headers.id_user = ${userId} AND Transaction_Headers.order_status IN ('done','shipped')
           ), 0) < Vouchers.min_purchase_amount THEN 'NOT_CLAIMABLE_TXN'
           
         WHEN Vouchers.voucher_type = 'shipping'
           AND COALESCE((
             SELECT COUNT(*) AS Count
             FROM Transaction_Headers
-            WHERE Transaction_Headers.id_user = ${userId}
+            WHERE Transaction_Headers.id_user = ${userId} AND Transaction_Headers.order_status IN ('done','shipped')
           ), 0) > 3 THEN 'CLAIMABLE'
           
         WHEN Vouchers.voucher_type = 'shipping'
           AND COALESCE((
             SELECT COUNT(*) AS Count
             FROM Transaction_Headers
-            WHERE Transaction_Headers.id_user = ${userId}
+            WHERE Transaction_Headers.id_user = ${userId} AND Transaction_Headers.order_status IN ('done','shipped')
           ), 0) < 3 THEN 'NOT_CLAIMABLE_COUNT'
           
         ELSE 'CLAIMABLE'
