@@ -153,24 +153,18 @@ function App() {
               <Route element={<ProtectedPage needLogin={true}><CreateOrder /></ProtectedPage>} path="/order" />
               <Route element={<ProtectedPage needLogin={true}><OrderDetail /></ProtectedPage>} path="/order/:id" />
               <Route element={<ProtectedPage needLogin={true}><OrderHistory /></ProtectedPage>} path="/order-history" />
+              <Route element={<ProtectedPage needLogin={true}><Voucher /></ProtectedPage>} path="/voucher" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN, ROLE.BRANCH_ADMIN]}> <OrderList /> </ProtectedPageAdmin> } path="/admin/orders" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN, ROLE.BRANCH_ADMIN]}> <ProductStockHistory /> </ProtectedPageAdmin> } path="/admin/product-stock-history" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN, ROLE.BRANCH_ADMIN]}> <SalesReport /> </ProtectedPageAdmin> } path="/admin/sales-report" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN, ROLE.BRANCH_ADMIN]}> <AdminProfile /> </ProtectedPageAdmin> } path="/admin/admin-profile" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN]}> <BranchStoreManagement /> </ProtectedPageAdmin> } path="/admin/branch-management" />
-              <Route Component={ManageCategory} path="/manage-category" />
-              <Route Component={ManageDiscount} path="/manage-discount" />
-              <Route Component={ManageVoucher} path="/manage-voucher" />
-              <Route Component={ManageCategory} path="/admin/manage-category" />
-              <Route Component={ManageDiscount} path="/admin/manage-discount" />
-              <Route Component={ManageVoucher} path="/admin/manage-voucher" />
-              <Route Component={ManageProduct} path="/admin/manage-product" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <ManageCategory /> </ProtectedPageAdmin> } path="/admin/manage-category" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <ManageDiscount /> </ProtectedPageAdmin> } path="/admin/manage-discount" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <ManageVoucher /> </ProtectedPageAdmin> } path="/admin/manage-voucher" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <ManageProduct /> </ProtectedPageAdmin> } path="/admin/manage-product" />
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.BRANCH_ADMIN, ROLE.SUPER_ADMIN]}> <ManageStock /> </ProtectedPageAdmin> } path="/admin/manage-stock" />
-              <Route Component={Voucher} path="/voucher" />
+              
               <Route element={ <ProtectedPageAdmin roleRequired={[ROLE.SUPER_ADMIN, ROLE.BRANCH_ADMIN]}> <DetailOrder /> </ProtectedPageAdmin> } path="/admin/orders/:id" />
             </Routes>
           </BrowserRouter>
