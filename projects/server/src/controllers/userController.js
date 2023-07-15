@@ -167,7 +167,9 @@ module.exports = {
   },
   getUserByToken: async (req, res) => {
     try {
-      const user = jwt.verify(req.params.token, jwtKey);
+      let bearerToken = req.headers['authorization'];
+      bearerToken = bearerToken.split(' ')[1]
+      const user = jwt.verify(bearerToken, jwtKey);
       const getUser = await users.findOne({where: {id: user.id_user}})
       res.send({code: 200, message: "Get user by token success", user: getUser})
     } catch(error){

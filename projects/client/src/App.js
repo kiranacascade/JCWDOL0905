@@ -65,7 +65,7 @@ function App() {
 
     const fetchUser = async (token) => {
       try {
-        const res = await api.get(`/users/auth/${token}`, {
+        const res = await api.get(`/users/auth`, {
           headers: {Authorization : `Bearer ${token}`}
         });
         dispatch(login(res.data.user));
@@ -80,7 +80,9 @@ function App() {
     }
     const fetchAdmin = async (token_admin) => {
       try {
-        const res = await api.get(`/admins/auth/${token_admin}`);
+        const res = await api.get(`/admins/auth`,{
+          headers: {Authorization : `Bearer ${token_admin}`}
+        });
         dispatch(loginAdmin(res.data.admin));
         dispatch(setAccessTokenAdmin(token_admin));
       } catch (error) {
