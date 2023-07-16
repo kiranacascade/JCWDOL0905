@@ -47,10 +47,10 @@ module.exports = {
         where: {
             id_inventory: id_inventory,
             start_date: {
-                [Op.lte]: data.end_date // Discount starts before or on end_date
+                [Op.lte]: data.end_date
             },
             end_date: {
-                [Op.gte]: data.start_date // Discount ends after or on start_date
+                [Op.gte]: data.start_date
               }
         }
       })
@@ -168,9 +168,6 @@ module.exports = {
 
       const result = await discount.findAndCountAll({
         where: {
-          end_date: {
-              [Op.gte]: new Date(),
-            },
             ...searchInventory,
             ...typeQuery,
         },
@@ -200,5 +197,4 @@ module.exports = {
       });
     }
   },
-  
 };

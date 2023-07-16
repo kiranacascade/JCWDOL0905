@@ -19,11 +19,31 @@ module.exports = {
           message: "Please complete the data",
         });
       }
+
+      if (voucher_type === "total purchase" || voucher_type === "shipping" || voucher_type === "referral code" ) {
+        const voucherExists = await voucher.findOne({ where : {voucher_type : voucher_type, start_date: {
+          [Op.lte]: end_date 
+        },
+        end_date: {
+          [Op.gte]: start_date
+        } } })
+        if (voucherExists) {
+          return res.status(400).send({
+            isError: true,
+            message: `Active voucher with type ${voucher_type} already exists`,
+          });
+        }
+      }
       
       let data = {...req.body};
       data.start_date = new Date(start_date)
       data.end_date = new Date(end_date)
-
+      if (voucher_type !== "total purchase") {
+        data.min_purchase_amount = null;
+      }
+      if (voucher_kind === "amount") {
+        data.max_discount = null;
+      }
       const now = new Date();
       now.setHours(0,0,0,0)
       if (new Date(start_date) < now) {
@@ -40,6 +60,13 @@ module.exports = {
         });
       }
 
+      if (voucher_kind === "percentage" && voucher_value > 100) {
+        return res.status(400).send({
+          isError: true,
+          message: "Voucher value cannot be greater than 100%",
+        });
+      }
+
       if (voucher_type === "product") {
         if (!id_inventory) {
           return res.status(400).send({
@@ -48,6 +75,19 @@ module.exports = {
           });
         }
 
+        const voucherProductExists = await voucher.findOne({ where : {id_inventory : id_inventory, start_date: {
+          [Op.lte]: end_date 
+        },
+        end_date: {
+          [Op.gte]: start_date
+        } } })
+
+        if (voucherProductExists) {
+          return res.status(400).send({
+            isError: true,
+            message: `Active voucher already exists`,
+          });
+        }
         const featuredProduct = await inventory.findOne({
           where: {
             id: id_inventory,
@@ -73,13 +113,6 @@ module.exports = {
           });
         }
 
-        if (voucher_kind === "percentage" && voucher_value > 100) {
-          return res.status(400).send({
-            isError: true,
-            message: "Voucher value cannot be greater than 100",
-          });
-        }
-
         const result = await voucher.create(data);
         return res.status(200).send({
           isError: false,
@@ -89,20 +122,13 @@ module.exports = {
       }
 
       if (voucher_type === "total purchase") {
-        if (!max_discount || !min_purchase_amount) {
+        if ( !min_purchase_amount ) {
           return res.status(400).send({
             isError: true,
             message: "Please complete the data",
           });
         }
-
-        if (voucher_kind === "percentage" && voucher_value > 100) {
-          return res.status(400).send({
-            isError: true,
-            message: "Voucher value cannot be greater than or equal to 100",
-          });
-        }
-
+        
         const result = await voucher.create(data);
         return res.status(200).send({
           isError: false,
@@ -131,17 +157,12 @@ module.exports = {
       const page = parseInt(req.query.page) || 1;
       const pageSize = 12;
       const sort = req.query.sort || "ASC";
-      const voucherCode = req.query.code || null;
       const voucherType = req.query.type || null;
 
       const typeQuery = voucherType ? {voucher_type : voucherType} : {};
-      // const codeQuery = voucherCode ? { voucher_code: { [Op.like]: `%${voucherCode}%` } } : {};
 
         const result = await voucher.findAndCountAll({
           where: {
-            end_date: {
-              [Op.gte]: new Date(),
-            },
              ...typeQuery
           },
           include: {

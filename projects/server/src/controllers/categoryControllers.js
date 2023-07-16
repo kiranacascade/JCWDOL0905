@@ -83,6 +83,20 @@ module.exports = {
     try {
       const { category_name } = req.body;
 
+      const categoryWithSameName = await category.findOne({
+        where: {
+          category_name: category_name,
+          id: { [Op.ne]: req.params.id }, // Excludes the current category ID
+        },
+      });
+
+      if (categoryWithSameName) {
+        return res.status(400).send({
+          isError: false,
+          message: "Same category name already exists",
+        });
+      }
+
       if (!req.file) {
         await category.update(
           {

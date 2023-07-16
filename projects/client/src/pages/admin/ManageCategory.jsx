@@ -4,11 +4,12 @@ import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Toaster } from "react-hot-toast";
 import Layout from "../../component/Layout";
 import AddCategoryModal from "../../component/manageCategory/AddCategoryModal";
-import DeleteCategoryModal from "../../component/manageCategory/DeleteModal";
+import DeleteCategoryModal from "../../component/manageCategory/DeleteCategoryModal";
 import EditCategoryModal from "../../component/manageCategory/EditCategoryModal";
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { Pagination } from "semantic-ui-react";
 import { useSearchParams } from "react-router-dom";
+
 export const ManageCategory = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activePage, setActivePage] = useState(Number(searchParams.get("page")) || 1);
@@ -32,23 +33,24 @@ export const ManageCategory = () => {
     });
   }, [activePage, sort, searchCategory]);
 
-  useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const categoriesData = await api.get('/category', {
-          params: {
-            adm: 1,
-            page: activePage,
-            name: searchCategory,
-            sort: sort
-          }
-        });
-        setCategories(categoriesData.data.data);
-        setTotalPage(Math.ceil(categoriesData.data.count / 12));
-      } catch (err) {
-        console.log(err);
-      }
+  async function fetchCategories() {
+    try {
+      const categoriesData = await api.get('/category', {
+        params: {
+          adm: 1,
+          page: activePage,
+          name: searchCategory,
+          sort: sort
+        }
+      });
+      setCategories(categoriesData.data.data);
+      setTotalPage(Math.ceil(categoriesData.data.count / 12));
+    } catch (err) {
+      console.log(err);
     }
+  }
+
+  useEffect(() => {
     fetchCategories();
   }, [sort, activePage, searchCategory]);
 
@@ -196,6 +198,7 @@ const handleSortChange = (e) => {
           setOpen={setAddModalOpen}
           cancelButtonRef={null}
           onClose={closeAddModal}
+          fetchCategories={fetchCategories}
         />
       )}
       {deleteModalOpen && (
@@ -205,6 +208,7 @@ const handleSortChange = (e) => {
           categoryId={selectedCategoryId}
           cancelButtonRef={null}
           onClose={closeDeleteModal}
+          fetchCategories={fetchCategories}
         />
       )}
       {editModalOpen && (
@@ -214,6 +218,7 @@ const handleSortChange = (e) => {
           category={selectedCategory}
           cancelButtonRef={null}
           onClose={closeEditModal}
+          fetchCategories={fetchCategories}
         />
       )}
       </div>

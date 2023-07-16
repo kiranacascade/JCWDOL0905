@@ -63,6 +63,19 @@ const vouchers = [
     id_inventory: null,
     product_name: null
   },
+  {
+    id: 5,
+    voucher_type: "shipping",
+    voucher_kind: "amount",
+    // voucher_code: "FREESHIP30K",
+    voucher_value: 50000,
+    max_discount: null,
+    min_purchase_amount: 200000,
+    start_date: "2023-06-19 17:00:00",
+    end_date: "2023-07-25 17:00:00",
+    id_inventory: null,
+    product_name: null
+  },
 ];
 
 const user_vouchers = [
@@ -74,7 +87,8 @@ const user_vouchers = [
     id_voucher: 2,
     is_used: 1
   },
-]
+  ]
+
 export default function Voucher() {
   const [userClaimedVouchers, setUserClaimedVouchers] = useState([]);
   const navigate = useNavigate()
@@ -119,8 +133,10 @@ export default function Voucher() {
         <h3 className="mb-6">Enjoy the best promotion vouchers at the moment!</h3>
         <div className="grid grid-cols-1 gap-y-4  md:grid-cols-2 md:gap-x-4 md:gap-y-4 lg:grid-cols-2 lg:gap-x-6 lg:gap-y-6">
           {vouchers.map((voucher) => {
-            
+            // cek voucher yang sudah di claim ()
             const isVoucherClaimed = userClaimedVouchers.includes(voucher.id);
+
+            // cek kalau voucher yang sedang di map sudah dipakai / belum
         const isVoucherUsed = user_vouchers.find(
           (userVoucher) => userVoucher.id_voucher === voucher.id && userVoucher.is_used === 1
         );
@@ -184,7 +200,13 @@ export default function Voucher() {
                 >
                   Use
                 </button>
-                  : 
+                  : voucher.voucher_type === "shipping" && !isVoucherClaimed ? 
+                  <button
+                      className="m-1 mr-5 w-40 h-8 bg-green-300 hover:bg-green-300 text-md font-bold text-white active:bg-green-300 rounded-md"
+                      // onClick={() => claim(voucher)}
+                    >
+                      Not Applicable
+                    </button> :
                   <button
                       className="m-1 mr-5 w-20 h-8 bg-green-500 hover:bg-green-600 text-md font-bold text-white active:bg-green-700 rounded-md"
                       // onClick={() => claim(voucher)}

@@ -61,7 +61,7 @@ module.exports = {
             bearerToken = bearerToken.split(' ')[1]
             const user = jwt.verify(bearerToken, jwtKey);
 
-            const {quantity, stock} = req.body;
+            const { quantity } = req.body;
 
             let findInventory = await inventories.findOne({ where: { id: inventoryId } });
             if (!findInventory){
@@ -92,6 +92,7 @@ module.exports = {
             });
         
             res.status(201).send({
+                isError: false,
                 message: "Successfully add item to cart",
                 data: addItem,
             });

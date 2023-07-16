@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { api } from "../../api/api";
 import toast from "react-hot-toast";
 
-export default function DeleteProductModal({ open, setOpen, onClose, productId, fetchProducts}) {
+export default function DeleteCategoryModal({ open, setOpen, onClose, categoryId, fetchCategories}) {
   const [modalOpen, setModalOpen] = useState(open);
   const token = localStorage.getItem("token_admin");
   const cancelButtonRef = useRef(null);
@@ -23,13 +23,13 @@ export default function DeleteProductModal({ open, setOpen, onClose, productId, 
 
   const handleDelete = async () => {
     try {
-      const response = await api.delete(`/product/${productId}`, {
+      const response = await api.delete(`/category/${categoryId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       toast.success(response.data.message);
-      fetchProducts()
+      fetchCategories()
       handleClose();
     } catch (error) {
       console.log(error);
@@ -84,12 +84,13 @@ export default function DeleteProductModal({ open, setOpen, onClose, productId, 
                         as="h3"
                         className="text-base font-semibold leading-6 text-gray-900"
                       >
-                        Delete Product
+                        Delete Category
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
-                          Are you sure you want to delete this product? All
-                          inventories with this product will not be listed in any store branch. This action cannot be undone.
+                          Are you sure you want to delete this category? All
+                          products with this category will not be listed in any
+                          category. This action cannot be undone.
                         </p>
                       </div>
                     </div>
