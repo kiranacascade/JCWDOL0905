@@ -18,6 +18,7 @@ import Countdown from "react-countdown";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import CancelOrderModal from "../../component/CancelOrderModal";
 import UploadPaymentModal from "../../component/UploadPaymentModal";
+import ReceiveOrderModal from "../../component/ReceiveOrderModal";
 
 export default function OrderDetail() {
   const id = useParams().id;
@@ -149,6 +150,12 @@ export default function OrderDetail() {
                       </div>
                     }
                     
+                    {order.order_status=='shipped' &&
+                      <div className="mt-6">
+                        <ReceiveOrderModal id={id}/>
+                      </div>
+                    }
+                    
 
                   <p className="mt-5 font-bold">Item List</p>
 
@@ -193,6 +200,11 @@ export default function OrderDetail() {
                                 </div>
                               </div>
                             </div>
+                            {data.bonus_qty > 0 &&
+                              <p className="mt-1 text-sm font-medium text-gray-900">
+                                Bonus item: {data.bonus_qty} pcs
+                              </p>
+                            }
                           </div>
                         </div>
                       </li>
@@ -217,46 +229,9 @@ export default function OrderDetail() {
                           Shipping Address
                       </label>
                       <div className="mt-1">
-                          <textarea
-                          id="address_detail"
-                          name="address_detail"
-                          readOnly
-                          rows={3}
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                          defaultValue={detail}
-                          />
+                        <p className="text-gray-600 sm:text-sm">{detail}</p>
                       </div>
                   </div>
-                  {/* <div>
-                        <label htmlFor="shipping_service" className="block text-sm font-medium text-gray-900">
-                            Shipping Service
-                        </label>
-                        <div className="mt-1">
-                            <input
-                            type="text"
-                            name="shipping_service"
-                            id="shipping_service"
-                            readOnly
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                            >
-                            </input>
-                        </div>
-                    </div> */}
-
-                    {/* <div>
-                        <label htmlFor="user_voucher" className="block text-sm font-medium text-gray-900">
-                            Voucher
-                        </label>
-                        <div className="mt-1">
-                            <input
-                            name="user_voucher"
-                            id="user_voucher"
-                            readOnly
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                            >
-                            </input>
-                        </div>
-                    </div> */}
                     
                     <div className="flex items-center justify-between">
                         <dt className="text-sm text-gray-600">Total Weight</dt>
@@ -288,18 +263,6 @@ export default function OrderDetail() {
                       </div>
                     }
                   </dl>
-
-                  {/* {shippingCost != null &&
-                    <div className="mt-6">
-                        <button
-                        type="button"
-                        onClick={()=>handleSubmit()}
-                        className="w-full rounded-md border border-transparent bg-green-600 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-green-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-                        >
-                          Continue Payment
-                        </button>
-                    </div>
-                  } */}
                 </section>
               </form>
             </div>

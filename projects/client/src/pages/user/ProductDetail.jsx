@@ -21,6 +21,7 @@ const ProductDetail = () => {
     const [product, setProduct] = useState({})
     const [productQty, setProductQty] = useState(1)
     const [errorQuantity, setErrorQuantity] = useState();
+    const [bonusQty, setBonusQty] = useState(0)
 
 
     let validateQuantity = (value) => {
@@ -57,6 +58,7 @@ const ProductDetail = () => {
 
     async function addToCart(){
         try{
+          // const data = {quantity: productQty}
             if(carts.length>0){
                 let deleteCart = false;
 
@@ -74,7 +76,7 @@ const ProductDetail = () => {
                             }
                         });
                         toast.success(deleteCart.data.message);
-                        const response = await api.post(`cart/${id}`, {quantity: productQty}, {
+                        const response = await api.post(`cart/${id}`, {quantity: productQty, bonusQty}, {
                             'headers': {
                                 'Authorization': `Bearer ${token}`
                             }
@@ -84,7 +86,7 @@ const ProductDetail = () => {
                         toast.success(response.data.message);
                     }
                 }else{
-                    const response = await api.post(`cart/${id}`, {quantity: productQty}, {
+                    const response = await api.post(`cart/${id}`, {quantity: productQty, bonusQty}, {
                         'headers': {
                             'Authorization': `Bearer ${token}`
                         }
@@ -94,11 +96,11 @@ const ProductDetail = () => {
                     toast.success(response.data.message);
                 }
             }else{
-              const response = await api.post(`cart/${id}`, {quantity : productQty}, {
-                'headers': {
-                  'Authorization': `Bearer ${token}`
-                }
-              });
+                const response = await api.post(`cart/${id}`, {quantity: productQty, bonusQty}, {
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 countCart()
                 toast.success(response.data.message);
             }
@@ -130,7 +132,9 @@ const ProductDetail = () => {
         async function fetchProductData() {
           try {
               const result = await api.get(`/inventory/${id}`)
-              setProduct(result.data.data)
+              const productData = result.data.data
+              setProduct(productData)
+              if(productData.Discounts[0].discount_type=='buy one get one') setBonusQty(productQty)
           } catch (error) {
             if(error.response.data.navigate){
               Navigate('/404')
@@ -138,15 +142,12 @@ const ProductDetail = () => {
           }
       }
       fetchProductData();
-    }, [user, branchId]);
+    }, [user, branchId, productQty]);
 
     function increaseQty(e) {
       e.preventDefault()
-      console.log("outside", productQty)
       if (productQty < product.stock) {
-        console.log("inside if", productQty)
         setProductQty(parseInt(productQty) + 1)
-        console.log("after set", productQty)
       } else if (productQty == "") {
         setProductQty(1)
       }
@@ -156,9 +157,6 @@ const ProductDetail = () => {
       e.preventDefault()
       if (productQty > 1) {
         setProductQty(parseInt(productQty) - 1)
-        if (parseInt(productQty) - 1 <= product.stock) {
-          setErrorQuantity("")
-        }
       }
     }
 

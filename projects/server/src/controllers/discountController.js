@@ -119,7 +119,6 @@ module.exports = {
       const productName = req.query.name || null;
       const discountType = req.query.type || null;
       const branchId = req.query.branchId || 1;
-
       const typeQuery = discountType ? {discount_type : discountType} : {};
       const searchQuery = productName ? { product_name: { [Op.like]: `%${productName}%` } } : {};
 
@@ -165,7 +164,7 @@ module.exports = {
       }
 
       const searchInventory = productName ? {id_inventory : inventoryIds} : {};
-
+      
       const result = await discount.findAndCountAll({
         where: {
             ...searchInventory,

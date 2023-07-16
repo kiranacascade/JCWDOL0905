@@ -16,7 +16,9 @@ export default function CancelOrderModal(props) {
     try{
       const response = await api.patch(`order/cancel/${id}`)
       toast.success(response.data.message)
-      window.location.href = `/order/${id}`
+
+      if(props.admin) window.location.href = `/admin/orders/${id}`
+      else window.location.href = `/order/${id}`
     }catch(error){
       toast.error(error.response.data.message);
     }
@@ -27,7 +29,7 @@ export default function CancelOrderModal(props) {
         <button
         type="button"
         onClick={()=>setOpen(true)}
-        className="mr-1 w-full rounded-md border border-transparent bg-gray-300 py-3 px-4 text-base font-medium text-gray-500 shadow-sm hover:bg-gray-50 hover:text-black focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50 outline outline-1"
+        className="mr-1 w-full rounded-md border border-transparent bg-white py-3 px-4 text-base font-medium text-black-500 shadow-sm hover:bg-gray-300 hover:text-black focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50 outline outline-1"
         >
             Cancel Order
         </button>
@@ -67,7 +69,7 @@ export default function CancelOrderModal(props) {
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
-                          Are you sure you want to cancel your? This action cannot be undone.
+                          Are you sure you want to cancel order?
                         </p>
                       </div>
                     </div>

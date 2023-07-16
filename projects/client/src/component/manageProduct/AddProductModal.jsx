@@ -114,9 +114,7 @@ export default function AddProductModal({ open, setOpen, onClose, categories, fe
                       <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                         
                         <ProductForm  title={"Add New Product"} categories={categories} handleClose={handleClose} cancelButtonRef={cancelButtonRef}/>
-                       
-                        
-                        
+
                       </Dialog.Panel>
                     </Transition.Child>
                   </div>

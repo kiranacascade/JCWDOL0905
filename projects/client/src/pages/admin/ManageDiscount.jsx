@@ -5,12 +5,6 @@ import AddDiscountModal from "../../component/manageDiscount/AddDiscountModal";
 import Layout from "../../component/Layout";
 import { useSelector } from "react-redux";
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import moment from "moment";
-import { useSearchParams } from "react-router-dom";
-import { Pagination } from "semantic-ui-react";
-import "semantic-ui-css/semantic.min.css";
-import Table from "../../component/Table";
-import DiscountTableBody from "../../component/manageDiscount/DiscountTableBody";
 
 export default function ManageDiscount() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -59,7 +53,8 @@ export default function ManageDiscount() {
     }
   }
 
-  useEffect(() => {    
+  useEffect(() => {
+
     fetchDiscounts();
     async function getStoreBranches() {
       try {
@@ -97,18 +92,20 @@ export default function ManageDiscount() {
     setSearchProduct(search)
   }};
 
+  
+
   return (
     <Layout>
-      <div className="flex min-w-screen min-h-screen">
-        <Toaster />
-        <div className="flex mx-auto rounded-md w-full max-w-xl max-h-5xl px-2 bg-white md:w-full md:max-w-4xl md:px-6 lg:w-full lg:max-w-7xl lg:h-7xl lg:px-4">
-          <div className="w-full lg:w-full p-4 lg:p-8 justify-start ">
-            <div className="flex justify-between items-center my-3 mb-8">
-              <div>
-                <h2>Manage Discount</h2>
-              </div>
-              <button
-                className="bg-green-500 h-10 px-4 md:px-8 lg:px-8 text-white font-semibold rounded-md"
+    <div className="flex min-w-screen min-h-screen">
+      <Toaster />
+      <div className="flex mx-auto rounded-md w-full max-w-xl max-h-5xl px-2 bg-white md:w-full md:max-w-4xl md:px-6 lg:w-full lg:max-w-7xl lg:h-7xl lg:px-4">
+        <div className="w-full lg:w-full p-4 lg:p-8 justify-start ">
+          <div className="flex justify-between items-center my-3 mb-8">
+          <div>
+          <h2>Manage Discount</h2>
+          </div>
+            <button
+              className="bg-green-600 h-10 px-4 md:px-8 lg:px-8 text-white font-semibold rounded-md"
                 onClick={openAddModal}
               >
                 Create Discount
@@ -192,32 +189,30 @@ export default function ManageDiscount() {
                 </select>
               </div>
             </div>
-
             <Table headCols={["ID", "Product", "Discount Type", "Discount Value", "Period", "Status"]} tableBody={<DiscountTableBody discounts={discounts}/>} />
 
-            <div className="my-12 flex justify-center">
-              <Pagination
-                activePage={activePage}
-                totalPages={totalPage}
-                onPageChange={(e, pageInfo) => {
-                  setActivePage(pageInfo.activePage);
-                }}
-              />
-            </div>
+<div className="my-12 flex justify-center">
+  <Pagination
+    activePage={activePage}
+    totalPages={totalPage}
+    onPageChange={(e, pageInfo) => {
+      setActivePage(pageInfo.activePage);
+    }}
+  />
+
           </div>
-          <div></div>
         </div>
-        {addModalOpen && (
-          <AddDiscountModal
-            selectedBranchId={selectedBranchId}
-            open={addModalOpen}
-            setOpen={setAddModalOpen}
-            cancelButtonRef={null}
-            onClose={closeAddModal}
-            fetchDiscounts={fetchDiscounts}
-          />
-        )}
+        <div></div>
       </div>
+      {addModalOpen && (
+        <AddDiscountModal
+          open={addModalOpen}
+          setOpen={setAddModalOpen}
+          cancelButtonRef={null}
+          onClose={closeAddModal}
+        />
+      )}
+    </div>
     </Layout>
   );
 };

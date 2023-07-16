@@ -9,7 +9,6 @@ import EditCategoryModal from "../../component/manageCategory/EditCategoryModal"
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { Pagination } from "semantic-ui-react";
 import { useSearchParams } from "react-router-dom";
-
 export const ManageCategory = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activePage, setActivePage] = useState(Number(searchParams.get("page")) || 1);
@@ -23,6 +22,15 @@ export const ManageCategory = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState({});
+
+  useEffect(() => {
+    setSearchParams({ 
+      page: activePage,
+      sort: sort,
+      name: searchCategory,
+      adm: 1
+    });
+  }, [activePage, sort, searchCategory]);
 
   useEffect(() => {
     setSearchParams({ 
