@@ -169,7 +169,6 @@ export default function CreateVoucherModal({ open, setOpen, onClose, fetchVouche
       fetchVouchers();
       handleClose();
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     }
   };

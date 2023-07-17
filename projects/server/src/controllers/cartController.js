@@ -61,7 +61,7 @@ module.exports = {
             let bearerToken = req.headers['authorization'];
             bearerToken = bearerToken.split(' ')[1]
             const user = jwt.verify(bearerToken, jwtKey);
-            const {quantity, stock} = req.body;
+            const {quantity} = req.body;
             let findInventory = await inventories.findOne({ where: { id: inventoryId } });
             if (!findInventory){
                 return res.status(404).send({ isError: true, message: "Inventory not exist" });

@@ -35,21 +35,17 @@ export default function EditCategoryModal({ open, setOpen, onClose, category, fe
     try {
       const fileInput = document.getElementById("image");
       const file = fileInput.files[0];
-
       const formData = new FormData();
       formData.append("image", file);
       formData.append("category_name", values.category_name);
-
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
       const response = await api.patch(`/category/${category.id}`, formData, config);
-
       toast.success(response.data.message);
       fetchCategories()
       handleClose();
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     }
   };
@@ -61,7 +57,6 @@ export default function EditCategoryModal({ open, setOpen, onClose, category, fe
       onSubmit={(values) => updateCategory(values)}
     >
       {(props) => {
-        // console.log(props);
         return (
     <Transition.Root show={modalOpen} as={Fragment}>
       <Dialog

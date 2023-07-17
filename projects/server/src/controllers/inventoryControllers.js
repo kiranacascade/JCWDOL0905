@@ -88,7 +88,7 @@ module.exports = {
       isError: false,
       message: "Successfully fetch inventories",
       data: allInventories.rows,
-      count: allInventories.count,
+      count: allInventories.count ,
     });
 
     } catch (err) {
@@ -256,7 +256,6 @@ module.exports = {
     const id = req.params.id;
     try {
       const { stock, status, quantity } = req.body;
-      console.log(stock)
 
       const inventoryData = await inventory.findOne({
         where: {id : id}
@@ -265,7 +264,9 @@ module.exports = {
       if (!inventoryData) {
         return res.status(404).send({ isError: true, message: "Inventory not exist", navigate: true})
       }
-
+      if (status === 'out' && inventoryData.stock < quantity) {
+        return res.status(404).send({ isError: true, message: "Can't reduce quantity more than available stock", navigate: true})
+      }
       const data = await inventory.update({
         stock: stock
       },{

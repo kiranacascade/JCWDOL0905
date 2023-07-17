@@ -13,10 +13,8 @@ export default function ProductForm({ title, categories, handleClose, cancelButt
               className="text-lg font-semibold leading-6 text-gray-900"
             >
               {title}
-              {/* Add New Product */}
             </Dialog.Title>
             <div className="mt-8 mb-4 w-96">
-              {/* <Form> */}
               <Field name="product_name">
                 {({ field, form }) => (
                   <div>

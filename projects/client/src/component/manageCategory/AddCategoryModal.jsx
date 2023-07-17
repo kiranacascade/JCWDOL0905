@@ -47,7 +47,6 @@ export default function AddCategoryModal({ open, setOpen, onClose, fetchCategori
       fetchCategories()
       handleClose();
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     }
   };

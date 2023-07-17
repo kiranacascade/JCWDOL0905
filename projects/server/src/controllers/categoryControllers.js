@@ -157,4 +157,26 @@ module.exports = {
       });
     }
   },
+  findCategory: async(req, res) => {
+    try{
+      const result = await category.findOne({where: {id : req.params.id}})
+      if (!result) {
+        return res.status(400).send({
+          isError: true,
+          message: "Category not found",
+          navigate: true
+        });
+      }
+      res.status(200).send({
+        isError: false,
+        message: "Category found",
+        navigate: false
+      });
+    } catch (error) {
+      res.status(400).send({
+        isError: true,
+        message: "Failed finding category",
+      });
+    }
+  }
 };

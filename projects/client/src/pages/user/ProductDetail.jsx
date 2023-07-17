@@ -23,7 +23,6 @@ const ProductDetail = () => {
     const [errorQuantity, setErrorQuantity] = useState();
     const [bonusQty, setBonusQty] = useState(0)
 
-
     let validateQuantity = (value) => {
       if (value == "") {
         setErrorQuantity("Please input quantity");
@@ -58,7 +57,6 @@ const ProductDetail = () => {
 
     async function addToCart(){
         try{
-          // const data = {quantity: productQty}
             if(carts.length>0){
                 let deleteCart = false;
 
@@ -157,6 +155,9 @@ const ProductDetail = () => {
       e.preventDefault()
       if (productQty > 1) {
         setProductQty(parseInt(productQty) - 1)
+        if (parseInt(productQty) - 1 <= product.stock) {
+          setErrorQuantity("")
+        }
       }
     }
 
@@ -266,18 +267,16 @@ const ProductDetail = () => {
                         </div>
                         <button
                         onClick={() => addToCart(id)}
-                        disabled={productQty > product.stock || product.stock === 0 || productQty < 1 || errorQuantity}
+                        disabled={productQty > product.stock || product.stock <= 0 || productQty < 1 || errorQuantity}
                         className="flex items-center justify-center disabled:opacity-60 rounded-md border border-transparent bg-green-500 py-2 px-8 text-lg font-bold text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                       >
                         Add to Cart
                       </button>
                       </div>
-                      
                     )}
                   </div>
               </section>
               <div className="text-red-700 text-sm font-semibold mt-2 h-10">{errorQuantity ? errorQuantity : " "}</div>
-            
             </div>
           </div>
         </div>
