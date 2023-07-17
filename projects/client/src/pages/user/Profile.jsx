@@ -127,7 +127,7 @@ export default function Profile() {
                         {addressId == undefined &&
                             <div>
                                 <h3 className="text-lg font-medium text-white">Shipping Address</h3>
-                                <p className="max-w-3xl text-base text-teal-50"><b>Shipping address has not been set</b></p>
+                                <p className="max-w-3xl text-base text-teal-50"><b>Shipping address has not been set. <a className="underline" href="/address">Set shipping address</a></b></p>
                             </div>
                         }
                         {addressId != undefined &&

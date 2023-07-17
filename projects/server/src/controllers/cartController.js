@@ -11,6 +11,7 @@ module.exports = {
             let bearerToken = req.headers['authorization'];
             bearerToken = bearerToken.split(' ')[1]
             const user = jwt.verify(bearerToken, jwtKey);
+            console.log("ini user", user)
 
             const query = `select carts.id, carts.product_qty, carts.bonus_qty, carts.id_inventory,
             inventories.stock, inventories.id_branch,
@@ -54,6 +55,7 @@ module.exports = {
             let bearerToken = req.headers['authorization'];
             bearerToken = bearerToken.split(' ')[1]
             const user = jwt.verify(bearerToken, jwtKey);
+            console.log("ini user", user)
 
             const {quantity, stock} = req.body;
 

@@ -71,7 +71,7 @@ export default function CreateOrder() {
         }
         if(addressId == undefined){
           toast.error("Shipping address not setted")
-          setTimeout(() => {Navigate('/')}, 500)
+          setTimeout(() => {Navigate('/address')}, 500)
         }
         const data = {branchId: carts[0].id_branch, addressId, orderWeight: getTotalWeight(carts), serviceId}
         const response = await api.post(`shipping`, data);

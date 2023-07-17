@@ -21,6 +21,7 @@ export default function Delivered(props) {
 
     const setAddress = async () => {
         let addressId = document.getElementById("address").value;
+        if(addressId==0) return 0
         localStorage.setItem("addressId", addressId);
         var index = addressData.findIndex(item => item.id == addressId)
         sortBranch(addressData[index].latitude, addressData[index].longitude, branchsData)
@@ -29,7 +30,8 @@ export default function Delivered(props) {
 
         localStorage.setItem("address", addressData[index].city);
         setLocation(addressData[index].city)
-        Navigate('/')
+        if(props.addressPage==true)Navigate('/address')
+        else Navigate('/')
     }
 
     useEffect(() => {
@@ -39,9 +41,11 @@ export default function Delivered(props) {
             else sortAddress(userLocation.latitude, userLocation.longitude, addressData)
 
             if(localStorage.getItem("branchId")==undefined) sortBranch(userLocation.latitude, userLocation.longitude, branchsData)
+            if(localStorage.getItem("branchId")==0 && !token) sortBranch(userLocation.latitude, userLocation.longitude, branchsData)
             if(branchId==0)setBranchId(localStorage.getItem("branchId"))
             if(localStorage.getItem("address")==undefined || localStorage.getItem("address")=='undefined'){localStorage.setItem("address", userLocation.position);}
-            Navigate('/')
+            if(props.addressPage==true)Navigate('/address')
+            else Navigate('/')
           }catch(error){
             console.log("Set branch failed");
           }
@@ -74,26 +78,31 @@ export default function Delivered(props) {
 
     return (
         <div>
-            <div className="bg-white">
-                <div className="mx-auto max-w-7xl py-2 px-6 md:flex md:items-center md:justify-between lg:px-8">
-                    <div className="mt-8 md:order-1 md:mt-0">
-                        <div>
-                            <p className="inline-flex my-2">
-                                <span className="inline-flex items-start">
-                                    <img src={pin} alt="" className="self-center w-4 h-4 rounded-full mr-1" />
-                                    <span>
-                                        Delivered to <b>{location=='undefined' || !location ? userLocation.position : location}</b> &nbsp;&nbsp;
-                                        <button>
-                                            <img onClick={() => setOpen(true)} src={chevrondown} alt="" className="self-center w-3 h-3 rounded-full mx-1" />
-                                        </button>
+            {props.addressPage == true ?
+                <button type="button" onClick={() => setOpen(true)} className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center">
+                    <p>Set Shipping Address</p>
+                </button> :
+                <div className="bg-white">
+                    <div className="mx-auto max-w-7xl py-2 px-6 md:flex md:items-center md:justify-between lg:px-8">
+                        <div className="mt-8 md:order-1 md:mt-0">
+                            <div>
+                                <p className="inline-flex my-2">
+                                    <span className="inline-flex items-start">
+                                        <img src={pin} alt="" className="self-center w-4 h-4 rounded-full mr-1" />
+                                        <span>
+                                            Delivered to <b>{location=='undefined' || !location ? userLocation.position : location}</b> &nbsp;&nbsp;
+                                            <button>
+                                                <img onClick={() => setOpen(true)} src={chevrondown} alt="" className="self-center w-3 h-3 rounded-full mx-1" />
+                                            </button>
+                                        </span>
+                                        
                                     </span>
-                                    
-                                </span>
-                            </p>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
             <Transition.Root show={open} as={Fragment}>
                 <Dialog as="div" className="relative z-10" onClose={setOpen}>
                     <div className="fixed inset-0" />
@@ -101,15 +110,7 @@ export default function Delivered(props) {
                     <div className="fixed inset-0 overflow-hidden">
                     <div className="absolute inset-0 overflow-hidden">
                         <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
-                        <Transition.Child
-                            as={Fragment}
-                            enter="transform transition ease-in-out duration-500 sm:duration-700"
-                            enterFrom="translate-x-full"
-                            enterTo="translate-x-0"
-                            leave="transform transition ease-in-out duration-500 sm:duration-700"
-                            leaveFrom="translate-x-0"
-                            leaveTo="translate-x-full"
-                        >
+                        <Transition.Child as={Fragment} enter="transform transition ease-in-out duration-500 sm:duration-700" enterFrom="translate-x-full" enterTo="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leaveFrom="translate-x-0" leaveTo="translate-x-full">
                             <Dialog.Panel className="pointer-events-auto w-screen max-w-2xl">
                             <form className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                                 <div className="flex-1">
@@ -153,6 +154,7 @@ export default function Delivered(props) {
                                                 onChange={(e) => setAddressId(e.target.value)}
                                                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                                                 >
+                                                    <option key={0} value={0}>Select Address</option>
                                                     {addressData.map((address)=>{
                                                         return(<option key={address.id} selected={address.id==localStorage.getItem("addressId")} value={address.id}>{address.label} - {address.address_detail} - {address.city} {address.id == localStorage.getItem("nearestAddressId") ? "(Nearest)" : ""}</option>)
                                                     })}

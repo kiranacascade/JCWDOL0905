@@ -142,7 +142,7 @@ export function sortBranch(lat, lng, branchsData){
     
   let sortedArr = branchsData.sort(function(a,b) {return a.distance - b.distance});
 
-  if(sortedArr[0].distance > 30){
+  if(sortedArr[0].distance > 30 || sortedArr[0].distance == 'NaN'){
       localStorage.setItem("branchId", 0);
   }else{
       localStorage.setItem("branchId", sortedArr[0].id);
