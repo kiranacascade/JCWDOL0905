@@ -59,6 +59,7 @@ export default function DetailOrder() {
     fetchData();
   }, [role, id_branch]);
 
+
   return (
     <>
         <Layout>
@@ -176,7 +177,9 @@ export default function DetailOrder() {
                   </h2>
 
                   <dl className="mt-6 space-y-4">
+
                   {order.id != undefined && <OrderInformation order={order}/>}
+
                     {(order.order_status=='waiting for payment' || order.order_status=='waiting for payment confirmation' || order.order_status=='processed') &&
                       <div className="mt-6 flex">
                         <CancelOrderModal id={id} admin={true}/>
