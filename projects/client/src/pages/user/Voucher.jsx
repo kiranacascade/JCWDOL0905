@@ -155,7 +155,7 @@ export default function Voucher() {
                       <div className="text-sm font-semibold text-gray-500">Do minimum 3x transaction to get this voucher</div>
                     )}
                     {voucher.voucher_type === "product" ? 
-                    <div className="text-sm font-semibold text-gray-500">on purchase: {voucher.product_name} at: {voucher?.branch_name}</div> : <></>
+                    <div className="text-sm font-semibold text-gray-500">on purchase: {voucher.product_name} at {voucher?.branch_name}</div> : <></>
                     } 
 
                   <div className="text-xs text-gray-400 mt-3">valid until : {formattedDate(voucher.end_date)}</div>

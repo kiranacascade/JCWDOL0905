@@ -9,6 +9,7 @@ import { countItem } from "../../redux/cartSlice";
 import { CheckIcon } from '@heroicons/react/20/solid'
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import ProductInformation from "../../component/ProductInformation";
+import { checkDiscount } from "../../function";
 
 const ProductDetail = () => {
     const dispatch = useDispatch()

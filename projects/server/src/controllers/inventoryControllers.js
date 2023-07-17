@@ -74,7 +74,7 @@ module.exports = {
       attributes: {
         include: [
           [
-            literal("`Product`.`product_price` -  IFNULL((select case when d.discount_type =  'percentage' then `Product`.`product_price` *  d.discount_value * 0.01 when d.discount_type =  'amount' then  d.discount_value when d.discount_type = 'buy one get one' then 0 end as discount from discounts d where d.id_inventory = `Inventory`.`id` and end_date >= CURDATE() limit 1),0)"),
+            literal("`Product`.`product_price` -  IFNULL((select case when d.discount_type =  'percentage' then `Product`.`product_price` *  d.discount_value * 0.01 when d.discount_type =  'amount' then  d.discount_value when d.discount_type = 'buy one get one' then 0 end as discount from discounts d where d.id_inventory = `Inventory`.`id` and end_date >= CURDATE() and start_date <= CURDATE() limit 1),0)"),
             'discounted_price',
           ],
         ],
@@ -230,7 +230,7 @@ module.exports = {
       attributes: {
         include: [
           [
-            literal("`Product`.`product_price` -  IFNULL((select case when d.discount_type =  'percentage' then `Product`.`product_price` *  d.discount_value * 0.01 when d.discount_type =  'amount' then  d.discount_value when d.discount_type = 'buy one get one' then 0 end as discount from discounts d where d.id_inventory = `Inventory`.`id` and end_date >= CURDATE() limit 1),0)"),
+            literal("`Product`.`product_price` -  IFNULL((select case when d.discount_type =  'percentage' then `Product`.`product_price` *  d.discount_value * 0.01 when d.discount_type =  'amount' then  d.discount_value when d.discount_type = 'buy one get one' then 0 end as discount from discounts d where d.id_inventory = `Inventory`.`id` and end_date >= CURDATE() and start_date <= CURDATE() limit 1),0)"),
             'discounted_price',
           ],
         ],

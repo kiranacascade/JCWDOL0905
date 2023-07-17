@@ -11,7 +11,6 @@ module.exports = {
             let bearerToken = req.headers['authorization'];
             bearerToken = bearerToken.split(' ')[1]
             const user = jwt.verify(bearerToken, jwtKey);
-            console.log("ini user", user)
 
             const query = `select carts.id, carts.product_qty, carts.bonus_qty, carts.id_inventory,
             inventories.stock, inventories.id_branch,
@@ -57,13 +56,15 @@ module.exports = {
             const user = jwt.verify(bearerToken, jwtKey);
 
             const {quantity} = req.body;
-
+            
             let findInventory = await inventories.findOne({ where: { id: inventoryId } });
             if (!findInventory){
                 return res.status(404).send({ isError: true, message: "Inventory not exist" });
             }
 
-            if(findInventory.stock < (quantity+bonus_qty)) return res.status(400).send({isError: true, message: "Item quantity + bonus item can't exceed the available stock"})
+            let total_qty = parseInt(quantity) + parseInt(bonus_qty);
+
+            if(findInventory.stock < (total_qty)) return res.status(400).send({isError: true, message: `Item quantity + bonus item can't exceed the available stock`})
 
             let findCartItem = await carts.findOne({ where: { id_inventory: inventoryId } });
             if (findCartItem){
@@ -71,11 +72,6 @@ module.exports = {
                 const updateBonusQty = parseInt(findCartItem.bonus_qty) + parseInt(bonus_qty);
                 if ((updatedQty + updateBonusQty) > findInventory.stock) {
                     return res.status(400).send({isError: true, message: "Item quantity + bonus item can't exceed the available stock"})
-                    // const updatedCartMax = carts.update({product_qty: findInventory.stock},
-                    // { where: {id: findCartItem.id}},
-                    // )
-
-                    // return res.status(201).send({ isError: false, message: "Successfully add item to cart at maximum stock", data: updatedCartMax },);
                 }
 
                 const updatedCart = carts.update(
