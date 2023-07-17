@@ -36,31 +36,33 @@ module.exports = {
   getDashboardDataPerBranch: async (req, res) => {
     let { id, year } = req.query;
     year = year || "2023";
-    const rawQuery = `
-    SELECT DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m') AS name, SUM(Transaction_Headers.final_price) AS totalSales
-    FROM (
-      SELECT Transaction_Details.*, Store_Branches.id AS branch_id
-      FROM Transaction_Details
-      JOIN Inventories ON Transaction_Details.id_inventory = Inventories.id
-      JOIN Store_Branches ON Inventories.id_branch = Store_Branches.id
-    ) AS CombinedQuery
-    JOIN Transaction_Headers ON CombinedQuery.id_trans_header = Transaction_Headers.id
-    WHERE order_status IN ('done', 'shipped') AND CombinedQuery.branch_id = :branchId AND YEAR(Transaction_Headers.createdAt) = :year
-    GROUP BY DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m')
-    ORDER BY DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m') ASC;`;
-    const query2 = `SELECT COUNT(Transaction_Headers.id) as totalTransactions,SUM(Transaction_Headers.final_price) AS totalSales
-    FROM (
-      SELECT Transaction_Details.*, Store_Branches.id AS branch_id
-      FROM Transaction_Details
-      JOIN Inventories ON Transaction_Details.id_inventory = Inventories.id
-      JOIN Store_Branches ON Inventories.id_branch = Store_Branches.id
-    ) AS CombinedQuery
-    JOIN Transaction_Headers ON CombinedQuery.id_trans_header = Transaction_Headers.id
-    WHERE order_status IN ('done', 'shipped') AND CombinedQuery.branch_id = :branchId  AND YEAR(Transaction_Headers.createdAt) = :year;`;
+    const queryTotalSales = `SELECT sum(final_price) as totalSales from transaction_headers where id_branch = ${id} and order_status in('shipped', 'done') and year(transaction_headers.createdAt) = "${year}" group by date_format(transaction_headers.createdAt, '%Y-%M');`
+    const queryTotalTransactions = `SELECT count(transaction_headers.id) as totalTransactions from transaction_headers where id_branch = ${id} and order_status in('shipped', 'done') and year(transaction_headers.createdAt) = "${year}";`
+    // const rawQuery = `
+    // SELECT DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m') AS name, SUM(Transaction_Headers.final_price) AS totalSales
+    // FROM (
+    //   SELECT Transaction_Details.*, Store_Branches.id AS branch_id
+    //   FROM Transaction_Details
+    //   JOIN Inventories ON Transaction_Details.id_inventory = Inventories.id
+    //   JOIN Store_Branches ON Inventories.id_branch = Store_Branches.id
+    // ) AS CombinedQuery
+    // JOIN Transaction_Headers ON CombinedQuery.id_trans_header = Transaction_Headers.id
+    // WHERE order_status IN ('done', 'shipped') AND CombinedQuery.branch_id = :branchId AND YEAR(Transaction_Headers.createdAt) = :year
+    // GROUP BY DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m')
+    // ORDER BY DATE_FORMAT(Transaction_Headers.createdAt, '%Y-%m') ASC;`;
+    // const query2 = `SELECT COUNT(Transaction_Headers.id) as totalTransactions,SUM(Transaction_Headers.final_price) AS totalSales
+    // FROM (
+    //   SELECT Transaction_Details.*, Store_Branches.id AS branch_id
+    //   FROM Transaction_Details
+    //   JOIN Inventories ON Transaction_Details.id_inventory = Inventories.id
+    //   JOIN Store_Branches ON Inventories.id_branch = Store_Branches.id
+    // ) AS CombinedQuery
+    // JOIN Transaction_Headers ON CombinedQuery.id_trans_header = Transaction_Headers.id
+    // WHERE order_status IN ('done', 'shipped') AND CombinedQuery.branch_id = :branchId  AND YEAR(Transaction_Headers.createdAt) = :year;`;
     try {
       const totalUser = await users.count();
-      const [result] = await db.sequelize.query(rawQuery, { replacements: { branchId: id, year: year }, });
-      const [result2,] = await db.sequelize.query(query2, { replacements: { branchId: id, year: year}, });      
+      const [result] = await db.sequelize.query(queryTotalSales, { replacements: { branchId: id, year: year }, });
+      const [result2,] = await db.sequelize.query(queryTotalTransactions, { replacements: { branchId: id, year: year}, });      
       let maxMonthlySales = 0;
       for (const monthSales of result) {
         if (Number(monthSales.totalSales) > maxMonthlySales) {
